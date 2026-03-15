@@ -24,7 +24,11 @@ class HubLauncher extends FormApplication {
 Hooks.once("init", () => {
 
   // Global API namespace
-  game.faundryvttTools = {};
+  game.faundryvttTools = {
+    openHub() {
+      new HubMenu().render(true);
+    }
+  };
 
   // Settings menu button — opens the Hub (GM only)
   game.settings.registerMenu(MODULE_ID, "hubMenu", {
