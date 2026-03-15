@@ -1,3 +1,5 @@
+import { MODULE_ID } from "../shared/constants.mjs";
+
 /**
  * Auto-generates recipe components by picking random items from a compendium.
  * Items are drawn from folders lv1/lv2/lv3 inside a "components" folder
@@ -9,7 +11,8 @@ export class ComponentGenerator {
   static COMPONENTS_FOLDER = "components";
   static WORLD_FOLDER_NAME = "Crafting Components";
 
-  static RARITIES = {
+  /** Default rarity config — used as fallback and initial setting value. */
+  static DEFAULT_RARITIES = {
     veryCommon:    { points: 1,  minLevel: 1 },
     common:        { points: 2,  minLevel: 1 },
     uncommon:      { points: 3,  minLevel: 1 },
@@ -23,12 +26,21 @@ export class ComponentGenerator {
   static LEVEL_POINTS = { 1: 1, 2: 2, 3: 3 };
 
   /**
+   * Get current rarities config from settings (falls back to defaults).
+   */
+  static getRarities() {
+    const saved = game.settings.get(MODULE_ID, "craftingRarities");
+    if (saved && Object.keys(saved).length) return saved;
+    return this.DEFAULT_RARITIES;
+  }
+
+  /**
    * Generate components for a given rarity.
    * @param {string} rarityKey — key from RARITIES
    * @returns {Array|null} Array of {uuid, name, img, quantity} or null on error
    */
   static async generate(rarityKey) {
-    const rarity = this.RARITIES[rarityKey];
+    const rarity = this.getRarities()[rarityKey];
     if (!rarity) return null;
 
     // Find compendium

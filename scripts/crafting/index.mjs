@@ -1,9 +1,21 @@
 import { MODULE_ID } from "../shared/constants.mjs";
 import { HubMenu } from "../hub/HubMenu.mjs";
 import { CraftingSystem } from "./CraftingSystem.mjs";
+import { ComponentGenerator } from "./ComponentGenerator.mjs";
 import { RecipeBook } from "./apps/RecipeBook.mjs";
 import { RecipeEditor } from "./apps/RecipeEditor.mjs";
 import { RecipeManager } from "./apps/RecipeManager.mjs";
+import { RaritySettings } from "./apps/RaritySettings.mjs";
+
+class RaritySettingsLauncher extends FormApplication {
+  constructor(...args) {
+    super(...args);
+    new RaritySettings().render(true);
+    this.close();
+  }
+  async _updateObject() {}
+  render() { return this; }
+}
 
 /**
  * Initialize the Crafting feature.
@@ -19,6 +31,23 @@ export function initCrafting() {
     config: false,
     type: Array,
     default: []
+  });
+
+  game.settings.register(MODULE_ID, "craftingRarities", {
+    name: "CRAFTING.RaritySettings",
+    scope: "world",
+    config: false,
+    type: Object,
+    default: ComponentGenerator.DEFAULT_RARITIES
+  });
+
+  game.settings.registerMenu(MODULE_ID, "raritySettingsMenu", {
+    name: "CRAFTING.RaritySettings",
+    label: "CRAFTING.OpenRaritySettings",
+    hint: "CRAFTING.RaritySettingsHint",
+    icon: "fas fa-sliders-h",
+    type: RaritySettingsLauncher,
+    restricted: true
   });
 
   /* ---- Hub registration ---- */

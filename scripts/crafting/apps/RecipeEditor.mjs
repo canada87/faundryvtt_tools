@@ -154,7 +154,7 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
    * Open a rarity picker dialog, then auto-generate components.
    */
   static async #onAutoGenerate() {
-    const rarities = ComponentGenerator.RARITIES;
+    const rarities = ComponentGenerator.getRarities();
     const options = Object.keys(rarities).map(key =>
       `<option value="${key}">${game.i18n.localize(`CRAFTING.Rarity.${key}`)}</option>`
     ).join("");

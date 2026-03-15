@@ -1,0 +1,30 @@
+<div class="rarity-settings-content">
+  <table class="rarity-table">
+    <thead>
+      <tr>
+        <th>{{localize "CRAFTING.RarityName"}}</th>
+        <th>{{localize "CRAFTING.RarityPoints"}}</th>
+        <th>{{localize "CRAFTING.RarityMinLevel"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each rows}}
+        <tr>
+          <td class="rarity-label">{{this.label}}</td>
+          <td>
+            <input type="number" name="rarities.{{this.key}}.points"
+                   value="{{this.points}}" min="1" />
+          </td>
+          <td>
+            <input type="number" name="rarities.{{this.key}}.minLevel"
+                   value="{{this.minLevel}}" min="1" max="3" />
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <button type="submit" class="submit-btn">
+    <i class="fas fa-save"></i> {{localize "CRAFTING.Save"}}
+  </button>
+</div>

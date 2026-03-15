@@ -26,6 +26,12 @@
     "Save": "Salva",
     "Remove": "Rimuovi",
     "CraftingComplete": "Creazione Completata!",
+    "RaritySettings": "Configurazione Rarità",
+    "OpenRaritySettings": "Configura Rarità",
+    "RaritySettingsHint": "Configura i punti e il livello minimo dei componenti per ogni grado di rarità.",
+    "RarityName": "Rarità",
+    "RarityPoints": "Punti",
+    "RarityMinLevel": "Livello Min",
     "AutoGenerate": "Auto-genera",
     "AutoGenerateHint": "Auto-genera componenti in base alla rarità del risultato",
     "SelectRarity": "Rarità Risultato",
@@ -57,7 +63,8 @@
     "Info": {
       "CraftSuccess": "{item} creato con successo!",
       "RecipeSaved": "Ricetta salvata con successo.",
-      "RecipesAssigned": "Assegnazioni ricette aggiornate."
+      "RecipesAssigned": "Assegnazioni ricette aggiornate.",
+      "RaritiesSaved": "Configurazione rarità salvata."
     },
     "Confirm": {
       "Delete": "Sei sicuro di voler eliminare la ricetta \"{name}\"?"
