@@ -1,0 +1,59 @@
+{
+  "FVTT_TOOLS": {
+    "HubTitle": "Faundryvtt Tools",
+    "OpenHub": "Open Tools Hub",
+    "HubHint": "Open the tools hub to access all available features."
+  },
+  "CRAFTING": {
+    "FeatureName": "Crafting",
+    "FeatureDescription": "Create recipes, manage ingredients, and craft items.",
+    "RecipeBook": "Recipe Book",
+    "RecipeManager": "Recipe Manager",
+    "OpenRecipeManager": "Open Recipe Manager",
+    "RecipeManagerHint": "Open the recipe manager to create, edit, and assign recipes.",
+    "RecipeEditor": "Recipe Editor",
+    "NewRecipe": "New Recipe",
+    "EditRecipe": "Edit Recipe",
+    "DeleteRecipe": "Delete Recipe",
+    "AssignRecipe": "Assign Recipe",
+    "AssignRecipeTo": "Assign: {name}",
+    "Craft": "Craft",
+    "Components": "Components",
+    "Result": "Result",
+    "RecipeName": "Recipe Name",
+    "RecipeImage": "Image",
+    "Description": "Description",
+    "Save": "Save",
+    "Remove": "Remove",
+    "CraftingComplete": "Crafting Complete!",
+    "DropComponentHint": "Drag items here to add components",
+    "DropResultHint": "Drag an item here to set the result",
+    "EmptyRecipeBook": "Your recipe book is empty. Ask the GM to assign you some recipes!",
+    "EmptyRecipeManager": "No recipes yet. Click 'New Recipe' to create one.",
+    "NoActors": "No player-owned actors found.",
+    "Chat": {
+      "Crafted": "crafted {item}!"
+    },
+    "Warn": {
+      "NoActor": "No actor selected.",
+      "MissingComponents": "You don't have all the required components.",
+      "NoName": "Please enter a recipe name.",
+      "NoComponents": "Please add at least one component.",
+      "NoResult": "Please set a result item."
+    },
+    "Error": {
+      "RecipeNotFound": "Recipe not found.",
+      "RemoveFailed": "Failed to remove {item} from inventory.",
+      "CreateFailed": "Failed to create the crafted item.",
+      "ItemNotFound": "Source item not found: {uuid}"
+    },
+    "Info": {
+      "CraftSuccess": "Successfully crafted {item}!",
+      "RecipeSaved": "Recipe saved successfully.",
+      "RecipesAssigned": "Recipe assignments updated."
+    },
+    "Confirm": {
+      "Delete": "Are you sure you want to delete the recipe \"{name}\"?"
+    }
+  }
+}

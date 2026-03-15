@@ -1,0 +1,47 @@
+<div class="recipe-manager-content">
+
+  <div class="manager-header">
+    <button type="button" data-action="createRecipe" class="create-btn">
+      <i class="fas fa-plus"></i> {{localize "CRAFTING.NewRecipe"}}
+    </button>
+  </div>
+
+  {{#if isEmpty}}
+    <div class="empty-state">
+      <i class="fas fa-flask"></i>
+      <p>{{localize "CRAFTING.EmptyRecipeManager"}}</p>
+    </div>
+  {{else}}
+    <div class="recipe-table">
+      {{#each recipes}}
+        <div class="recipe-row" data-recipe-id="{{this.id}}">
+          <img src="{{this.img}}" width="36" height="36" class="recipe-icon" />
+          <div class="recipe-info">
+            <strong>{{this.name}}</strong>
+            <span class="recipe-summary">
+              {{this.components.length}} {{localize "CRAFTING.Components"}}
+              {{#if this.result}}
+                &rarr; {{this.result.name}}
+              {{/if}}
+            </span>
+          </div>
+          <div class="recipe-actions">
+            <button type="button" data-action="assignRecipe"
+                    title="{{localize 'CRAFTING.AssignRecipe'}}">
+              <i class="fas fa-users"></i>
+            </button>
+            <button type="button" data-action="editRecipe"
+                    title="{{localize 'CRAFTING.EditRecipe'}}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button type="button" data-action="deleteRecipe"
+                    title="{{localize 'CRAFTING.DeleteRecipe'}}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+
+</div>

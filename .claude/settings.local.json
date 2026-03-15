@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm scripts/crafting.mjs)",
+      "Bash(rm scripts/apps/RecipeBook.mjs)",
+      "Bash(rm scripts/apps/RecipeEditor.mjs)",
+      "Bash(rm scripts/apps/RecipeManager.mjs)",
+      "Bash(rmdir scripts/apps)",
+      "Bash(rm templates/recipe-book.hbs)",
+      "Bash(rm templates/recipe-editor.hbs)",
+      "Bash(rm templates/recipe-manager.hbs)"
+    ]
+  }
+}

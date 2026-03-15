@@ -1,0 +1,35 @@
+{
+  "id": "faundryvtt_tools",
+  "title": "Faundryvtt Tools",
+  "description": "A modular toolkit for FoundryVTT. Currently includes a system-agnostic crafting system with recipes, ingredients, and crafting operations.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "authors": [
+    {
+      "name": "jacassia"
+    }
+  ],
+  "esmodules": [
+    "scripts/module.mjs"
+  ],
+  "styles": [
+    "styles/hub.css",
+    "styles/crafting.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    },
+    {
+      "lang": "it",
+      "name": "Italiano",
+      "path": "languages/it.json"
+    }
+  ],
+  "socket": true
+}

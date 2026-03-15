@@ -1,0 +1,11 @@
+<div class="hub-menu-content">
+  <div class="hub-features">
+    {{#each features}}
+      <div class="hub-feature-card" data-action="openFeature" data-feature="{{this.id}}">
+        <i class="{{this.icon}}"></i>
+        <h3>{{this.name}}</h3>
+        <p>{{this.description}}</p>
+      </div>
+    {{/each}}
+  </div>
+</div>

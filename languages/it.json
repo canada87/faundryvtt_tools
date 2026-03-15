@@ -1,0 +1,59 @@
+{
+  "FVTT_TOOLS": {
+    "HubTitle": "Faundryvtt Tools",
+    "OpenHub": "Apri Hub Strumenti",
+    "HubHint": "Apri l'hub strumenti per accedere a tutte le funzionalità disponibili."
+  },
+  "CRAFTING": {
+    "FeatureName": "Crafting",
+    "FeatureDescription": "Crea ricette, gestisci ingredienti e crea oggetti.",
+    "RecipeBook": "Ricettario",
+    "RecipeManager": "Gestione Ricette",
+    "OpenRecipeManager": "Apri Gestione Ricette",
+    "RecipeManagerHint": "Apri il gestore ricette per creare, modificare e assegnare ricette.",
+    "RecipeEditor": "Editor Ricetta",
+    "NewRecipe": "Nuova Ricetta",
+    "EditRecipe": "Modifica Ricetta",
+    "DeleteRecipe": "Elimina Ricetta",
+    "AssignRecipe": "Assegna Ricetta",
+    "AssignRecipeTo": "Assegna: {name}",
+    "Craft": "Crea",
+    "Components": "Componenti",
+    "Result": "Risultato",
+    "RecipeName": "Nome Ricetta",
+    "RecipeImage": "Immagine",
+    "Description": "Descrizione",
+    "Save": "Salva",
+    "Remove": "Rimuovi",
+    "CraftingComplete": "Creazione Completata!",
+    "DropComponentHint": "Trascina oggetti qui per aggiungere componenti",
+    "DropResultHint": "Trascina un oggetto qui per impostare il risultato",
+    "EmptyRecipeBook": "Il tuo ricettario è vuoto. Chiedi al GM di assegnarti delle ricette!",
+    "EmptyRecipeManager": "Nessuna ricetta. Clicca 'Nuova Ricetta' per crearne una.",
+    "NoActors": "Nessun personaggio dei giocatori trovato.",
+    "Chat": {
+      "Crafted": "ha creato {item}!"
+    },
+    "Warn": {
+      "NoActor": "Nessun personaggio selezionato.",
+      "MissingComponents": "Non hai tutti i componenti necessari.",
+      "NoName": "Inserisci un nome per la ricetta.",
+      "NoComponents": "Aggiungi almeno un componente.",
+      "NoResult": "Imposta un oggetto risultato."
+    },
+    "Error": {
+      "RecipeNotFound": "Ricetta non trovata.",
+      "RemoveFailed": "Impossibile rimuovere {item} dall'inventario.",
+      "CreateFailed": "Impossibile creare l'oggetto.",
+      "ItemNotFound": "Oggetto sorgente non trovato: {uuid}"
+    },
+    "Info": {
+      "CraftSuccess": "{item} creato con successo!",
+      "RecipeSaved": "Ricetta salvata con successo.",
+      "RecipesAssigned": "Assegnazioni ricette aggiornate."
+    },
+    "Confirm": {
+      "Delete": "Sei sicuro di voler eliminare la ricetta \"{name}\"?"
+    }
+  }
+}

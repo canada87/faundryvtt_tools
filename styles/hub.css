@@ -1,0 +1,48 @@
+/* ============================================ */
+/*  Hub Menu                                    */
+/* ============================================ */
+
+.faundryvtt-tools.hub-menu .hub-menu-content {
+  padding: 16px;
+}
+
+.faundryvtt-tools.hub-menu .hub-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.faundryvtt-tools.hub-menu .hub-feature-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-align: center;
+}
+
+.faundryvtt-tools.hub-menu .hub-feature-card:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: var(--color-border-highlight, #7a7971);
+}
+
+.faundryvtt-tools.hub-menu .hub-feature-card i {
+  font-size: 2rem;
+  color: var(--color-text-dark-primary, #191813);
+}
+
+.faundryvtt-tools.hub-menu .hub-feature-card h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.faundryvtt-tools.hub-menu .hub-feature-card p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-text-dark-secondary, #666);
+}

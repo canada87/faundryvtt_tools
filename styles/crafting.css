@@ -1,0 +1,325 @@
+/* ============================================ */
+/*  Recipe Book (Player)                        */
+/* ============================================ */
+
+.crafting.recipe-book .recipe-book-content {
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.crafting.recipe-book .recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.crafting.recipe-book .recipe-card {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.crafting.recipe-book .recipe-card.disabled {
+  opacity: 0.6;
+}
+
+.crafting.recipe-book .recipe-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crafting.recipe-book .recipe-header .recipe-icon {
+  border: none;
+  flex-shrink: 0;
+}
+
+.crafting.recipe-book .recipe-header h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.crafting.recipe-book .craft-btn {
+  white-space: nowrap;
+}
+
+.crafting.recipe-book .recipe-description {
+  font-size: 0.85rem;
+  color: var(--color-text-dark-secondary, #666);
+  margin: 4px 0;
+}
+
+.crafting.recipe-book .recipe-details {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.crafting.recipe-book .components {
+  flex: 1;
+}
+
+.crafting.recipe-book .components h4,
+.crafting.recipe-book .result h4 {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.crafting.recipe-book .components ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.crafting.recipe-book .components li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+}
+
+.crafting.recipe-book .components li img {
+  border: none;
+  flex-shrink: 0;
+}
+
+.crafting.recipe-book .has-item {
+  color: var(--color-level-success, #18520b);
+}
+
+.crafting.recipe-book .missing-item {
+  color: var(--color-level-error, #c41e3a);
+}
+
+.crafting.recipe-book .quantity {
+  margin-left: auto;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.crafting.recipe-book .result-arrow {
+  display: flex;
+  align-items: center;
+  padding-top: 24px;
+  font-size: 1.2rem;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.crafting.recipe-book .result {
+  flex: 0 0 auto;
+}
+
+.crafting.recipe-book .result-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.crafting.recipe-book .result-item img {
+  border: none;
+}
+
+.crafting.recipe-book .empty-state,
+.crafting.recipe-manager .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--color-text-dark-secondary, #666);
+  gap: 12px;
+  padding: 40px;
+}
+
+.crafting .empty-state i {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+/* ============================================ */
+/*  Recipe Editor (GM)                          */
+/* ============================================ */
+
+.crafting.recipe-editor .recipe-editor-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.crafting.recipe-editor .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.crafting.recipe-editor .form-group > label {
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.crafting.recipe-editor .form-fields {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crafting.recipe-editor .form-fields img {
+  border: none;
+}
+
+.crafting.recipe-editor .drop-zone {
+  border: 2px dashed var(--color-border-light-tertiary, #aaa);
+  border-radius: 4px;
+  padding: 8px;
+  min-height: 60px;
+  transition: border-color 0.2s;
+}
+
+.crafting.recipe-editor .drop-zone:hover {
+  border-color: var(--color-border-highlight, #7a7971);
+}
+
+.crafting.recipe-editor .drop-hint {
+  text-align: center;
+  color: var(--color-text-dark-secondary, #999);
+  margin: 8px 0;
+  font-size: 0.85rem;
+}
+
+.crafting.recipe-editor .component-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.crafting.recipe-editor .component-entry,
+.crafting.recipe-editor .result-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.crafting.recipe-editor .component-entry img,
+.crafting.recipe-editor .result-entry img {
+  border: none;
+  flex-shrink: 0;
+}
+
+.crafting.recipe-editor .component-name {
+  flex: 1;
+}
+
+.crafting.recipe-editor .component-qty,
+.crafting.recipe-editor .result-qty {
+  width: 50px;
+  text-align: center;
+}
+
+.crafting.recipe-editor .submit-btn {
+  margin-top: 8px;
+  align-self: flex-end;
+}
+
+/* ============================================ */
+/*  Recipe Manager (GM)                         */
+/* ============================================ */
+
+.crafting.recipe-manager .recipe-manager-content {
+  padding: 8px;
+}
+
+.crafting.recipe-manager .manager-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.crafting.recipe-manager .create-btn {
+  font-weight: bold;
+}
+
+.crafting.recipe-manager .recipe-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.crafting.recipe-manager .recipe-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+}
+
+.crafting.recipe-manager .recipe-row .recipe-icon {
+  border: none;
+  flex-shrink: 0;
+}
+
+.crafting.recipe-manager .recipe-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.crafting.recipe-manager .recipe-summary {
+  font-size: 0.8rem;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.crafting.recipe-manager .recipe-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* ============================================ */
+/*  Chat message                                */
+/* ============================================ */
+
+.crafting-chat {
+  text-align: center;
+}
+
+.crafting-chat img {
+  border: none;
+  margin-top: 4px;
+}
+
+/* ============================================ */
+/*  Assignment dialog                           */
+/* ============================================ */
+
+.crafting-assign-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+
+.crafting-assign-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.crafting-assign-label img {
+  border-radius: 50%;
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+}

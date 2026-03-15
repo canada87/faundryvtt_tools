@@ -1,0 +1,56 @@
+<div class="recipe-book-content">
+  {{#if isEmpty}}
+    <div class="empty-state">
+      <i class="fas fa-book-open"></i>
+      <p>{{localize "CRAFTING.EmptyRecipeBook"}}</p>
+    </div>
+  {{else}}
+    <div class="recipe-list">
+      {{#each recipes}}
+        <div class="recipe-card {{#unless canCraft}}disabled{{/unless}}" data-recipe-id="{{this.id}}">
+          <div class="recipe-header">
+            <img src="{{this.img}}" width="40" height="40" class="recipe-icon" />
+            <h3 class="recipe-name">{{this.name}}</h3>
+            <button type="button" class="craft-btn" data-action="craft"
+              {{#unless canCraft}}disabled{{/unless}}
+              title="{{localize 'CRAFTING.Craft'}}">
+              <i class="fas fa-hammer"></i> {{localize "CRAFTING.Craft"}}
+            </button>
+          </div>
+
+          {{#if this.description}}
+            <p class="recipe-description">{{this.description}}</p>
+          {{/if}}
+
+          <div class="recipe-details">
+            <div class="components">
+              <h4>{{localize "CRAFTING.Components"}}</h4>
+              <ul>
+                {{#each this.components}}
+                  <li class="{{#if sufficient}}has-item{{else}}missing-item{{/if}}">
+                    <img src="{{this.img}}" width="24" height="24" />
+                    <span class="item-name">{{this.name}}</span>
+                    <span class="quantity">{{this.owned}} / {{this.quantity}}</span>
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+
+            <div class="result-arrow">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+
+            <div class="result">
+              <h4>{{localize "CRAFTING.Result"}}</h4>
+              <div class="result-item">
+                <img src="{{this.result.img}}" width="32" height="32" />
+                <span class="item-name">{{this.result.name}}</span>
+                <span class="quantity">x{{this.result.quantity}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</div>
