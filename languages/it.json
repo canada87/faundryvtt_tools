@@ -26,6 +26,10 @@
     "Save": "Salva",
     "Remove": "Rimuovi",
     "CraftingComplete": "Creazione Completata!",
+    "AutoGenerate": "Auto-genera",
+    "AutoGenerateHint": "Auto-genera componenti in base alla rarità del risultato",
+    "SelectRarity": "Rarità Risultato",
+    "Generate": "Genera",
     "DropComponentHint": "Trascina oggetti qui per aggiungere componenti",
     "DropResultHint": "Trascina un oggetto qui per impostare il risultato",
     "EmptyRecipeBook": "Il tuo ricettario è vuoto. Chiedi al GM di assegnarti delle ricette!",
@@ -39,13 +43,16 @@
       "MissingComponents": "Non hai tutti i componenti necessari.",
       "NoName": "Inserisci un nome per la ricetta.",
       "NoComponents": "Aggiungi almeno un componente.",
+      "NoComponentsFound": "Nessun componente trovato nel compendio per questa rarità.",
       "NoResult": "Imposta un oggetto risultato."
     },
     "Error": {
       "RecipeNotFound": "Ricetta non trovata.",
       "RemoveFailed": "Impossibile rimuovere {item} dall'inventario.",
       "CreateFailed": "Impossibile creare l'oggetto.",
-      "ItemNotFound": "Oggetto sorgente non trovato: {uuid}"
+      "ItemNotFound": "Oggetto sorgente non trovato: {uuid}",
+      "CompendiumNotFound": "Compendio non trovato: {name}",
+      "FolderNotFound": "Cartella \"{name}\" non trovata nel compendio"
     },
     "Info": {
       "CraftSuccess": "{item} creato con successo!",
@@ -54,6 +61,16 @@
     },
     "Confirm": {
       "Delete": "Sei sicuro di voler eliminare la ricetta \"{name}\"?"
+    },
+    "Rarity": {
+      "veryCommon": "Molto Comune",
+      "common": "Comune",
+      "uncommon": "Non Comune",
+      "rare": "Raro",
+      "veryRare": "Molto Raro",
+      "legendary": "Leggendario",
+      "veryLegendary": "Molto Leggendario",
+      "unique": "Unico"
     }
   }
 }

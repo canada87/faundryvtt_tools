@@ -26,6 +26,10 @@
     "Save": "Save",
     "Remove": "Remove",
     "CraftingComplete": "Crafting Complete!",
+    "AutoGenerate": "Auto-generate",
+    "AutoGenerateHint": "Auto-generate components based on result rarity",
+    "SelectRarity": "Result Rarity",
+    "Generate": "Generate",
     "DropComponentHint": "Drag items here to add components",
     "DropResultHint": "Drag an item here to set the result",
     "EmptyRecipeBook": "Your recipe book is empty. Ask the GM to assign you some recipes!",
@@ -39,13 +43,16 @@
       "MissingComponents": "You don't have all the required components.",
       "NoName": "Please enter a recipe name.",
       "NoComponents": "Please add at least one component.",
+      "NoComponentsFound": "No components found in compendium for this rarity.",
       "NoResult": "Please set a result item."
     },
     "Error": {
       "RecipeNotFound": "Recipe not found.",
       "RemoveFailed": "Failed to remove {item} from inventory.",
       "CreateFailed": "Failed to create the crafted item.",
-      "ItemNotFound": "Source item not found: {uuid}"
+      "ItemNotFound": "Source item not found: {uuid}",
+      "CompendiumNotFound": "Compendium not found: {name}",
+      "FolderNotFound": "Folder \"{name}\" not found in compendium"
     },
     "Info": {
       "CraftSuccess": "Successfully crafted {item}!",
@@ -54,6 +61,16 @@
     },
     "Confirm": {
       "Delete": "Are you sure you want to delete the recipe \"{name}\"?"
+    },
+    "Rarity": {
+      "veryCommon": "Very Common",
+      "common": "Common",
+      "uncommon": "Uncommon",
+      "rare": "Rare",
+      "veryRare": "Very Rare",
+      "legendary": "Legendary",
+      "veryLegendary": "Very Legendary",
+      "unique": "Unique"
     }
   }
 }

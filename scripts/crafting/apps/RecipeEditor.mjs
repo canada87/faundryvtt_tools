@@ -1,5 +1,6 @@
 import { MODULE_ID } from "../../shared/constants.mjs";
 import { CraftingSystem } from "../CraftingSystem.mjs";
+import { ComponentGenerator } from "../ComponentGenerator.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -29,7 +30,8 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
     },
     actions: {
       removeComponent: RecipeEditor.#onRemoveComponent,
-      removeResult: RecipeEditor.#onRemoveResult
+      removeResult: RecipeEditor.#onRemoveResult,
+      autoGenerate: RecipeEditor.#onAutoGenerate
     }
   };
 
@@ -146,6 +148,51 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onRemoveResult() {
     this.recipeData.result = null;
     this.render();
+  }
+
+  /**
+   * Open a rarity picker dialog, then auto-generate components.
+   */
+  static async #onAutoGenerate() {
+    const rarities = ComponentGenerator.RARITIES;
+    const options = Object.keys(rarities).map(key =>
+      `<option value="${key}">${game.i18n.localize(`CRAFTING.Rarity.${key}`)}</option>`
+    ).join("");
+
+    const content = `<form>
+      <div class="form-group">
+        <label>${game.i18n.localize("CRAFTING.SelectRarity")}</label>
+        <select name="rarity">${options}</select>
+      </div>
+    </form>`;
+
+    const result = await foundry.applications.api.DialogV2.wait({
+      window: { title: game.i18n.localize("CRAFTING.AutoGenerate") },
+      content,
+      buttons: [
+        {
+          action: "generate",
+          label: game.i18n.localize("CRAFTING.Generate"),
+          icon: "fas fa-magic",
+          callback: (event, button, dialog) => {
+            return dialog.querySelector("select[name=rarity]").value;
+          }
+        },
+        {
+          action: "cancel",
+          label: game.i18n.localize("Cancel"),
+          icon: "fas fa-times"
+        }
+      ]
+    });
+
+    if (!result || result === "cancel") return;
+
+    const components = await ComponentGenerator.generate(result);
+    if (components) {
+      this.recipeData.components = components;
+      this.render();
+    }
   }
 
   /* ---------------------------------------- */

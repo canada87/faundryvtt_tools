@@ -176,6 +176,17 @@
   border: none;
 }
 
+.crafting.recipe-editor .components-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.crafting.recipe-editor .auto-generate-btn {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+}
+
 .crafting.recipe-editor .drop-zone {
   border: 2px dashed var(--color-border-light-tertiary, #aaa);
   border-radius: 4px;

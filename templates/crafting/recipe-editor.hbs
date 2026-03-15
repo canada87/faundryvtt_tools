@@ -31,7 +31,13 @@
 
   {{!-- Components (drag items here) --}}
   <div class="form-group">
-    <label>{{localize "CRAFTING.Components"}}</label>
+    <div class="components-header">
+      <label>{{localize "CRAFTING.Components"}}</label>
+      <button type="button" data-action="autoGenerate" class="auto-generate-btn"
+              title="{{localize 'CRAFTING.AutoGenerateHint'}}">
+        <i class="fas fa-magic"></i> {{localize "CRAFTING.AutoGenerate"}}
+      </button>
+    </div>
     <div class="component-drop-zone drop-zone">
       {{#if recipe.components.length}}
         <ul class="component-list">
