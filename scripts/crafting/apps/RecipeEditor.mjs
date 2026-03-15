@@ -44,8 +44,6 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /** Live recipe data (mutated by drag-drop before submit) */
   recipeData = {
-    name: "",
-    img: "icons/sundries/scrolls/scroll-plain.webp",
     description: "",
     components: [],
     result: null
@@ -158,9 +156,7 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
     const data = foundry.utils.expandObject(formData.object);
 
     // Merge text fields from the form
-    this.recipeData.name = data.name?.trim() || "";
     this.recipeData.description = data.description?.trim() || "";
-    this.recipeData.img = data.img?.trim() || "icons/sundries/scrolls/scroll-plain.webp";
 
     // Update component quantities from the form inputs
     if (data.components) {
@@ -178,18 +174,18 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     // Validation
-    if (!this.recipeData.name) {
-      ui.notifications.warn(game.i18n.localize("CRAFTING.Warn.NoName"));
+    if (!this.recipeData.result) {
+      ui.notifications.warn(game.i18n.localize("CRAFTING.Warn.NoResult"));
       return false;
     }
     if (!this.recipeData.components.length) {
       ui.notifications.warn(game.i18n.localize("CRAFTING.Warn.NoComponents"));
       return false;
     }
-    if (!this.recipeData.result) {
-      ui.notifications.warn(game.i18n.localize("CRAFTING.Warn.NoResult"));
-      return false;
-    }
+
+    // Name and image derived from result item
+    this.recipeData.name = this.recipeData.result.name;
+    this.recipeData.img = this.recipeData.result.img;
 
     // Save
     if (this.recipeId) {

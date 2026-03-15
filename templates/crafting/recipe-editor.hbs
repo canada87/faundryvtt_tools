@@ -1,24 +1,32 @@
 <div class="recipe-editor-content">
 
-  {{!-- Name --}}
-  <div class="form-group">
-    <label>{{localize "CRAFTING.RecipeName"}}</label>
-    <input type="text" name="name" value="{{recipe.name}}" placeholder="{{localize 'CRAFTING.RecipeName'}}" required />
-  </div>
-
-  {{!-- Image --}}
-  <div class="form-group">
-    <label>{{localize "CRAFTING.RecipeImage"}}</label>
-    <div class="form-fields">
-      <img src="{{recipe.img}}" width="40" height="40" class="recipe-img-preview" />
-      <input type="text" name="img" value="{{recipe.img}}" />
-    </div>
-  </div>
-
   {{!-- Description --}}
   <div class="form-group">
     <label>{{localize "CRAFTING.Description"}}</label>
     <textarea name="description" rows="3" placeholder="{{localize 'CRAFTING.Description'}}">{{recipe.description}}</textarea>
+  </div>
+
+  {{!-- Result (drag item here) — shown first since it defines the recipe name/image --}}
+  <div class="form-group">
+    <label>{{localize "CRAFTING.Result"}}</label>
+    <div class="result-drop-zone drop-zone">
+      {{#if recipe.result}}
+        <div class="result-entry">
+          <img src="{{recipe.result.img}}" width="32" height="32" />
+          <span>{{recipe.result.name}}</span>
+          <input type="number" name="result.quantity"
+                 value="{{recipe.result.quantity}}" min="1" class="result-qty" />
+          <button type="button" data-action="removeResult"
+                  title="{{localize 'CRAFTING.Remove'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      {{else}}
+        <p class="drop-hint">
+          <i class="fas fa-plus-circle"></i> {{localize "CRAFTING.DropResultHint"}}
+        </p>
+      {{/if}}
+    </div>
   </div>
 
   {{!-- Components (drag items here) --}}
@@ -44,29 +52,6 @@
       <p class="drop-hint">
         <i class="fas fa-plus-circle"></i> {{localize "CRAFTING.DropComponentHint"}}
       </p>
-    </div>
-  </div>
-
-  {{!-- Result (drag item here) --}}
-  <div class="form-group">
-    <label>{{localize "CRAFTING.Result"}}</label>
-    <div class="result-drop-zone drop-zone">
-      {{#if recipe.result}}
-        <div class="result-entry">
-          <img src="{{recipe.result.img}}" width="32" height="32" />
-          <span>{{recipe.result.name}}</span>
-          <input type="number" name="result.quantity"
-                 value="{{recipe.result.quantity}}" min="1" class="result-qty" />
-          <button type="button" data-action="removeResult"
-                  title="{{localize 'CRAFTING.Remove'}}">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      {{else}}
-        <p class="drop-hint">
-          <i class="fas fa-plus-circle"></i> {{localize "CRAFTING.DropResultHint"}}
-        </p>
-      {{/if}}
     </div>
   </div>
 

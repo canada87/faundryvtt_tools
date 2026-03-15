@@ -32,6 +32,11 @@ languages/
   it.json                  — Traduzioni italiano
 ```
 
+## Nomenclatura
+
+Quando l'operatore si riferisce ad un modulo si intende Crafting o simili.
+Quando si deve riferire alla parte che li collega lo chiamera Hub.
+
 ## Convenzioni
 
 - **Versione Foundry target:** v13

@@ -20,13 +20,14 @@ export class CraftingSystem {
 
   static async addRecipe(data) {
     const recipes = this.getRecipes();
+    const result = data.result || null;
     const recipe = {
       id: foundry.utils.randomID(),
-      name: data.name || "",
-      img: data.img || "icons/sundries/scrolls/scroll-plain.webp",
+      name: result?.name || "",
+      img: result?.img || "icons/sundries/scrolls/scroll-plain.webp",
       description: data.description || "",
       components: data.components || [],
-      result: data.result || null
+      result
     };
     recipes.push(recipe);
     await this.saveRecipes(recipes);
