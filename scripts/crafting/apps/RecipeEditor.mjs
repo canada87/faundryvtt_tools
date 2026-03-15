@@ -175,7 +175,7 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
           label: game.i18n.localize("CRAFTING.Generate"),
           icon: "fas fa-magic",
           callback: (event, button, dialog) => {
-            return dialog.querySelector("select[name=rarity]").value;
+            return dialog.element.querySelector("select[name=rarity]").value;
           }
         },
         {
