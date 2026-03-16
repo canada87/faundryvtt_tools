@@ -251,6 +251,7 @@
 
 .crafting.recipe-manager .recipe-manager-content {
   padding: 8px;
+  overflow-y: auto;
 }
 
 .crafting.recipe-manager .manager-header {
