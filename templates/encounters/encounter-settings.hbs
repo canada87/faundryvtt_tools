@@ -1,0 +1,58 @@
+<div class="encounter-settings-content">
+
+  <div class="form-group">
+    <label>{{localize "ENCOUNTERS.CompendiumName"}}</label>
+    <input type="text" name="compendium" value="{{compendium}}"
+           placeholder="module.Compendium" />
+    <small class="hint">{{localize "ENCOUNTERS.CompendiumHint"}}</small>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "ENCOUNTERS.CreatureTypePath"}}</label>
+    <input type="text" name="creatureTypePath" value="{{creatureTypePath}}"
+           placeholder="system.details.creatureType" />
+    <small class="hint">{{localize "ENCOUNTERS.CreatureTypePathHint"}}</small>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "ENCOUNTERS.TargetFolder"}}</label>
+    <input type="text" name="targetFolder" value="{{targetFolder}}"
+           placeholder="mostri" />
+    <small class="hint">{{localize "ENCOUNTERS.TargetFolderHint"}}</small>
+  </div>
+
+  <hr>
+
+  <div class="groups-section">
+    <div class="groups-header">
+      <label><strong>{{localize "ENCOUNTERS.Groups"}}</strong></label>
+      <button type="button" data-action="addGroup" class="add-group-btn">
+        <i class="fas fa-plus"></i> {{localize "ENCOUNTERS.AddGroup"}}
+      </button>
+    </div>
+
+    <div class="groups-table-header">
+      <span class="col-label">{{localize "ENCOUNTERS.GroupLabel"}}</span>
+      <span class="col-folders">{{localize "ENCOUNTERS.GroupFolders"}}</span>
+      <span class="col-action"></span>
+    </div>
+
+    {{#each groups}}
+      <div class="group-entry" data-group-index="{{@index}}">
+        <input type="text" name="groups.{{@index}}.label"
+               value="{{this.label}}" placeholder="CR 1-2" class="col-label" />
+        <input type="text" name="groups.{{@index}}.folders"
+               value="{{this.foldersStr}}" placeholder="CR1, CR2" class="col-folders" />
+        <button type="button" data-action="removeGroup" class="col-action"
+                title="{{localize 'ENCOUNTERS.RemoveGroup'}}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    {{/each}}
+  </div>
+
+  <button type="submit" class="submit-btn">
+    <i class="fas fa-save"></i> {{localize "ENCOUNTERS.Save"}}
+  </button>
+
+</div>

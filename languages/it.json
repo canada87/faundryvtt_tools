@@ -79,5 +79,41 @@
       "veryLegendary": "Molto Leggendario",
       "unique": "Unico"
     }
+  },
+  "ENCOUNTERS": {
+    "FeatureName": "Incontri Casuali",
+    "FeatureDescription": "Genera incontri casuali da un compendio e posizionali sulla mappa.",
+    "GeneratorTitle": "Generatore Incontri",
+    "SettingsTitle": "Impostazioni Incontri",
+    "OpenSettings": "Configura Incontri",
+    "SettingsHint": "Configura il compendio, il campo tipo creatura, la cartella destinazione e i gruppi CR.",
+    "CompendiumName": "Compendio",
+    "CompendiumHint": "L'ID del compendio da usare per i mostri (es. canadavtt.Monsters)",
+    "CreatureTypePath": "Campo Tipo Creatura",
+    "CreatureTypePathHint": "Percorso dot-notation al campo tipo creatura sull'attore (es. system.details.creatureType)",
+    "TargetFolder": "Cartella Destinazione",
+    "TargetFolderHint": "Nome della cartella nel mondo dove verranno importati gli attori",
+    "Groups": "Gruppi CR",
+    "GroupLabel": "Etichetta",
+    "GroupFolders": "Cartelle",
+    "AddGroup": "Aggiungi Gruppo",
+    "RemoveGroup": "Rimuovi",
+    "FilterTypes": "Filtra per Tipo",
+    "FilterHint": "Click sinistro: Includi (blu) | Click destro: Escludi (rosso)",
+    "Generate": "Scegli Posizione",
+    "Save": "Salva",
+    "Warn": {
+      "NoMonsters": "Nessun mostro trovato con i filtri attuali.",
+      "NoCompendium": "Nessun compendio configurato. Configura prima le impostazioni incontri."
+    },
+    "Error": {
+      "CompendiumNotFound": "Compendio \"{name}\" non trovato!"
+    },
+    "Info": {
+      "ClickMap": "Clicca sulla mappa per posizionare l'incontro...",
+      "SpawnComplete": "Incontro generato!",
+      "SettingsSaved": "Impostazioni incontri salvate.",
+      "Importing": "Importazione: {name}..."
+    }
   }
 }

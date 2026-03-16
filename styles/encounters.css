@@ -1,0 +1,199 @@
+/* ============================================ */
+/*  Encounter Generator                         */
+/* ============================================ */
+
+.encounters.encounter-generator .encounter-generator-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.encounters.encounter-generator .filter-hint {
+  display: block;
+  color: var(--color-text-dark-secondary, #666);
+  margin-bottom: 4px;
+}
+
+/* --- Type tags --- */
+
+.encounters.encounter-generator .type-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--color-border-light-tertiary, #782e22);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.encounters.encounter-generator .type-tag {
+  padding: 4px 8px;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background: #ccc;
+  color: #000;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.85em;
+  transition: all 0.2s;
+}
+
+.encounters.encounter-generator .type-tag:hover {
+  filter: brightness(1.1);
+}
+
+/* Included (blue) */
+.encounters.encounter-generator .type-tag.selected {
+  background-color: #2e5ec4;
+  color: white;
+  border-color: #1a3b80;
+}
+
+/* Excluded (red) */
+.encounters.encounter-generator .type-tag.excluded {
+  background-color: #c42e2e;
+  color: white;
+  border-color: #801a1a;
+}
+
+/* --- Group inputs --- */
+
+.encounters.encounter-generator .group-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.encounters.encounter-generator .group-input label {
+  flex: 1;
+}
+
+.encounters.encounter-generator .group-input input[type="number"] {
+  width: 60px;
+  text-align: center;
+}
+
+/* --- Footer --- */
+
+.encounters.encounter-generator .generator-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.encounters.encounter-generator .generate-btn {
+  font-weight: bold;
+}
+
+/* --- Empty state --- */
+
+.encounters .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--color-text-dark-secondary, #666);
+  gap: 12px;
+  padding: 40px;
+}
+
+.encounters .empty-state i {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+/* ============================================ */
+/*  Encounter Settings                          */
+/* ============================================ */
+
+.encounters.encounter-settings .encounter-settings-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.encounters.encounter-settings .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.encounters.encounter-settings .form-group > label {
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.encounters.encounter-settings .hint {
+  font-size: 0.8rem;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+/* --- Groups section --- */
+
+.encounters.encounter-settings .groups-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.encounters.encounter-settings .add-group-btn {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+}
+
+.encounters.encounter-settings .groups-table-header {
+  display: flex;
+  gap: 6px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  margin-bottom: 4px;
+}
+
+.encounters.encounter-settings .groups-table-header .col-label {
+  flex: 1;
+}
+
+.encounters.encounter-settings .groups-table-header .col-folders {
+  flex: 2;
+}
+
+.encounters.encounter-settings .groups-table-header .col-action {
+  width: 32px;
+}
+
+.encounters.encounter-settings .group-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.encounters.encounter-settings .group-entry .col-label {
+  flex: 1;
+}
+
+.encounters.encounter-settings .group-entry .col-folders {
+  flex: 2;
+}
+
+.encounters.encounter-settings .group-entry .col-action {
+  width: 32px;
+  text-align: center;
+}
+
+.encounters.encounter-settings .submit-btn {
+  margin-top: 8px;
+  align-self: flex-end;
+}

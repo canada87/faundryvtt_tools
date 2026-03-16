@@ -18,15 +18,25 @@ scripts/
       RecipeBook.mjs       — UI giocatore: ricettario con stato componenti
       RecipeEditor.mjs     — UI GM: crea/modifica ricette con drag-and-drop
       RecipeManager.mjs    — UI GM: lista ricette, assegna, elimina
+  encounters/
+    index.mjs              — Init della feature incontri (settings, hooks, API)
+    EncounterSystem.mjs    — Logica core: compendio, filtri, estrazione, spawn
+    apps/
+      EncounterGenerator.mjs — UI GM: filtro tipi, selezione per gruppo CR, genera
+      EncounterSettings.mjs  — UI GM: configura compendio, campo tipo, cartella, gruppi
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
+  encounters.css           — Stili di tutte le UI incontri
 templates/
   hub-menu.hbs             — Template hub
   crafting/
     recipe-book.hbs        — Template ricettario giocatore
     recipe-editor.hbs      — Template editor ricetta
     recipe-manager.hbs     — Template gestore ricette
+  encounters/
+    encounter-generator.hbs — Template generatore incontri
+    encounter-settings.hbs  — Template impostazioni incontri
 languages/
   en.json                  — Traduzioni inglese
   it.json                  — Traduzioni italiano
@@ -47,7 +57,7 @@ Quando si deve riferire alla parte che li collega lo chiamera Hub.
 - **Actor flags:** usano `MODULE_ID` con path dot-notation per feature (es. `crafting.recipes`)
 - **UI framework:** ApplicationV2 + HandlebarsApplicationMixin (API v13)
 - **Template paths:** `modules/faundryvtt_tools/templates/<feature>/...`
-- **Localizzazione:** chiavi organizzate per namespace (`FVTT_TOOLS.*` per l'hub, `CRAFTING.*` per crafting)
+- **Localizzazione:** chiavi organizzate per namespace (`FVTT_TOOLS.*` per l'hub, `CRAFTING.*` per crafting, `ENCOUNTERS.*` per incontri)
 
 ## Come aggiungere una nuova feature
 

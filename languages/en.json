@@ -79,5 +79,41 @@
       "veryLegendary": "Very Legendary",
       "unique": "Unique"
     }
+  },
+  "ENCOUNTERS": {
+    "FeatureName": "Random Encounters",
+    "FeatureDescription": "Generate random encounters from a compendium and spawn them on the map.",
+    "GeneratorTitle": "Encounter Generator",
+    "SettingsTitle": "Encounter Settings",
+    "OpenSettings": "Configure Encounters",
+    "SettingsHint": "Configure the compendium, creature type field, target folder, and CR groups.",
+    "CompendiumName": "Compendium",
+    "CompendiumHint": "The compendium ID to use for monsters (e.g. canadavtt.Monsters)",
+    "CreatureTypePath": "Creature Type Field",
+    "CreatureTypePathHint": "Dot-notation path to the creature type field on the actor (e.g. system.details.creatureType)",
+    "TargetFolder": "Target Folder",
+    "TargetFolderHint": "Name of the world folder where imported actors will be placed",
+    "Groups": "CR Groups",
+    "GroupLabel": "Label",
+    "GroupFolders": "Folders",
+    "AddGroup": "Add Group",
+    "RemoveGroup": "Remove",
+    "FilterTypes": "Filter by Type",
+    "FilterHint": "Left-click: Include (blue) | Right-click: Exclude (red)",
+    "Generate": "Choose Position",
+    "Save": "Save",
+    "Warn": {
+      "NoMonsters": "No monsters found with the current filters.",
+      "NoCompendium": "No compendium configured. Please configure the encounter settings first."
+    },
+    "Error": {
+      "CompendiumNotFound": "Compendium \"{name}\" not found!"
+    },
+    "Info": {
+      "ClickMap": "Click on the map to place the encounter...",
+      "SpawnComplete": "Encounter spawned!",
+      "SettingsSaved": "Encounter settings saved.",
+      "Importing": "Importing: {name}..."
+    }
   }
 }
