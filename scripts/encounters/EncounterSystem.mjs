@@ -114,13 +114,20 @@ export class EncounterSystem {
   }
 
   /**
+   * Hard floor for the minimum monster level per difficulty tier.
+   * High cannot drop below 2, Very High cannot drop below 3.
+   */
+  static DIFFICULTY_MIN_FLOORS = { 4: 2, 5: 3 };
+
+  /**
    * Calculate the valid monster-level range for a given difficulty.
-   *   min = max(1, partyLevel + difficulty − 5)
+   *   min = max(1, partyLevel + difficulty − 5)  — then clamped by floor
    *   max = partyLevel + difficulty − 1
    */
   static calculateLevelRange(partyLevel, difficulty) {
+    const floor = this.DIFFICULTY_MIN_FLOORS[difficulty] ?? 1;
     return {
-      min: Math.max(1, partyLevel + difficulty - 5),
+      min: Math.max(floor, partyLevel + difficulty - 5),
       max: partyLevel + difficulty - 1
     };
   }
