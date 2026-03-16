@@ -88,7 +88,121 @@ export class EncounterSystem {
   }
 
   /* ---------------------------------------- */
-  /*  Drawing                                  */
+  /*  Difficulty calculations                   */
+  /* ---------------------------------------- */
+
+  /**
+   * Multipliers for each difficulty level (1–5) relative to "High".
+   */
+  static DIFFICULTY_MULTIPLIERS = {
+    1: 0.3,   // Very Low  — 70 % less than High
+    2: 0.5,   // Low       — 50 % less
+    3: 0.8,   // Medium    — 20 % less
+    4: 1.0,   // High      — base
+    5: 1.4    // Very High — 40 % more
+  };
+
+  /**
+   * Calculate the encounter point budget.
+   * High = partySize × partyLevel; other difficulties scale from there.
+   * Always rounds up.
+   */
+  static calculateBudget(partyLevel, partySize, difficulty) {
+    const highBudget = partySize * partyLevel;
+    const multiplier = this.DIFFICULTY_MULTIPLIERS[difficulty] ?? 1.0;
+    return Math.ceil(highBudget * multiplier);
+  }
+
+  /**
+   * Calculate the valid monster-level range for a given difficulty.
+   *   min = max(1, partyLevel + difficulty − 5)
+   *   max = partyLevel + difficulty − 1
+   */
+  static calculateLevelRange(partyLevel, difficulty) {
+    return {
+      min: Math.max(1, partyLevel + difficulty - 5),
+      max: partyLevel + difficulty - 1
+    };
+  }
+
+  /**
+   * Extract the numeric level from a compendium folder name (e.g. "CR5" → 5).
+   * Returns null when no number is found.
+   */
+  static extractFolderLevel(folderName) {
+    const match = folderName.match(/(\d+)/);
+    return match ? parseInt(match[1]) : null;
+  }
+
+  /**
+   * Draw monsters based on party parameters and difficulty.
+   * Monsters are picked randomly until the point budget is met or exceeded.
+   * Each monster costs points equal to the level of its compendium folder.
+   *
+   * @param {Array}    index        Compendium index entries
+   * @param {Map}      folderMap    folder-name → folder-id
+   * @param {Array}    groups       CR group definitions (to enumerate all known folders)
+   * @param {number}   partyLevel
+   * @param {number}   partySize
+   * @param {number}   difficulty   1–5
+   * @param {string}   typePath     Dot-path to creature type field
+   * @param {string[]} included     Included types (empty = all)
+   * @param {string[]} excluded     Excluded types
+   * @returns {Array}               Drawn index entries
+   */
+  static drawByDifficulty(
+    index, folderMap, groups,
+    partyLevel, partySize, difficulty,
+    typePath, included, excluded
+  ) {
+    const budget = this.calculateBudget(partyLevel, partySize, difficulty);
+    const { min, max } = this.calculateLevelRange(partyLevel, difficulty);
+
+    // Collect candidates from all group folders whose level falls in range
+    const allCandidates = [];   // { entry, level }
+
+    for (const group of groups) {
+      for (const folderName of group.folders) {
+        const level = this.extractFolderLevel(folderName);
+        if (level === null || level < min || level > max) continue;
+
+        const folderId = folderMap.get(folderName);
+        if (!folderId) continue;
+
+        let entries = index.filter(i => i.folder === folderId);
+
+        // Apply type filters
+        entries = entries.filter(entry => {
+          const type = this.getNestedValue(entry, typePath)?.trim();
+          if (!type) return false;
+          if (excluded.includes(type)) return false;
+          if (included.length > 0 && !included.includes(type)) return false;
+          return true;
+        });
+
+        for (const entry of entries) {
+          allCandidates.push({ entry, level });
+        }
+      }
+    }
+
+    if (allCandidates.length === 0) return [];
+
+    // Greedy random selection: keep drawing until budget is met or exceeded
+    const drawn = [];
+    let remaining = budget;
+
+    while (remaining > 0) {
+      const pick = allCandidates[Math.floor(Math.random() * allCandidates.length)];
+      drawn.push(pick.entry);
+      remaining -= pick.level;
+    }
+
+    return drawn;
+  }
+
+  /* ---------------------------------------- */
+  /*  Drawing (manual mode)                    */
   /* ---------------------------------------- */
 
   /**

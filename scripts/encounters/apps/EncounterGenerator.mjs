@@ -5,8 +5,10 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
  * Main encounter generator window.
- * Shows creature-type filter tags and CR-group inputs,
- * then spawns the drawn monsters on the canvas.
+ * Two modes:
+ *   - **Difficulty**: party level / size / difficulty → auto-calculates budget and level range
+ *   - **Manual**: pick a count for each CR group
+ * Both modes share the creature-type filter tags.
  */
 export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -24,8 +26,8 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
       resizable: true
     },
     position: {
-      width: 500,
-      height: 550
+      width: 520,
+      height: 600
     },
     actions: {
       generate: EncounterGenerator.#onGenerate
@@ -75,7 +77,7 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
     super._onRender(context, options);
     const el = this.element;
 
-    // Attach tag click handlers (left = include, right = exclude)
+    // --- Type-tag click handlers (left = include, right = exclude) ---
     el.querySelectorAll(".type-tag").forEach(tag => {
       tag.addEventListener("click", () => {
         tag.classList.remove("excluded");
@@ -87,6 +89,48 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
         tag.classList.toggle("excluded");
       });
     });
+
+    // --- Mode toggle ---
+    const modeBtns = el.querySelectorAll(".mode-btn");
+    const diffSection = el.querySelector(".difficulty-section");
+    const manualSection = el.querySelector(".manual-section");
+
+    modeBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        modeBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const mode = btn.dataset.mode;
+        if (diffSection) diffSection.style.display = mode === "difficulty" ? "" : "none";
+        if (manualSection) manualSection.style.display = mode === "manual" ? "" : "none";
+      });
+    });
+
+    // --- Live budget / level-range summary ---
+    const partyLevelInput = el.querySelector("#party-level");
+    const partySizeInput = el.querySelector("#party-size");
+    const difficultySelect = el.querySelector("#difficulty");
+    const summaryEl = el.querySelector("#budget-summary");
+
+    const updateSummary = () => {
+      if (!summaryEl) return;
+      const pLevel = Math.max(1, Number(partyLevelInput?.value) || 1);
+      const pSize = Math.max(1, Number(partySizeInput?.value) || 1);
+      const diff = Number(difficultySelect?.value) || 4;
+
+      const budget = EncounterSystem.calculateBudget(pLevel, pSize, diff);
+      const { min, max } = EncounterSystem.calculateLevelRange(pLevel, diff);
+
+      summaryEl.textContent =
+        `${game.i18n.localize("ENCOUNTERS.Budget")}: ${budget}  |  ` +
+        `${game.i18n.localize("ENCOUNTERS.MonsterLevels")}: ${min} – ${max}`;
+    };
+
+    [partyLevelInput, partySizeInput, difficultySelect].forEach(input => {
+      if (input) input.addEventListener("input", updateSummary);
+    });
+
+    // Initial calculation
+    updateSummary();
   }
 
   /* ---------------------------------------- */
@@ -98,21 +142,36 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
     const typePath = game.settings.get(MODULE_ID, "encounterCreatureTypePath");
     const groups = game.settings.get(MODULE_ID, "encounterGroups");
 
-    // Collect filter state from CSS classes
+    // Collect type filters (shared by both modes)
     const includedTypes = [...el.querySelectorAll(".type-tag.selected")]
       .map(t => t.dataset.type);
     const excludedTypes = [...el.querySelectorAll(".type-tag.excluded")]
       .map(t => t.dataset.type);
 
-    // Collect counts from number inputs
-    const counts = groups.map((_, i) =>
-      Number(el.querySelector(`input[data-group-index="${i}"]`)?.value) || 0
-    );
+    // Determine active mode
+    const activeMode = el.querySelector(".mode-btn.active")?.dataset.mode ?? "difficulty";
+    let drawn;
 
-    const drawn = EncounterSystem.drawMonsters(
-      this.#index, this.#folderMap, groups, counts,
-      typePath, includedTypes, excludedTypes
-    );
+    if (activeMode === "difficulty") {
+      const partyLevel = Math.max(1, Number(el.querySelector("#party-level")?.value) || 1);
+      const partySize = Math.max(1, Number(el.querySelector("#party-size")?.value) || 1);
+      const difficulty = Number(el.querySelector("#difficulty")?.value) || 4;
+
+      drawn = EncounterSystem.drawByDifficulty(
+        this.#index, this.#folderMap, groups,
+        partyLevel, partySize, difficulty,
+        typePath, includedTypes, excludedTypes
+      );
+    } else {
+      // Manual mode
+      const counts = groups.map((_, i) =>
+        Number(el.querySelector(`input[data-group-index="${i}"]`)?.value) || 0
+      );
+      drawn = EncounterSystem.drawMonsters(
+        this.#index, this.#folderMap, groups, counts,
+        typePath, includedTypes, excludedTypes
+      );
+    }
 
     if (drawn.length === 0) {
       ui.notifications.warn(game.i18n.localize("ENCOUNTERS.Warn.NoMonsters"));
