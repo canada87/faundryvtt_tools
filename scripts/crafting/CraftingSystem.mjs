@@ -93,22 +93,88 @@ export class CraftingSystem {
   }
 
   /**
-   * Count how many of a given item (by name) an actor owns.
+   * Parse a "lv<N>" suffix from an item name.
+   * Returns { baseName, level } or null if no level suffix is found.
+   * E.g. "legno lv2" → { baseName: "legno", level: 2 }
+   */
+  static _parseLevel(name) {
+    const match = name.match(/^(.+?)\s+lv(\d+)$/i);
+    if (!match) return null;
+    return { baseName: match[1].trim(), level: parseInt(match[2], 10) };
+  }
+
+  /**
+   * Check if a candidate item can substitute for a required component.
+   * A higher-level item (same base name, level >=) can replace a lower-level one.
+   * Items without a level suffix require exact name match.
+   */
+  static _isCompatible(requiredName, candidateName) {
+    if (requiredName === candidateName) return true;
+    const req = this._parseLevel(requiredName);
+    if (!req) return false;
+    const cand = this._parseLevel(candidateName);
+    if (!cand) return false;
+    return cand.baseName === req.baseName && cand.level >= req.level;
+  }
+
+  /**
+   * Count how many compatible items an actor owns for a given component name.
+   * Higher-level variants of a leveled item are included.
    */
   static countItem(actor, itemName) {
     let total = 0;
     for (const item of actor.items) {
-      if (item.name === itemName) total += this.getItemQuantity(item);
+      if (this._isCompatible(itemName, item.name)) total += this.getItemQuantity(item);
     }
     return total;
   }
 
   /**
    * Check whether an actor can craft a given recipe.
+   * Uses a greedy allocation algorithm: processes the most restrictive
+   * components first (highest level) so that shared items are not double-counted.
    */
   static canCraft(actor, recipe) {
     if (!recipe?.components?.length || !recipe?.result) return false;
-    return recipe.components.every(c => this.countItem(actor, c.name) >= c.quantity);
+
+    // Build inventory snapshot: Map<itemName, availableQty>
+    const inventory = new Map();
+    for (const item of actor.items) {
+      const qty = this.getItemQuantity(item);
+      inventory.set(item.name, (inventory.get(item.name) ?? 0) + qty);
+    }
+
+    // Sort components by level descending (most restrictive first)
+    const sorted = [...recipe.components].sort((a, b) => {
+      const la = this._parseLevel(a.name)?.level ?? 0;
+      const lb = this._parseLevel(b.name)?.level ?? 0;
+      return lb - la;
+    });
+
+    // Simulate allocation
+    for (const comp of sorted) {
+      let needed = comp.quantity;
+      // Compatible item names sorted by level ascending (consume cheapest first)
+      const compatible = [...inventory.keys()]
+        .filter(name => this._isCompatible(comp.name, name))
+        .sort((a, b) => {
+          const la = this._parseLevel(a)?.level ?? 0;
+          const lb = this._parseLevel(b)?.level ?? 0;
+          return la - lb;
+        });
+
+      for (const name of compatible) {
+        if (needed <= 0) break;
+        const available = inventory.get(name) ?? 0;
+        const take = Math.min(available, needed);
+        inventory.set(name, available - take);
+        needed -= take;
+      }
+
+      if (needed > 0) return false;
+    }
+
+    return true;
   }
 
   /* ---------------------------------------- */
@@ -127,8 +193,13 @@ export class CraftingSystem {
       return false;
     }
 
-    // Remove components
-    for (const comp of recipe.components) {
+    // Remove components (most restrictive first, matching canCraft allocation order)
+    const sortedComponents = [...recipe.components].sort((a, b) => {
+      const la = this._parseLevel(a.name)?.level ?? 0;
+      const lb = this._parseLevel(b.name)?.level ?? 0;
+      return lb - la;
+    });
+    for (const comp of sortedComponents) {
       const ok = await this._removeItems(actor, comp.name, comp.quantity);
       if (!ok) {
         ui.notifications.error(game.i18n.format("CRAFTING.Error.RemoveFailed", { item: comp.name }));
@@ -167,7 +238,13 @@ export class CraftingSystem {
     const toDelete = [];
     const toUpdate = [];
 
-    const items = actor.items.filter(i => i.name === itemName);
+    // Get compatible items; sort by level ascending so lower-level items are consumed first
+    const items = actor.items.filter(i => this._isCompatible(itemName, i.name));
+    items.sort((a, b) => {
+      const la = this._parseLevel(a.name)?.level ?? 0;
+      const lb = this._parseLevel(b.name)?.level ?? 0;
+      return la - lb;
+    });
     for (const item of items) {
       if (remaining <= 0) break;
       const qty = this.getItemQuantity(item);

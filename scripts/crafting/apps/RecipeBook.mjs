@@ -58,7 +58,7 @@ export class RecipeBook extends HandlebarsApplicationMixin(ApplicationV2) {
         return { ...comp, owned, sufficient: owned >= comp.quantity };
       });
 
-      const canCraft = components.every(c => c.sufficient) && !!recipe.result;
+      const canCraft = CraftingSystem.canCraft(this.actor, recipe);
       recipes.push({ ...recipe, components, canCraft });
     }
 
