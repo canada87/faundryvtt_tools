@@ -1,0 +1,100 @@
+/* ============================================ */
+/*  Party Placer                                */
+/* ============================================ */
+
+.party.party-placer .party-placer-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* --- Select all / none --- */
+
+.party.party-placer .party-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.party.party-placer .select-btn {
+  flex: 1;
+  font-size: 0.8rem;
+  padding: 4px;
+}
+
+/* --- Actor list --- */
+
+.party.party-placer .actor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.party.party-placer .actor-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.party.party-placer .actor-entry:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.party.party-placer .actor-entry img {
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.party.party-placer .actor-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.party.party-placer .actor-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.party.party-placer .player-name {
+  color: var(--color-text-dark-secondary, #666);
+  font-size: 0.8rem;
+}
+
+/* --- Footer --- */
+
+.party.party-placer .party-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.party.party-placer .place-btn {
+  font-weight: bold;
+}
+
+/* --- Empty state --- */
+
+.party .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--color-text-dark-secondary, #666);
+  gap: 12px;
+  padding: 40px;
+}
+
+.party .empty-state i {
+  font-size: 3rem;
+  opacity: 0.3;
+}

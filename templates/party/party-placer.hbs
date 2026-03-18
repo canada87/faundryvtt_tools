@@ -1,0 +1,40 @@
+<div class="party-placer-content">
+
+  {{#if hasActors}}
+
+    <div class="party-actions">
+      <button type="button" data-action="selectAll" class="select-btn">
+        <i class="fas fa-check-double"></i> {{localize "PARTY.SelectAll"}}
+      </button>
+      <button type="button" data-action="selectNone" class="select-btn">
+        <i class="fas fa-times"></i> {{localize "PARTY.SelectNone"}}
+      </button>
+    </div>
+
+    <div class="actor-list">
+      {{#each actors}}
+        <label class="actor-entry">
+          <input type="checkbox" data-actor-id="{{this.actorId}}" checked />
+          <img src="{{this.actorImg}}" width="36" height="36" />
+          <div class="actor-info">
+            <span class="actor-name">{{this.actorName}}</span>
+            <small class="player-name">{{this.userName}}</small>
+          </div>
+        </label>
+      {{/each}}
+    </div>
+
+    <div class="party-footer">
+      <button type="button" data-action="place" class="place-btn">
+        <i class="fas fa-map-marker-alt"></i> {{localize "PARTY.Place"}}
+      </button>
+    </div>
+
+  {{else}}
+    <div class="empty-state">
+      <i class="fas fa-user-slash"></i>
+      <p>{{localize "PARTY.Warn.NoActors"}}</p>
+    </div>
+  {{/if}}
+
+</div>

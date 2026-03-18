@@ -184,5 +184,21 @@
       "GenerationComplete": "Loot generato!",
       "SettingsSaved": "Impostazioni loot salvate."
     }
+  },
+  "PARTY": {
+    "FeatureName": "Posiziona Party",
+    "FeatureDescription": "Seleziona i personaggi dei giocatori e posizionali sulla mappa con un click.",
+    "PlacerTitle": "Posiziona Party",
+    "SelectAll": "Tutti",
+    "SelectNone": "Nessuno",
+    "Place": "Posiziona sulla Mappa",
+    "Warn": {
+      "NoneSelected": "Seleziona almeno un personaggio.",
+      "NoActors": "Nessun personaggio assegnato ai giocatori."
+    },
+    "Info": {
+      "ClickMap": "Clicca sulla mappa per posizionare il party...",
+      "Placed": "{count} token posizionati!"
+    }
   }
 }

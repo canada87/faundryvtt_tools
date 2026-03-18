@@ -184,5 +184,21 @@
       "GenerationComplete": "Loot generated!",
       "SettingsSaved": "Loot settings saved."
     }
+  },
+  "PARTY": {
+    "FeatureName": "Place Party",
+    "FeatureDescription": "Select player characters and place them on the map with a click.",
+    "PlacerTitle": "Place Party",
+    "SelectAll": "All",
+    "SelectNone": "None",
+    "Place": "Place on Map",
+    "Warn": {
+      "NoneSelected": "Select at least one character.",
+      "NoActors": "No characters assigned to players."
+    },
+    "Info": {
+      "ClickMap": "Click on the map to place the party...",
+      "Placed": "{count} tokens placed!"
+    }
   }
 }
