@@ -121,6 +121,32 @@ export class LootSystem {
   }
 
   /* ---------------------------------------- */
+  /*  Spawning                                 */
+  /* ---------------------------------------- */
+
+  /**
+   * Spawn an unlinked treasure token on the canvas and return its synthetic actor.
+   * @param {Actor} templateActor  The world actor to use as template
+   * @param {{x:number, y:number}} position  World-space click position
+   * @returns {Actor|null}  The token's synthetic actor, or null on failure
+   */
+  static async spawnTreasureToken(templateActor, position) {
+    const snapped = canvas.grid.getSnappedPosition(position.x, position.y, 1);
+    const tokenProto = await templateActor.getTokenDocument();
+
+    const [tokenDoc] = await canvas.scene.createEmbeddedDocuments("Token", [{
+      ...tokenProto.toObject(),
+      x: snapped.x,
+      y: snapped.y,
+      actorLink: false
+    }]);
+
+    // Return the synthetic (unlinked) actor on the token
+    const placedToken = canvas.tokens.get(tokenDoc.id);
+    return placedToken?.actor ?? null;
+  }
+
+  /* ---------------------------------------- */
   /*  Generation pipeline                      */
   /* ---------------------------------------- */
 

@@ -145,6 +145,8 @@
     "SettingsHint": "Configura il compendio, i gruppi loot, i range di oro e il percorso valuta.",
     "CompendiumName": "Compendio",
     "CompendiumHint": "Il nome del compendio da usare per gli oggetti loot (es. Crafting & Consumables)",
+    "ActorName": "Nome Attore Tesoro",
+    "ActorNameHint": "Nome dell'attore nel mondo da usare come contenitore del loot. Verrà piazzato come token sulla mappa.",
     "CurrencyPath": "Percorso Valuta",
     "CurrencyPathHint": "Percorso dot-notation al campo valuta sull'attore (es. system.currency.gp)",
     "LootGroups": "Gruppi Loot",
@@ -172,9 +174,11 @@
       "NoItemsInGroup": "Nessun oggetto trovato nelle cartelle del gruppo \"{name}\"."
     },
     "Error": {
-      "CompendiumNotFound": "Compendio \"{name}\" non trovato!"
+      "CompendiumNotFound": "Compendio \"{name}\" non trovato!",
+      "ActorNotFound": "Attore \"{name}\" non trovato nel mondo. Crea un attore con quel nome."
     },
     "Info": {
+      "ClickMap": "Clicca sulla mappa per posizionare il tesoro...",
       "ItemAdded": "Aggiunto: {name}",
       "GoldAdded": "{gold} gp aggiunti a {name}",
       "GenerationComplete": "Loot generato!",

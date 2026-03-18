@@ -10,6 +10,7 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /** Local form state (survives add/remove re-renders) */
   #compendium;
+  #actorName;
   #currencyPath;
   #groups;
   #goldRanges;
@@ -49,6 +50,7 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
   constructor(options = {}) {
     super(options);
     this.#compendium = game.settings.get(MODULE_ID, "lootCompendium");
+    this.#actorName = game.settings.get(MODULE_ID, "lootActorName");
     this.#currencyPath = game.settings.get(MODULE_ID, "lootCurrencyPath");
     this.#groups = foundry.utils.deepClone(game.settings.get(MODULE_ID, "lootGroups"));
     this.#goldRanges = foundry.utils.deepClone(game.settings.get(MODULE_ID, "lootGoldRanges"));
@@ -61,6 +63,7 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext(options) {
     return {
       compendium: this.#compendium,
+      actorName: this.#actorName,
       currencyPath: this.#currencyPath,
       groups: this.#groups.map(g => ({
         ...g,
@@ -77,6 +80,7 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
   #syncFormToState() {
     const el = this.element;
     this.#compendium = el.querySelector('[name="compendium"]')?.value ?? this.#compendium;
+    this.#actorName = el.querySelector('[name="actorName"]')?.value ?? this.#actorName;
     this.#currencyPath = el.querySelector('[name="currencyPath"]')?.value ?? this.#currencyPath;
 
     const groups = [];
@@ -135,6 +139,7 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
     const data = foundry.utils.expandObject(formData.object);
 
     await game.settings.set(MODULE_ID, "lootCompendium", data.compendium || "");
+    await game.settings.set(MODULE_ID, "lootActorName", data.actorName || "Tesoro");
     await game.settings.set(MODULE_ID, "lootCurrencyPath", data.currencyPath || "system.currency.gp");
 
     // Parse groups

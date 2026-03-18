@@ -31,6 +31,15 @@ export function initLoot() {
     default: "Crafting & Consumables"
   });
 
+  game.settings.register(MODULE_ID, "lootActorName", {
+    name: "LOOT.ActorName",
+    hint: "LOOT.ActorNameHint",
+    scope: "world",
+    config: false,
+    type: String,
+    default: "Tesoro"
+  });
+
   game.settings.register(MODULE_ID, "lootCurrencyPath", {
     name: "LOOT.CurrencyPath",
     hint: "LOOT.CurrencyPathHint",

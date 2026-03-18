@@ -10,7 +10,11 @@
       "Bash(rm templates/recipe-editor.hbs)",
       "Bash(rm templates/recipe-manager.hbs)",
       "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''languages/it.json'',''utf8''\\)\\); console.log\\(''it.json OK''\\)\")",
-      "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''languages/en.json'',''utf8''\\)\\); console.log\\(''en.json OK''\\)\")"
+      "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''languages/en.json'',''utf8''\\)\\); console.log\\(''en.json OK''\\)\")",
+      "Bash(node --check scripts/loot/LootSystem.mjs)",
+      "Bash(node --check scripts/loot/index.mjs)",
+      "Bash(node --check scripts/loot/apps/LootGenerator.mjs)",
+      "Bash(node --check scripts/loot/apps/LootSettings.mjs)"
     ]
   }
 }

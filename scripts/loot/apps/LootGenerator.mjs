@@ -5,8 +5,9 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
  * Main loot generator window.
- * Shows configured loot groups with item counts, a difficulty selector for gold,
- * and generates loot onto the selected token's actor.
+ * Shows configured loot groups with item counts, a difficulty selector for gold.
+ * On generate: closes the window, waits for a map click, spawns a treasure token,
+ * and fills it with loot items and gold.
  */
 export class LootGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -74,18 +75,6 @@ export class LootGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onGenerate(event, target) {
     const el = this.element;
 
-    // Require a selected token
-    const token = canvas.tokens.controlled[0];
-    if (!token) {
-      ui.notifications.warn(game.i18n.localize("LOOT.Warn.NoToken"));
-      return;
-    }
-    const actor = token.actor;
-    if (!actor) {
-      ui.notifications.warn(game.i18n.localize("LOOT.Warn.NoActor"));
-      return;
-    }
-
     // Collect counts per group
     const groups = game.settings.get(MODULE_ID, "lootGroups");
     const counts = groups.map((_, i) =>
@@ -102,6 +91,35 @@ export class LootGenerator extends HandlebarsApplicationMixin(ApplicationV2) {
       return;
     }
 
-    await LootSystem.generate(this.#pack, this.#index, this.#folderMap, actor, counts, diffIndex);
+    // Find the template actor
+    const actorName = game.settings.get(MODULE_ID, "lootActorName");
+    const templateActor = game.actors.getName(actorName);
+    if (!templateActor) {
+      ui.notifications.error(
+        game.i18n.format("LOOT.Error.ActorNotFound", { name: actorName })
+      );
+      return;
+    }
+
+    // Capture references before closing
+    const pack = this.#pack;
+    const index = this.#index;
+    const folderMap = this.#folderMap;
+
+    this.close();
+    ui.notifications.info(game.i18n.localize("LOOT.Info.ClickMap"));
+
+    // Wait for a canvas click, then spawn and fill
+    const handleClick = async (event) => {
+      canvas.stage.off("mousedown", handleClick);
+      const pos = event.data.getLocalPosition(canvas.stage);
+
+      const tokenActor = await LootSystem.spawnTreasureToken(templateActor, pos);
+      if (tokenActor) {
+        await LootSystem.generate(pack, index, folderMap, tokenActor, counts, diffIndex);
+      }
+    };
+
+    canvas.stage.on("mousedown", handleClick);
   }
 }

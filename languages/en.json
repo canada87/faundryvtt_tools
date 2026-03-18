@@ -145,6 +145,8 @@
     "SettingsHint": "Configure the compendium, loot groups, gold ranges, and currency path.",
     "CompendiumName": "Compendium",
     "CompendiumHint": "The compendium name to use for loot items (e.g. Crafting & Consumables)",
+    "ActorName": "Treasure Actor Name",
+    "ActorNameHint": "Name of the world actor to use as loot container. It will be placed as a token on the map.",
     "CurrencyPath": "Currency Path",
     "CurrencyPathHint": "Dot-notation path to the currency field on the actor (e.g. system.currency.gp)",
     "LootGroups": "Loot Groups",
@@ -172,9 +174,11 @@
       "NoItemsInGroup": "No items found in group \"{name}\" folders."
     },
     "Error": {
-      "CompendiumNotFound": "Compendium \"{name}\" not found!"
+      "CompendiumNotFound": "Compendium \"{name}\" not found!",
+      "ActorNotFound": "Actor \"{name}\" not found in the world. Create an actor with that name."
     },
     "Info": {
+      "ClickMap": "Click on the map to place the treasure...",
       "ItemAdded": "Added: {name}",
       "GoldAdded": "{gold} gp added to {name}",
       "GenerationComplete": "Loot generated!",
