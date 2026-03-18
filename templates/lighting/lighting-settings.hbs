@@ -1,0 +1,78 @@
+<div class="lighting-settings-content">
+
+  <!-- ========== Presets ========== -->
+  <div class="presets-section">
+    <div class="section-header">
+      <label><strong>{{localize "LIGHTING.Presets"}}</strong></label>
+      <button type="button" data-action="addPreset" class="add-btn">
+        <i class="fas fa-plus"></i> {{localize "LIGHTING.AddPreset"}}
+      </button>
+    </div>
+    <small class="hint">{{localize "LIGHTING.PresetsSettingsHint"}}</small>
+
+    <div class="presets-table-header">
+      <span class="col-label">{{localize "LIGHTING.PresetLabel"}}</span>
+      <span class="col-icon">{{localize "LIGHTING.PresetIcon"}}</span>
+      <span class="col-num">Bright</span>
+      <span class="col-num">Dim</span>
+      <span class="col-num">Angle</span>
+      <span class="col-action"></span>
+    </div>
+
+    {{#each presets}}
+      <div class="preset-entry" data-preset-index="{{@index}}">
+        <input type="text" name="presets.{{@index}}.label"
+               value="{{this.label}}" placeholder="Torcia" class="col-label" />
+        <input type="text" name="presets.{{@index}}.icon"
+               value="{{this.icon}}" placeholder="fas fa-fire" class="col-icon" />
+        <input type="number" name="presets.{{@index}}.bright"
+               value="{{this.bright}}" min="0" class="col-num" />
+        <input type="number" name="presets.{{@index}}.dim"
+               value="{{this.dim}}" min="0" class="col-num" />
+        <input type="number" name="presets.{{@index}}.angle"
+               value="{{this.angle}}" min="0" max="360" class="col-num" />
+        <button type="button" data-action="removePreset" class="col-action"
+                title="{{localize 'LIGHTING.RemovePreset'}}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    {{/each}}
+  </div>
+
+  <hr>
+
+  <!-- ========== Darkness levels ========== -->
+  <div class="darkness-levels-section">
+    <div class="section-header">
+      <label><strong>{{localize "LIGHTING.DarknessLevels"}}</strong></label>
+      <button type="button" data-action="addDarkness" class="add-btn">
+        <i class="fas fa-plus"></i> {{localize "LIGHTING.AddDarkness"}}
+      </button>
+    </div>
+    <small class="hint">{{localize "LIGHTING.DarknessLevelsHint"}}</small>
+
+    <div class="darkness-table-header">
+      <span class="col-label">{{localize "LIGHTING.DarknessLabel"}}</span>
+      <span class="col-value">{{localize "LIGHTING.DarknessValue"}}</span>
+      <span class="col-action"></span>
+    </div>
+
+    {{#each darknessLevels}}
+      <div class="darkness-entry" data-darkness-index="{{@index}}">
+        <input type="text" name="darknessLevels.{{@index}}.label"
+               value="{{this.label}}" placeholder="50%" class="col-label" />
+        <input type="number" name="darknessLevels.{{@index}}.value"
+               value="{{this.value}}" min="0" max="1" step="0.0001" class="col-value" />
+        <button type="button" data-action="removeDarkness" class="col-action"
+                title="{{localize 'LIGHTING.RemoveDarkness'}}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    {{/each}}
+  </div>
+
+  <button type="submit" class="submit-btn">
+    <i class="fas fa-save"></i> {{localize "LIGHTING.Save"}}
+  </button>
+
+</div>

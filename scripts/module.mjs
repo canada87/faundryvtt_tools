@@ -4,6 +4,7 @@ import { initCrafting } from "./crafting/index.mjs";
 import { initEncounters } from "./encounters/index.mjs";
 import { initLoot } from "./loot/index.mjs";
 import { initParty } from "./party/index.mjs";
+import { initLighting } from "./lighting/index.mjs";
 
 /* ---------------------------------------- */
 /*  Settings menu launcher (FormApplication */
@@ -48,6 +49,7 @@ Hooks.once("init", () => {
   initEncounters();
   initLoot();
   initParty();
+  initLighting();
 
   console.log("Faundryvtt Tools | Module initialized");
 });

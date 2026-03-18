@@ -1,0 +1,222 @@
+/* ============================================ */
+/*  Lighting Control                            */
+/* ============================================ */
+
+.lighting.lighting-control .lighting-control-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lighting.lighting-control .lighting-hint {
+  display: block;
+  color: var(--color-text-dark-secondary, #666);
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+}
+
+/* --- Darkness --- */
+
+.lighting.lighting-control .darkness-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.lighting.lighting-control .darkness-row select {
+  flex: 1;
+}
+
+.lighting.lighting-control .apply-darkness-btn {
+  white-space: nowrap;
+}
+
+/* --- Custom inputs --- */
+
+.lighting.lighting-control .custom-inputs {
+  display: flex;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.lighting.lighting-control .custom-inputs .form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lighting.lighting-control .custom-inputs label {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.lighting.lighting-control .custom-inputs input[type="number"] {
+  width: 100%;
+  text-align: center;
+}
+
+.lighting.lighting-control .apply-custom-btn {
+  width: 100%;
+  margin-top: 2px;
+}
+
+/* --- Presets --- */
+
+.lighting.lighting-control .preset-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.lighting.lighting-control .preset-btn {
+  flex: 1 1 auto;
+  min-width: 120px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lighting.lighting-control .preset-btn small {
+  opacity: 0.7;
+  font-size: 0.75rem;
+}
+
+.lighting.lighting-control .off-btn {
+  background: rgba(180, 40, 40, 0.15);
+}
+
+/* --- Note --- */
+
+.lighting.lighting-control .lighting-note {
+  text-align: center;
+  color: var(--color-text-dark-secondary, #888);
+  margin-top: 4px;
+}
+
+/* ============================================ */
+/*  Lighting Settings                           */
+/* ============================================ */
+
+.lighting.lighting-settings .lighting-settings-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lighting.lighting-settings .hint {
+  font-size: 0.8rem;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.lighting.lighting-settings .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.lighting.lighting-settings .add-btn {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+}
+
+/* --- Presets table --- */
+
+.lighting.lighting-settings .presets-table-header {
+  display: flex;
+  gap: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  margin-bottom: 4px;
+}
+
+.lighting.lighting-settings .presets-table-header .col-label,
+.lighting.lighting-settings .preset-entry .col-label {
+  flex: 2;
+}
+
+.lighting.lighting-settings .presets-table-header .col-icon,
+.lighting.lighting-settings .preset-entry .col-icon {
+  flex: 2;
+}
+
+.lighting.lighting-settings .presets-table-header .col-num,
+.lighting.lighting-settings .preset-entry .col-num {
+  flex: 1;
+}
+
+.lighting.lighting-settings .presets-table-header .col-action,
+.lighting.lighting-settings .preset-entry .col-action {
+  width: 32px;
+}
+
+.lighting.lighting-settings .preset-entry {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.lighting.lighting-settings .preset-entry input[type="number"] {
+  text-align: center;
+}
+
+/* --- Darkness table --- */
+
+.lighting.lighting-settings .darkness-table-header {
+  display: flex;
+  gap: 6px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  margin-bottom: 4px;
+}
+
+.lighting.lighting-settings .darkness-table-header .col-label,
+.lighting.lighting-settings .darkness-entry .col-label {
+  flex: 2;
+}
+
+.lighting.lighting-settings .darkness-table-header .col-value,
+.lighting.lighting-settings .darkness-entry .col-value {
+  flex: 1;
+}
+
+.lighting.lighting-settings .darkness-table-header .col-action,
+.lighting.lighting-settings .darkness-entry .col-action {
+  width: 32px;
+  text-align: center;
+}
+
+.lighting.lighting-settings .darkness-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.lighting.lighting-settings .darkness-entry input[type="number"] {
+  text-align: center;
+}
+
+.lighting.lighting-settings .submit-btn {
+  margin-top: 8px;
+  align-self: flex-end;
+}

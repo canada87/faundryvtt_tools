@@ -1,0 +1,70 @@
+<div class="lighting-control-content">
+
+  <!-- ========== Darkness ========== -->
+  {{#if hasDarknessLevels}}
+    <div class="darkness-section">
+      <label><strong>{{localize "LIGHTING.Darkness"}}</strong></label>
+      <div class="darkness-row">
+        <select id="darkness-select">
+          {{#each darknessLevels}}
+            <option value="{{this.value}}">{{this.label}}</option>
+          {{/each}}
+        </select>
+        <button type="button" data-action="applyDarkness" class="apply-darkness-btn">
+          <i class="fas fa-moon"></i> {{localize "LIGHTING.ApplyDarkness"}}
+        </button>
+      </div>
+    </div>
+
+    <hr>
+  {{/if}}
+
+  <!-- ========== Custom overrides ========== -->
+  <div class="custom-section">
+    <label><strong>{{localize "LIGHTING.CustomValues"}}</strong></label>
+    <small class="lighting-hint">{{localize "LIGHTING.CustomHint"}}</small>
+    <div class="custom-inputs">
+      <div class="form-group">
+        <label>Bright</label>
+        <input type="number" id="custom-bright" placeholder="--" min="0" step="1" />
+      </div>
+      <div class="form-group">
+        <label>Dim</label>
+        <input type="number" id="custom-dim" placeholder="--" min="0" step="1" />
+      </div>
+      <div class="form-group">
+        <label>Angle</label>
+        <input type="number" id="custom-angle" placeholder="--" min="0" max="360" step="1" />
+      </div>
+    </div>
+    <button type="button" data-action="applyCustom" class="apply-custom-btn">
+      <i class="fas fa-sliders-h"></i> {{localize "LIGHTING.ApplyCustom"}}
+    </button>
+  </div>
+
+  <hr>
+
+  <!-- ========== Presets ========== -->
+  {{#if hasPresets}}
+    <div class="presets-section">
+      <label><strong>{{localize "LIGHTING.Presets"}}</strong></label>
+      <small class="lighting-hint">{{localize "LIGHTING.PresetsHint"}}</small>
+      <div class="preset-buttons">
+        {{#each presets}}
+          <button type="button" data-action="applyPreset" data-preset-index="{{this.index}}" class="preset-btn">
+            <i class="{{this.icon}}"></i> {{this.label}}
+            <small>({{this.bright}}/{{this.dim}}/{{this.angle}}°)</small>
+          </button>
+        {{/each}}
+        <button type="button" data-action="turnOff" class="preset-btn off-btn">
+          <i class="fas fa-power-off"></i> {{localize "LIGHTING.TurnOff"}}
+        </button>
+      </div>
+    </div>
+  {{/if}}
+
+  <div class="lighting-note">
+    <small><i class="fas fa-info-circle"></i> {{localize "LIGHTING.StaysOpen"}}</small>
+  </div>
+
+</div>

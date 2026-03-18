@@ -20,7 +20,8 @@
     "styles/crafting.css",
     "styles/encounters.css",
     "styles/loot.css",
-    "styles/party.css"
+    "styles/party.css",
+    "styles/lighting.css"
   ],
   "languages": [
     {

@@ -200,5 +200,45 @@
       "ClickMap": "Click on the map to place the party...",
       "Placed": "{count} tokens placed!"
     }
+  },
+  "LIGHTING": {
+    "FeatureName": "Lighting Control",
+    "FeatureDescription": "Manage token lighting and scene darkness.",
+    "ControlTitle": "Lighting Control",
+    "SettingsTitle": "Lighting Settings",
+    "OpenSettings": "Configure Lighting",
+    "SettingsHint": "Configure light presets and darkness levels.",
+    "Darkness": "Scene Darkness",
+    "ApplyDarkness": "Set",
+    "CustomValues": "Custom Light",
+    "CustomHint": "Custom override values. Leave empty to use the preset defaults.",
+    "ApplyCustom": "Apply Custom Values",
+    "Presets": "Light Presets",
+    "PresetsHint": "Click a preset to apply it to selected tokens. Custom values above take priority.",
+    "TurnOff": "Turn Off Light",
+    "StaysOpen": "This window stays open after each action.",
+    "Save": "Save",
+    "AddPreset": "Add Preset",
+    "RemovePreset": "Remove",
+    "PresetLabel": "Name",
+    "PresetIcon": "Icon",
+    "PresetsSettingsHint": "Each preset has a name, FontAwesome icon, bright, dim, and angle values.",
+    "DarknessLevels": "Darkness Levels",
+    "DarknessLevelsHint": "Darkness levels available in the control panel.",
+    "DarknessLabel": "Label",
+    "DarknessValue": "Value (0–1)",
+    "AddDarkness": "Add Level",
+    "RemoveDarkness": "Remove",
+    "Warn": {
+      "NoToken": "Select at least one token."
+    },
+    "Error": {
+      "NoScene": "No current scene found."
+    },
+    "Info": {
+      "LightUpdated": "Light updated: bright={bright}, dim={dim}, angle={angle}",
+      "DarknessSet": "Darkness set to {value}%",
+      "SettingsSaved": "Lighting settings saved."
+    }
   }
 }

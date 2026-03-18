@@ -200,5 +200,45 @@
       "ClickMap": "Clicca sulla mappa per posizionare il party...",
       "Placed": "{count} token posizionati!"
     }
+  },
+  "LIGHTING": {
+    "FeatureName": "Controllo Luci",
+    "FeatureDescription": "Gestisci l'illuminazione dei token e l'oscurità della scena.",
+    "ControlTitle": "Controllo Illuminazione",
+    "SettingsTitle": "Impostazioni Luci",
+    "OpenSettings": "Configura Luci",
+    "SettingsHint": "Configura i preset luce e i livelli di oscurità.",
+    "Darkness": "Oscurità Scena",
+    "ApplyDarkness": "Imposta",
+    "CustomValues": "Luce Personalizzata",
+    "CustomHint": "Valori personalizzati. Lasciali vuoti per usare i valori del preset.",
+    "ApplyCustom": "Applica Valori Personalizzati",
+    "Presets": "Preset Luce",
+    "PresetsHint": "Clicca un preset per applicarlo ai token selezionati. I valori personalizzati sopra hanno priorità.",
+    "TurnOff": "Spegni Luce",
+    "StaysOpen": "La finestra rimane aperta dopo ogni azione.",
+    "Save": "Salva",
+    "AddPreset": "Aggiungi Preset",
+    "RemovePreset": "Rimuovi",
+    "PresetLabel": "Nome",
+    "PresetIcon": "Icona",
+    "PresetsSettingsHint": "Ogni preset ha nome, icona FontAwesome, bright, dim e angolo.",
+    "DarknessLevels": "Livelli Oscurità",
+    "DarknessLevelsHint": "Livelli di oscurità disponibili nel pannello di controllo.",
+    "DarknessLabel": "Etichetta",
+    "DarknessValue": "Valore (0–1)",
+    "AddDarkness": "Aggiungi Livello",
+    "RemoveDarkness": "Rimuovi",
+    "Warn": {
+      "NoToken": "Seleziona almeno un token."
+    },
+    "Error": {
+      "NoScene": "Nessuna scena corrente trovata."
+    },
+    "Info": {
+      "LightUpdated": "Luce aggiornata: bright={bright}, dim={dim}, angle={angle}",
+      "DarknessSet": "Oscurità impostata a {value}%",
+      "SettingsSaved": "Impostazioni luci salvate."
+    }
   }
 }
