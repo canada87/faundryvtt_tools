@@ -114,9 +114,17 @@
     "FilterHint": "Click sinistro: Includi (blu) | Click destro: Escludi (rosso)",
     "Generate": "Scegli Posizione",
     "Save": "Salva",
+    "RandomScenario": "Genera Scenario",
+    "ScenarioLabel": "Scenario",
+    "ScenarioNone": "Clicca il pulsante per generare uno scenario casuale.",
+    "Scenarios": "Scenari Incontro",
+    "ScenariosHint": "Lista di scenari tattici da cui il generatore pesca casualmente.",
+    "AddScenario": "Aggiungi Scenario",
+    "RemoveScenario": "Rimuovi",
     "Warn": {
       "NoMonsters": "Nessun mostro trovato con i filtri attuali.",
-      "NoCompendium": "Nessun compendio configurato. Configura prima le impostazioni incontri."
+      "NoCompendium": "Nessun compendio configurato. Configura prima le impostazioni incontri.",
+      "NoScenarios": "Nessuno scenario configurato. Aggiungi scenari nelle impostazioni incontri."
     },
     "Error": {
       "CompendiumNotFound": "Compendio \"{name}\" non trovato!"

@@ -57,6 +57,14 @@ export function initEncounters() {
     default: EncounterSystem.DEFAULT_GROUPS
   });
 
+  game.settings.register(MODULE_ID, "encounterScenarios", {
+    name: "ENCOUNTERS.Scenarios",
+    scope: "world",
+    config: false,
+    type: Array,
+    default: EncounterSystem.DEFAULT_SCENARIOS
+  });
+
   game.settings.registerMenu(MODULE_ID, "encounterSettingsMenu", {
     name: "ENCOUNTERS.SettingsTitle",
     label: "ENCOUNTERS.OpenSettings",

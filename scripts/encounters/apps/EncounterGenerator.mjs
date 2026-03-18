@@ -30,7 +30,8 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
       height: 600
     },
     actions: {
-      generate: EncounterGenerator.#onGenerate
+      generate: EncounterGenerator.#onGenerate,
+      randomScenario: EncounterGenerator.#onRandomScenario
     }
   };
 
@@ -136,6 +137,34 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
   /* ---------------------------------------- */
   /*  Actions                                  */
   /* ---------------------------------------- */
+
+  static #onRandomScenario(event, target) {
+    const el = this.element;
+    const scenarios = game.settings.get(MODULE_ID, "encounterScenarios");
+    if (!scenarios?.length) {
+      ui.notifications.warn(game.i18n.localize("ENCOUNTERS.Warn.NoScenarios"));
+      return;
+    }
+    const idx = Math.floor(Math.random() * scenarios.length);
+    const scenarioText = scenarios[idx];
+
+    // Pick a random difficulty (1–5) and update the dropdown
+    const randomDiff = Math.floor(Math.random() * 5) + 1;
+    const diffSelect = el.querySelector("#difficulty");
+    if (diffSelect) {
+      diffSelect.value = String(randomDiff);
+      diffSelect.dispatchEvent(new Event("input"));
+    }
+
+    // Display the scenario
+    const resultEl = el.querySelector("#scenario-result");
+    if (resultEl) {
+      const diffLabel = diffSelect?.selectedOptions[0]?.textContent ?? "";
+      resultEl.innerHTML =
+        `<div class="scenario-text">${scenarioText}</div>` +
+        `<div class="scenario-difficulty"><strong>${game.i18n.localize("ENCOUNTERS.Difficulty")}:</strong> ${diffLabel}</div>`;
+    }
+  }
 
   static async #onGenerate(event, target) {
     const el = this.element;

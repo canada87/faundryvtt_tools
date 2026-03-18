@@ -51,6 +51,30 @@
     {{/each}}
   </div>
 
+  <hr>
+
+  <div class="scenarios-section">
+    <div class="scenarios-header">
+      <label><strong>{{localize "ENCOUNTERS.Scenarios"}}</strong></label>
+      <button type="button" data-action="addScenario" class="add-scenario-btn">
+        <i class="fas fa-plus"></i> {{localize "ENCOUNTERS.AddScenario"}}
+      </button>
+    </div>
+    <small class="hint">{{localize "ENCOUNTERS.ScenariosHint"}}</small>
+
+    <div class="scenarios-list">
+      {{#each scenarios}}
+        <div class="scenario-entry" data-scenario-index="{{@index}}">
+          <textarea name="scenarios.{{@index}}" rows="2">{{this}}</textarea>
+          <button type="button" data-action="removeScenario"
+                  title="{{localize 'ENCOUNTERS.RemoveScenario'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+
   <button type="submit" class="submit-btn">
     <i class="fas fa-save"></i> {{localize "ENCOUNTERS.Save"}}
   </button>

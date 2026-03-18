@@ -59,6 +59,48 @@
   border-color: #801a1a;
 }
 
+/* --- Scenario section --- */
+
+.encounters.encounter-generator .scenario-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.encounters.encounter-generator .scenario-btn {
+  font-weight: bold;
+  width: 100%;
+  padding: 6px;
+  font-size: 0.9rem;
+}
+
+.encounters.encounter-generator .scenario-result {
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+  border-radius: 4px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.encounters.encounter-generator .scenario-placeholder {
+  color: var(--color-text-dark-secondary, #888);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+.encounters.encounter-generator .scenario-text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.encounters.encounter-generator .scenario-difficulty {
+  font-size: 0.85rem;
+  color: var(--color-text-dark-secondary, #555);
+}
+
 /* --- Mode toggle --- */
 
 .encounters.encounter-generator .mode-toggle {
@@ -258,6 +300,49 @@
 .encounters.encounter-settings .group-entry .col-action {
   width: 32px;
   text-align: center;
+}
+
+/* --- Scenarios section --- */
+
+.encounters.encounter-settings .scenarios-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.encounters.encounter-settings .add-scenario-btn {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+}
+
+.encounters.encounter-settings .scenarios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.encounters.encounter-settings .scenario-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.encounters.encounter-settings .scenario-entry textarea {
+  flex: 1;
+  resize: vertical;
+  font-size: 0.85rem;
+}
+
+.encounters.encounter-settings .scenario-entry button {
+  flex-shrink: 0;
+  width: 32px;
+  margin-top: 2px;
 }
 
 .encounters.encounter-settings .submit-btn {

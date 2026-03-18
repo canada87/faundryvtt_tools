@@ -13,6 +13,7 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
   #creatureTypePath;
   #targetFolder;
   #groups;
+  #scenarios;
 
   static DEFAULT_OPTIONS = {
     id: "encounter-settings",
@@ -34,7 +35,9 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     },
     actions: {
       addGroup: EncounterSettings.#onAddGroup,
-      removeGroup: EncounterSettings.#onRemoveGroup
+      removeGroup: EncounterSettings.#onRemoveGroup,
+      addScenario: EncounterSettings.#onAddScenario,
+      removeScenario: EncounterSettings.#onRemoveScenario
     }
   };
 
@@ -50,6 +53,7 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     this.#creatureTypePath = game.settings.get(MODULE_ID, "encounterCreatureTypePath");
     this.#targetFolder = game.settings.get(MODULE_ID, "encounterTargetFolder");
     this.#groups = foundry.utils.deepClone(game.settings.get(MODULE_ID, "encounterGroups"));
+    this.#scenarios = foundry.utils.deepClone(game.settings.get(MODULE_ID, "encounterScenarios"));
   }
 
   /* ---------------------------------------- */
@@ -64,7 +68,8 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
       groups: this.#groups.map(g => ({
         ...g,
         foldersStr: g.folders.join(", ")
-      }))
+      })),
+      scenarios: this.#scenarios
     };
   }
 
@@ -92,6 +97,12 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
       });
     });
     this.#groups = groups;
+
+    const scenarios = [];
+    el.querySelectorAll(".scenario-entry textarea").forEach(ta => {
+      scenarios.push(ta.value);
+    });
+    this.#scenarios = scenarios;
   }
 
   /* ---------------------------------------- */
@@ -111,6 +122,19 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     this.render();
   }
 
+  static async #onAddScenario() {
+    this.#syncFormToState();
+    this.#scenarios.push("");
+    this.render();
+  }
+
+  static async #onRemoveScenario(event, target) {
+    this.#syncFormToState();
+    const index = Number(target.closest("[data-scenario-index]").dataset.scenarioIndex);
+    this.#scenarios.splice(index, 1);
+    this.render();
+  }
+
   static async #onSubmit(event, form, formData) {
     const data = foundry.utils.expandObject(formData.object);
 
@@ -127,6 +151,10 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
       }));
 
     await game.settings.set(MODULE_ID, "encounterGroups", groups);
+
+    // Parse scenarios from form data
+    const scenarios = Object.values(data.scenarios || {}).filter(s => s.trim());
+    await game.settings.set(MODULE_ID, "encounterScenarios", scenarios);
 
     ui.notifications.info(game.i18n.localize("ENCOUNTERS.Info.SettingsSaved"));
   }

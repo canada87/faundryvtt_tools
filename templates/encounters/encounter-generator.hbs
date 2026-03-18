@@ -2,6 +2,18 @@
 
   {{#if hasCompendium}}
 
+    <!-- ========== Random scenario ========== -->
+    <div class="scenario-section">
+      <button type="button" data-action="randomScenario" class="scenario-btn">
+        <i class="fas fa-theater-masks"></i> {{localize "ENCOUNTERS.RandomScenario"}}
+      </button>
+      <div class="scenario-result" id="scenario-result">
+        <span class="scenario-placeholder">{{localize "ENCOUNTERS.ScenarioNone"}}</span>
+      </div>
+    </div>
+
+    <hr>
+
     <!-- ========== Mode toggle ========== -->
     <div class="mode-toggle">
       <button type="button" class="mode-btn active" data-mode="difficulty">

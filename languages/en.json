@@ -114,9 +114,17 @@
     "FilterHint": "Left-click: Include (blue) | Right-click: Exclude (red)",
     "Generate": "Choose Position",
     "Save": "Save",
+    "RandomScenario": "Generate Scenario",
+    "ScenarioLabel": "Scenario",
+    "ScenarioNone": "Click the button to generate a random scenario.",
+    "Scenarios": "Encounter Scenarios",
+    "ScenariosHint": "List of tactical scenarios the generator randomly picks from.",
+    "AddScenario": "Add Scenario",
+    "RemoveScenario": "Remove",
     "Warn": {
       "NoMonsters": "No monsters found with the current filters.",
-      "NoCompendium": "No compendium configured. Please configure the encounter settings first."
+      "NoCompendium": "No compendium configured. Please configure the encounter settings first.",
+      "NoScenarios": "No scenarios configured. Add scenarios in the encounter settings."
     },
     "Error": {
       "CompendiumNotFound": "Compendium \"{name}\" not found!"

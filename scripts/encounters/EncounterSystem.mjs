@@ -16,6 +16,32 @@ export class EncounterSystem {
     { label: "CR 8-10", folders: ["CR8", "CR9", "CR10"] }
   ];
 
+  /**
+   * Default encounter scenarios — tactical encounter descriptions.
+   */
+  static DEFAULT_SCENARIOS = [
+    "Pochi nemici, rinforzi nemici in arrivo fra 3 turni. Fuggite.",
+    "Nemici ad ondate, rinforzi alleati in 5 turni.",
+    "Piccolo gruppo di nemici d'élite che insegue il party per catturarlo.",
+    "NPC in pericolo circondato da nemici. I nemici ignorano il party finché non interviene.",
+    "Attacco a sorpresa. Il party è in svantaggio nel primo turno.",
+    "Imboscata perfetta, party in svantaggio. Via di fuga sorvegliata da pochi nemici.",
+    "Il party ha il vantaggio della sorpresa su un obiettivo nemico isolato. Agire in silenzio.",
+    "Il party scorta un carico. I nemici puntano al carico, non al party.",
+    "Nemici deboli e numerosi. L'obiettivo è consumare risorse del party prima di un incontro più duro.",
+    "Un nemico potente ignora il party e sta distruggendo qualcosa di importante. Va fermato prima dell'ambiente, non con la forza bruta.",
+    "Il party è in inferiorità numerica. I nemici possono essere aggirati o evitati del tutto.",
+    "Combattimento facile. A metà incontro arriva qualcosa di molto più grosso.",
+    "Un nemico molto forte, da solo. Niente minion, niente fasi. Solo lui.",
+    "Rituale in corso. Il mago nemico deve perdere concentrazione entro X turni o evoca qualcosa di peggio.",
+    "Un NPC è il bersaglio di una caccia. I nemici sono già in movimento.",
+    "Nemici in ritirata con qualcosa di rubato. Inseguimento.",
+    "Nemico che si arrende e chiede aiuto. Potrebbe essere una trappola.",
+    "I nemici avanzano verso un obiettivo indifeso. Tenere la linea finché non è in salvo.",
+    "Il party stava per colpire un obiettivo nemico. Era una trappola. Ruoli invertiti.",
+    "Un gruppo d'élite nemico sta per completare una missione. Fermarlo in fretta."
+  ];
+
   /* ---------------------------------------- */
   /*  Helpers                                  */
   /* ---------------------------------------- */
