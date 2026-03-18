@@ -2,6 +2,7 @@ import { MODULE_ID } from "./shared/constants.mjs";
 import { HubMenu } from "./hub/HubMenu.mjs";
 import { initCrafting } from "./crafting/index.mjs";
 import { initEncounters } from "./encounters/index.mjs";
+import { initLoot } from "./loot/index.mjs";
 
 /* ---------------------------------------- */
 /*  Settings menu launcher (FormApplication */
@@ -44,6 +45,7 @@ Hooks.once("init", () => {
   // Initialize all features
   initCrafting();
   initEncounters();
+  initLoot();
 
   console.log("Faundryvtt Tools | Module initialized");
 });

@@ -135,5 +135,50 @@
       "SettingsSaved": "Encounter settings saved.",
       "Importing": "Importing: {name}..."
     }
+  },
+  "LOOT": {
+    "FeatureName": "Loot Generator",
+    "FeatureDescription": "Generate random loot from compendium folders and assign it to a token.",
+    "GeneratorTitle": "Loot Generator",
+    "SettingsTitle": "Loot Settings",
+    "OpenSettings": "Configure Loot",
+    "SettingsHint": "Configure the compendium, loot groups, gold ranges, and currency path.",
+    "CompendiumName": "Compendium",
+    "CompendiumHint": "The compendium name to use for loot items (e.g. Crafting & Consumables)",
+    "CurrencyPath": "Currency Path",
+    "CurrencyPathHint": "Dot-notation path to the currency field on the actor (e.g. system.currency.gp)",
+    "LootGroups": "Loot Groups",
+    "LootGroupsHint": "Set the number of items to draw from each group.",
+    "Groups": "Loot Groups",
+    "GroupsHint": "Each group has a label and a list of compendium folders to draw from.",
+    "GroupLabel": "Label",
+    "GroupFolders": "Folders",
+    "AddGroup": "Add Group",
+    "RemoveGroup": "Remove",
+    "GoldDifficulty": "Gold by Difficulty",
+    "NoGold": "No gold",
+    "Generate": "Generate Loot",
+    "Save": "Save",
+    "GoldRanges": "Gold Ranges",
+    "GoldRangesHint": "Random gold ranges per encounter difficulty tier.",
+    "RangeLabel": "Label",
+    "AddGoldRange": "Add Range",
+    "RemoveGoldRange": "Remove",
+    "Warn": {
+      "NoToken": "Select a token on the scene.",
+      "NoActor": "The selected token has no associated actor.",
+      "NothingToGenerate": "Set at least one item count or a gold difficulty.",
+      "NoCompendium": "No compendium configured. Please configure the loot settings first.",
+      "NoItemsInGroup": "No items found in group \"{name}\" folders."
+    },
+    "Error": {
+      "CompendiumNotFound": "Compendium \"{name}\" not found!"
+    },
+    "Info": {
+      "ItemAdded": "Added: {name}",
+      "GoldAdded": "{gold} gp added to {name}",
+      "GenerationComplete": "Loot generated!",
+      "SettingsSaved": "Loot settings saved."
+    }
   }
 }

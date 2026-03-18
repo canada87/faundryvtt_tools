@@ -1,0 +1,90 @@
+<div class="loot-settings-content">
+
+  <!-- ========== Compendium ========== -->
+  <div class="form-group">
+    <label>{{localize "LOOT.CompendiumName"}}</label>
+    <input type="text" name="compendium" value="{{compendium}}"
+           placeholder="Crafting & Consumables" />
+    <small class="hint">{{localize "LOOT.CompendiumHint"}}</small>
+  </div>
+
+  <!-- ========== Currency path ========== -->
+  <div class="form-group">
+    <label>{{localize "LOOT.CurrencyPath"}}</label>
+    <input type="text" name="currencyPath" value="{{currencyPath}}"
+           placeholder="system.currency.gp" />
+    <small class="hint">{{localize "LOOT.CurrencyPathHint"}}</small>
+  </div>
+
+  <hr>
+
+  <!-- ========== Loot groups ========== -->
+  <div class="groups-section">
+    <div class="section-header">
+      <label><strong>{{localize "LOOT.Groups"}}</strong></label>
+      <button type="button" data-action="addGroup" class="add-btn">
+        <i class="fas fa-plus"></i> {{localize "LOOT.AddGroup"}}
+      </button>
+    </div>
+    <small class="hint">{{localize "LOOT.GroupsHint"}}</small>
+
+    <div class="groups-table-header">
+      <span class="col-label">{{localize "LOOT.GroupLabel"}}</span>
+      <span class="col-folders">{{localize "LOOT.GroupFolders"}}</span>
+      <span class="col-action"></span>
+    </div>
+
+    {{#each groups}}
+      <div class="group-entry" data-group-index="{{@index}}">
+        <input type="text" name="groups.{{@index}}.label"
+               value="{{this.label}}" placeholder="Componenti lv1" class="col-label" />
+        <input type="text" name="groups.{{@index}}.folders"
+               value="{{this.foldersStr}}" placeholder="lv1, lv2" class="col-folders" />
+        <button type="button" data-action="removeGroup" class="col-action"
+                title="{{localize 'LOOT.RemoveGroup'}}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    {{/each}}
+  </div>
+
+  <hr>
+
+  <!-- ========== Gold ranges ========== -->
+  <div class="gold-ranges-section">
+    <div class="section-header">
+      <label><strong>{{localize "LOOT.GoldRanges"}}</strong></label>
+      <button type="button" data-action="addGoldRange" class="add-btn">
+        <i class="fas fa-plus"></i> {{localize "LOOT.AddGoldRange"}}
+      </button>
+    </div>
+    <small class="hint">{{localize "LOOT.GoldRangesHint"}}</small>
+
+    <div class="gold-ranges-table-header">
+      <span class="col-label">{{localize "LOOT.RangeLabel"}}</span>
+      <span class="col-min">Min</span>
+      <span class="col-max">Max</span>
+      <span class="col-action"></span>
+    </div>
+
+    {{#each goldRanges}}
+      <div class="gold-range-entry" data-range-index="{{@index}}">
+        <input type="text" name="goldRanges.{{@index}}.label"
+               value="{{this.label}}" placeholder="Medium" class="col-label" />
+        <input type="number" name="goldRanges.{{@index}}.min"
+               value="{{this.min}}" min="0" class="col-min" />
+        <input type="number" name="goldRanges.{{@index}}.max"
+               value="{{this.max}}" min="0" class="col-max" />
+        <button type="button" data-action="removeGoldRange" class="col-action"
+                title="{{localize 'LOOT.RemoveGoldRange'}}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    {{/each}}
+  </div>
+
+  <button type="submit" class="submit-btn">
+    <i class="fas fa-save"></i> {{localize "LOOT.Save"}}
+  </button>
+
+</div>

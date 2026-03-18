@@ -1,0 +1,216 @@
+/* ============================================ */
+/*  Loot Generator                              */
+/* ============================================ */
+
+.loot.loot-generator .loot-generator-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.loot.loot-generator .loot-hint {
+  display: block;
+  color: var(--color-text-dark-secondary, #666);
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+}
+
+/* --- Group rolls --- */
+
+.loot.loot-generator .group-rolls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.loot.loot-generator .group-roll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loot.loot-generator .group-roll label {
+  flex: 1;
+}
+
+.loot.loot-generator .group-roll input[type="number"] {
+  width: 60px;
+  text-align: center;
+}
+
+/* --- Footer --- */
+
+.loot.loot-generator .loot-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.loot.loot-generator .generate-btn {
+  font-weight: bold;
+}
+
+/* --- Empty state --- */
+
+.loot .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--color-text-dark-secondary, #666);
+  gap: 12px;
+  padding: 40px;
+}
+
+.loot .empty-state i {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+/* ============================================ */
+/*  Loot Settings                               */
+/* ============================================ */
+
+.loot.loot-settings .loot-settings-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.loot.loot-settings .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.loot.loot-settings .form-group > label {
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.loot.loot-settings .hint {
+  font-size: 0.8rem;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+/* --- Section headers --- */
+
+.loot.loot-settings .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.loot.loot-settings .add-btn {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+}
+
+/* --- Groups --- */
+
+.loot.loot-settings .groups-table-header {
+  display: flex;
+  gap: 6px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  margin-bottom: 4px;
+}
+
+.loot.loot-settings .groups-table-header .col-label {
+  flex: 1;
+}
+
+.loot.loot-settings .groups-table-header .col-folders {
+  flex: 2;
+}
+
+.loot.loot-settings .groups-table-header .col-action {
+  width: 32px;
+}
+
+.loot.loot-settings .group-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.loot.loot-settings .group-entry .col-label {
+  flex: 1;
+}
+
+.loot.loot-settings .group-entry .col-folders {
+  flex: 2;
+}
+
+.loot.loot-settings .group-entry .col-action {
+  width: 32px;
+  text-align: center;
+}
+
+/* --- Gold ranges --- */
+
+.loot.loot-settings .gold-ranges-table-header {
+  display: flex;
+  gap: 6px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  opacity: 0.7;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  margin-bottom: 4px;
+}
+
+.loot.loot-settings .gold-ranges-table-header .col-label {
+  flex: 2;
+}
+
+.loot.loot-settings .gold-ranges-table-header .col-min,
+.loot.loot-settings .gold-ranges-table-header .col-max {
+  flex: 1;
+}
+
+.loot.loot-settings .gold-ranges-table-header .col-action {
+  width: 32px;
+}
+
+.loot.loot-settings .gold-range-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.loot.loot-settings .gold-range-entry .col-label {
+  flex: 2;
+}
+
+.loot.loot-settings .gold-range-entry .col-min,
+.loot.loot-settings .gold-range-entry .col-max {
+  flex: 1;
+}
+
+.loot.loot-settings .gold-range-entry .col-action {
+  width: 32px;
+  text-align: center;
+}
+
+.loot.loot-settings .submit-btn {
+  margin-top: 8px;
+  align-self: flex-end;
+}

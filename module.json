@@ -18,7 +18,8 @@
   "styles": [
     "styles/hub.css",
     "styles/crafting.css",
-    "styles/encounters.css"
+    "styles/encounters.css",
+    "styles/loot.css"
   ],
   "languages": [
     {

@@ -1,0 +1,50 @@
+<div class="loot-generator-content">
+
+  {{#if hasCompendium}}
+
+    {{#if hasGroups}}
+      <!-- ========== Loot groups ========== -->
+      <div class="groups-section">
+        <label><strong>{{localize "LOOT.LootGroups"}}</strong></label>
+        <small class="loot-hint">{{localize "LOOT.LootGroupsHint"}}</small>
+
+        <div class="group-rolls">
+          {{#each groups}}
+            <div class="form-group group-roll">
+              <label>{{this.label}}</label>
+              <input type="number" data-group-index="{{this.index}}" value="0" min="0" />
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+
+    <!-- ========== Gold difficulty ========== -->
+    {{#if hasGoldRanges}}
+      <hr>
+      <div class="form-group">
+        <label><strong>{{localize "LOOT.GoldDifficulty"}}</strong></label>
+        <select id="gold-difficulty">
+          <option value="-1">-- {{localize "LOOT.NoGold"}} --</option>
+          {{#each goldRanges}}
+            <option value="{{this.index}}">{{this.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+    {{/if}}
+
+    <!-- ========== Generate ========== -->
+    <div class="loot-footer">
+      <button type="button" data-action="generate" class="generate-btn">
+        <i class="fas fa-coins"></i> {{localize "LOOT.Generate"}}
+      </button>
+    </div>
+
+  {{else}}
+    <div class="empty-state">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>{{localize "LOOT.Warn.NoCompendium"}}</p>
+    </div>
+  {{/if}}
+
+</div>

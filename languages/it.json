@@ -135,5 +135,50 @@
       "SettingsSaved": "Impostazioni incontri salvate.",
       "Importing": "Importazione: {name}..."
     }
+  },
+  "LOOT": {
+    "FeatureName": "Generatore Loot",
+    "FeatureDescription": "Genera loot casuale da cartelle di un compendio e assegnalo a un token.",
+    "GeneratorTitle": "Generatore Loot",
+    "SettingsTitle": "Impostazioni Loot",
+    "OpenSettings": "Configura Loot",
+    "SettingsHint": "Configura il compendio, i gruppi loot, i range di oro e il percorso valuta.",
+    "CompendiumName": "Compendio",
+    "CompendiumHint": "Il nome del compendio da usare per gli oggetti loot (es. Crafting & Consumables)",
+    "CurrencyPath": "Percorso Valuta",
+    "CurrencyPathHint": "Percorso dot-notation al campo valuta sull'attore (es. system.currency.gp)",
+    "LootGroups": "Gruppi Loot",
+    "LootGroupsHint": "Imposta il numero di oggetti da estrarre per ogni gruppo.",
+    "Groups": "Gruppi Loot",
+    "GroupsHint": "Ogni gruppo ha un'etichetta e una lista di cartelle del compendio da cui pescare.",
+    "GroupLabel": "Etichetta",
+    "GroupFolders": "Cartelle",
+    "AddGroup": "Aggiungi Gruppo",
+    "RemoveGroup": "Rimuovi",
+    "GoldDifficulty": "Oro per Difficoltà",
+    "NoGold": "Nessun oro",
+    "Generate": "Genera Loot",
+    "Save": "Salva",
+    "GoldRanges": "Range Oro",
+    "GoldRangesHint": "Fasce di oro casuale per livello di difficoltà incontro.",
+    "RangeLabel": "Etichetta",
+    "AddGoldRange": "Aggiungi Fascia",
+    "RemoveGoldRange": "Rimuovi",
+    "Warn": {
+      "NoToken": "Seleziona un token sulla scena.",
+      "NoActor": "Il token selezionato non ha un attore associato.",
+      "NothingToGenerate": "Imposta almeno un oggetto o una difficoltà per l'oro.",
+      "NoCompendium": "Nessun compendio configurato. Configura prima le impostazioni loot.",
+      "NoItemsInGroup": "Nessun oggetto trovato nelle cartelle del gruppo \"{name}\"."
+    },
+    "Error": {
+      "CompendiumNotFound": "Compendio \"{name}\" non trovato!"
+    },
+    "Info": {
+      "ItemAdded": "Aggiunto: {name}",
+      "GoldAdded": "{gold} gp aggiunti a {name}",
+      "GenerationComplete": "Loot generato!",
+      "SettingsSaved": "Impostazioni loot salvate."
+    }
   }
 }
