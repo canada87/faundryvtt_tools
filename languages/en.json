@@ -255,5 +255,49 @@
     "Warn": {
       "NoImage": "No image source found."
     }
+  },
+  "SAVING_THROW": {
+    "FeatureName": "Saving Throw",
+    "FeatureDescription": "Request saving throws from players with customizable DC and group modes.",
+    "RequestTitle": "Saving Throw Request",
+    "ResultsTitle": "Saving Throw Results",
+    "DC": "DC",
+    "ShowDC": "Show DC to players",
+    "Visible": "visible",
+    "Hidden": "hidden",
+    "ModeLabel": "Mode",
+    "Players": "Players",
+    "SelectAll": "All",
+    "SelectNone": "None",
+    "RequestRoll": "Request Roll",
+    "Cancel": "Cancel",
+    "NewRequest": "New Request",
+    "Success": "Success",
+    "Failure": "Failure",
+    "GroupSuccess": "Success",
+    "GroupFailure": "Failure",
+    "Understood": "Understood",
+    "Waiting": "Waiting for rolls...",
+    "RequiredSuccesses": "Required Successes",
+    "RequiredSuccessesShort": "required",
+    "RequiredCount": "{count} required",
+    "Mode": {
+      "individual": "Individual",
+      "groupAny": "Group (Any Success)",
+      "groupMajority": "Group (Majority)",
+      "groupAll": "Group (All Must Succeed)",
+      "groupCustom": "Group (Custom Threshold)"
+    },
+    "Chat": {
+      "RollNow": "Make your saving throw roll!"
+    },
+    "Warn": {
+      "NoPlayersSelected": "Select at least one player.",
+      "NoPlayers": "No active players with assigned characters found.",
+      "SessionActive": "A saving throw session is already active."
+    },
+    "Info": {
+      "RollRecorded": "Roll recorded: {result}"
+    }
   }
 }

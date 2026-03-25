@@ -6,6 +6,7 @@ import { initLoot } from "./loot/index.mjs";
 import { initParty } from "./party/index.mjs";
 import { initLighting } from "./lighting/index.mjs";
 import { initImageShare } from "./image-share/index.mjs";
+import { initSavingThrow } from "./saving-throw/index.mjs";
 
 /* ---------------------------------------- */
 /*  Settings menu launcher (FormApplication */
@@ -52,6 +53,7 @@ Hooks.once("init", () => {
   initParty();
   initLighting();
   initImageShare();
+  initSavingThrow();
 
   console.log("Faundryvtt Tools | Module initialized");
 });

@@ -24,10 +24,16 @@ scripts/
     apps/
       EncounterGenerator.mjs — UI GM: filtro tipi, selezione per gruppo CR, genera
       EncounterSettings.mjs  — UI GM: configura compendio, campo tipo, cartella, gruppi
+  saving-throw/
+    index.mjs              — Init della feature tiro salvezza (socket, hooks, API)
+    SavingThrowSystem.mjs  — Logica core: sessioni, intercettazione tiri, valutazione
+    apps/
+      SavingThrowRequest.mjs — UI GM: selezione giocatori, CD, modalità, risultati live
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
   encounters.css           — Stili di tutte le UI incontri
+  saving-throw.css         — Stili UI tiro salvezza e messaggi chat
 templates/
   hub-menu.hbs             — Template hub
   crafting/
@@ -37,6 +43,8 @@ templates/
   encounters/
     encounter-generator.hbs — Template generatore incontri
     encounter-settings.hbs  — Template impostazioni incontri
+  saving-throw/
+    saving-throw-request.hbs — Template richiesta tiro salvezza
 languages/
   en.json                  — Traduzioni inglese
   it.json                  — Traduzioni italiano

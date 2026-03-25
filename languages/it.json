@@ -255,5 +255,49 @@
     "Warn": {
       "NoImage": "Nessuna immagine trovata."
     }
+  },
+  "SAVING_THROW": {
+    "FeatureName": "Tiro Salvezza",
+    "FeatureDescription": "Richiedi tiri salvezza ai giocatori con CD personalizzabile e modalità di gruppo.",
+    "RequestTitle": "Richiesta Tiro Salvezza",
+    "ResultsTitle": "Risultati Tiro Salvezza",
+    "DC": "CD",
+    "ShowDC": "Mostra CD ai giocatori",
+    "Visible": "visibile",
+    "Hidden": "nascosta",
+    "ModeLabel": "Modalità",
+    "Players": "Giocatori",
+    "SelectAll": "Tutti",
+    "SelectNone": "Nessuno",
+    "RequestRoll": "Richiedi Tiro",
+    "Cancel": "Annulla",
+    "NewRequest": "Nuova Richiesta",
+    "Success": "Successo",
+    "Failure": "Fallimento",
+    "GroupSuccess": "Successo",
+    "GroupFailure": "Fallimento",
+    "Understood": "Capito",
+    "Waiting": "In attesa dei tiri...",
+    "RequiredSuccesses": "Successi Richiesti",
+    "RequiredSuccessesShort": "richiesti",
+    "RequiredCount": "{count} richiesti",
+    "Mode": {
+      "individual": "Individuale",
+      "groupAny": "Gruppo (Almeno Uno)",
+      "groupMajority": "Gruppo (Maggioranza)",
+      "groupAll": "Gruppo (Tutti)",
+      "groupCustom": "Gruppo (Soglia Personalizzata)"
+    },
+    "Chat": {
+      "RollNow": "Effettua il tuo tiro salvezza!"
+    },
+    "Warn": {
+      "NoPlayersSelected": "Seleziona almeno un giocatore.",
+      "NoPlayers": "Nessun giocatore attivo con personaggio assegnato trovato.",
+      "SessionActive": "Una sessione di tiro salvezza è già attiva."
+    },
+    "Info": {
+      "RollRecorded": "Tiro registrato: {result}"
+    }
   }
 }

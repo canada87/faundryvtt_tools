@@ -1,0 +1,135 @@
+<div class="st-content">
+  {{#if session}}
+    {{!-- Active session view --}}
+    <div class="st-session-info">
+      <div class="st-info-item">
+        <strong>{{localize "SAVING_THROW.DC"}}:</strong> {{session.dc}}
+        {{#if session.dcVisible}}
+          <span class="st-tag visible">{{localize "SAVING_THROW.Visible"}}</span>
+        {{else}}
+          <span class="st-tag hidden">{{localize "SAVING_THROW.Hidden"}}</span>
+        {{/if}}
+      </div>
+      <div class="st-info-item">
+        <strong>{{localize "SAVING_THROW.ModeLabel"}}:</strong> {{session.modeLabel}}
+        {{#if session.requiredSuccesses}}
+          <span class="st-required-tag">{{localize "SAVING_THROW.RequiredSuccessesShort"}}: {{session.requiredSuccesses}}</span>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="st-player-list">
+      {{#each session.players}}
+        <div class="st-player-row {{#if this.result}}rolled{{/if}} {{#if this.success}}success{{/if}} {{#unless this.success}}{{#if this.result}}failure{{/if}}{{/unless}}">
+          <img src="{{this.characterImg}}" width="36" height="36" />
+          <span class="st-player-name">{{this.characterName}}</span>
+          {{#if this.result}}
+            <span class="st-roll-result">{{this.result}}</span>
+            {{#if this.success}}
+              <i class="fas fa-check st-icon success"></i>
+            {{else}}
+              <i class="fas fa-times st-icon failure"></i>
+            {{/if}}
+          {{else}}
+            <span class="st-waiting"><i class="fas fa-hourglass-half"></i></span>
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
+
+    <div class="st-status">
+      {{#if session.resolved}}
+        {{#if session.isGroupMode}}
+          {{#if session.groupSuccess}}
+            <div class="st-group-result success">
+              <i class="fas fa-check-circle"></i> {{session.modeLabel}}: {{localize "SAVING_THROW.GroupSuccess"}} ({{session.successCount}}/{{session.totalCount}})
+              {{#if session.requiredSuccesses}}
+                <span class="st-required-note">— {{localize "SAVING_THROW.RequiredSuccessesShort"}}: {{session.requiredSuccesses}}</span>
+              {{/if}}
+            </div>
+          {{else}}
+            <div class="st-group-result failure">
+              <i class="fas fa-times-circle"></i> {{session.modeLabel}}: {{localize "SAVING_THROW.GroupFailure"}} ({{session.successCount}}/{{session.totalCount}})
+              {{#if session.requiredSuccesses}}
+                <span class="st-required-note">— {{localize "SAVING_THROW.RequiredSuccessesShort"}}: {{session.requiredSuccesses}}</span>
+              {{/if}}
+            </div>
+          {{/if}}
+        {{/if}}
+      {{else}}
+        <p class="st-waiting-text">
+          <i class="fas fa-hourglass-half"></i>
+          {{localize "SAVING_THROW.Waiting"}} ({{session.rolledCount}}/{{session.totalCount}})
+        </p>
+      {{/if}}
+    </div>
+
+    <div class="st-actions">
+      {{#if session.resolved}}
+        <button type="button" data-action="newRequest">
+          <i class="fas fa-redo"></i> {{localize "SAVING_THROW.NewRequest"}}
+        </button>
+      {{else}}
+        <button type="button" data-action="cancelSession">
+          <i class="fas fa-times"></i> {{localize "SAVING_THROW.Cancel"}}
+        </button>
+      {{/if}}
+    </div>
+
+  {{else}}
+    {{!-- Setup form --}}
+    {{#if hasPlayers}}
+      <div class="st-form">
+        <div class="st-dc-section">
+          <div class="form-group">
+            <label>{{localize "SAVING_THROW.DC"}}</label>
+            <input type="number" name="dc" value="15" min="1" max="99" />
+          </div>
+          <div class="form-group">
+            <label class="checkbox">
+              <input type="checkbox" name="dcVisible" checked />
+              {{localize "SAVING_THROW.ShowDC"}}
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "SAVING_THROW.ModeLabel"}}</label>
+          <select name="mode">
+            {{#each modes}}
+              <option value="{{this.value}}">{{this.label}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="form-group st-custom-threshold" style="display: none;">
+          <label>{{localize "SAVING_THROW.RequiredSuccesses"}}</label>
+          <input type="number" name="requiredSuccesses" value="1" min="1" />
+        </div>
+
+        <div class="st-player-section">
+          <div class="st-player-header">
+            <label>{{localize "SAVING_THROW.Players"}}</label>
+            <div class="st-select-buttons">
+              <button type="button" data-action="selectAll">{{localize "SAVING_THROW.SelectAll"}}</button>
+              <button type="button" data-action="selectNone">{{localize "SAVING_THROW.SelectNone"}}</button>
+            </div>
+          </div>
+          {{#each players}}
+            <label class="st-player-option">
+              <input type="checkbox" name="player" value="{{this.userId}}" checked />
+              <img src="{{this.characterImg}}" width="32" height="32" />
+              <span>{{this.characterName}} <small>({{this.playerName}})</small></span>
+            </label>
+          {{/each}}
+        </div>
+
+        <button type="button" data-action="requestRoll" class="st-request-btn">
+          <i class="fas fa-dice-d20"></i> {{localize "SAVING_THROW.RequestRoll"}}
+        </button>
+      </div>
+    {{else}}
+      <p class="st-empty">{{localize "SAVING_THROW.Warn.NoPlayers"}}</p>
+    {{/if}}
+  {{/if}}
+</div>

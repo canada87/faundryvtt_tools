@@ -22,7 +22,8 @@
     "styles/loot.css",
     "styles/party.css",
     "styles/lighting.css",
-    "styles/image-share.css"
+    "styles/image-share.css",
+    "styles/saving-throw.css"
   ],
   "languages": [
     {

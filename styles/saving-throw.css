@@ -1,0 +1,365 @@
+/* ---------------------------------------- */
+/*  Saving Throw Request — App              */
+/* ---------------------------------------- */
+
+.faundryvtt-tools.saving-throw-request .st-content {
+  padding: 8px;
+}
+
+/* Setup form */
+.faundryvtt-tools.saving-throw-request .st-dc-section {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-dc-section .form-group {
+  margin-bottom: 0;
+}
+
+.faundryvtt-tools.saving-throw-request .st-dc-section input[type="number"] {
+  width: 60px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-section {
+  margin: 12px 0;
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-select-buttons button {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  margin-left: 4px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-option:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-option img {
+  border-radius: 50%;
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-option small {
+  opacity: 0.7;
+}
+
+.faundryvtt-tools.saving-throw-request .st-request-btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Active session info */
+.faundryvtt-tools.saving-throw-request .st-session-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.faundryvtt-tools.saving-throw-request .st-tag {
+  font-size: 0.75rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 4px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-tag.visible {
+  background: rgba(45, 143, 45, 0.15);
+  color: #2d8f2d;
+}
+
+.faundryvtt-tools.saving-throw-request .st-tag.hidden {
+  background: rgba(204, 68, 68, 0.15);
+  color: #c44;
+}
+
+/* Player list (active session) */
+.faundryvtt-tools.saving-throw-request .st-player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.03);
+  border-left: 3px solid #999;
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-row img {
+  border-radius: 50%;
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-row.rolled.success {
+  border-left-color: #2d8f2d;
+  background: rgba(45, 143, 45, 0.08);
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-row.rolled.failure {
+  border-left-color: #c44;
+  background: rgba(204, 68, 68, 0.08);
+}
+
+.faundryvtt-tools.saving-throw-request .st-player-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.faundryvtt-tools.saving-throw-request .st-roll-result {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.faundryvtt-tools.saving-throw-request .st-icon.success {
+  color: #2d8f2d;
+}
+
+.faundryvtt-tools.saving-throw-request .st-icon.failure {
+  color: #c44;
+}
+
+.faundryvtt-tools.saving-throw-request .st-waiting {
+  opacity: 0.5;
+}
+
+/* Status area */
+.faundryvtt-tools.saving-throw-request .st-status {
+  margin: 8px 0;
+}
+
+.faundryvtt-tools.saving-throw-request .st-waiting-text {
+  text-align: center;
+  opacity: 0.7;
+  font-style: italic;
+  padding: 4px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-group-result {
+  text-align: center;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.faundryvtt-tools.saving-throw-request .st-group-result.success {
+  background: rgba(45, 143, 45, 0.15);
+  color: #2d8f2d;
+}
+
+.faundryvtt-tools.saving-throw-request .st-group-result.failure {
+  background: rgba(204, 68, 68, 0.15);
+  color: #c44;
+}
+
+/* Actions */
+.faundryvtt-tools.saving-throw-request .st-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-actions button {
+  flex: 1;
+}
+
+.faundryvtt-tools.saving-throw-request .st-empty {
+  text-align: center;
+  opacity: 0.7;
+  padding: 20px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-required-tag {
+  font-size: 0.8em;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-required-note {
+  font-size: 0.85em;
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+.faundryvtt-tools.saving-throw-request .st-custom-threshold {
+  margin-bottom: 8px;
+}
+
+.faundryvtt-tools.saving-throw-request .st-custom-threshold input[type="number"] {
+  width: 60px;
+}
+
+/* ---------------------------------------- */
+/*  Saving Throw — Chat Messages            */
+/* ---------------------------------------- */
+
+.saving-throw-chat {
+  padding: 4px;
+}
+
+.saving-throw-chat.request {
+  text-align: center;
+}
+
+.saving-throw-chat.request h3 {
+  color: var(--color-text-dark-primary, #191813);
+}
+
+.saving-throw-chat.results h3 {
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  padding-bottom: 4px;
+}
+
+.saving-throw-chat .st-results-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0;
+}
+
+.saving-throw-chat .st-result-entry {
+  padding: 3px 0;
+}
+
+.saving-throw-chat .st-result-entry.success i {
+  color: #2d8f2d;
+}
+
+.saving-throw-chat .st-result-entry.failure i {
+  color: #c44;
+}
+
+.saving-throw-chat .st-group-result {
+  margin-top: 6px;
+  padding: 6px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.saving-throw-chat .st-group-result.success {
+  background: rgba(45, 143, 45, 0.15);
+  color: #2d8f2d;
+}
+
+.saving-throw-chat .st-group-result.failure {
+  background: rgba(204, 68, 68, 0.15);
+  color: #c44;
+}
+
+/* ---------------------------------------- */
+/*  Saving Throw — Player Dialog            */
+/* ---------------------------------------- */
+
+.saving-throw-dialog {
+  text-align: center;
+  padding: 8px;
+}
+
+.saving-throw-dialog i.fa-2x {
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+/* ---------------------------------------- */
+/*  Saving Throw — Results Popup (players)  */
+/* ---------------------------------------- */
+
+.saving-throw-results-popup {
+  padding: 4px;
+}
+
+.saving-throw-results-popup h3 {
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  padding-bottom: 6px;
+}
+
+.saving-throw-results-popup .st-player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.saving-throw-results-popup .st-player-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.03);
+  border-left: 3px solid #999;
+}
+
+.saving-throw-results-popup .st-player-row.rolled.success {
+  border-left-color: #2d8f2d;
+  background: rgba(45, 143, 45, 0.08);
+}
+
+.saving-throw-results-popup .st-player-row.rolled.failure {
+  border-left-color: #c44;
+  background: rgba(204, 68, 68, 0.08);
+}
+
+.saving-throw-results-popup .st-player-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.saving-throw-results-popup .st-roll-result {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.saving-throw-results-popup .st-icon.success {
+  color: #2d8f2d;
+}
+
+.saving-throw-results-popup .st-icon.failure {
+  color: #c44;
+}
+
+.saving-throw-results-popup .st-group-result {
+  text-align: center;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.saving-throw-results-popup .st-group-result.success {
+  background: rgba(45, 143, 45, 0.15);
+  color: #2d8f2d;
+}
+
+.saving-throw-results-popup .st-group-result.failure {
+  background: rgba(204, 68, 68, 0.15);
+  color: #c44;
+}
