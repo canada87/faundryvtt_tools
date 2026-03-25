@@ -240,5 +240,14 @@
       "DarknessSet": "Darkness set to {value}%",
       "SettingsSaved": "Lighting settings saved."
     }
+  },
+  "IMAGE_SHARE": {
+    "FeatureName": "Fullscreen Image Share",
+    "FeatureDescription": "Share images as fullscreen overlays visible to all connected players.",
+    "ShareFullscreen": "Share Fullscreen",
+    "StopSharing": "Stop Sharing",
+    "Warn": {
+      "NoImage": "No image source found."
+    }
   }
 }

@@ -22,7 +22,8 @@
       "Bash(node --check scripts/lighting/LightingSystem.mjs)",
       "Bash(node --check scripts/lighting/index.mjs)",
       "Bash(node --check scripts/lighting/apps/LightingControl.mjs)",
-      "Bash(node --check scripts/lighting/apps/LightingSettings.mjs)"
+      "Bash(node --check scripts/lighting/apps/LightingSettings.mjs)",
+      "Bash(curl -s -L https://foundryvtt.com/api/classes/foundry.applications.api.ApplicationV2.html)"
     ]
   }
 }

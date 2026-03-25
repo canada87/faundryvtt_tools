@@ -240,5 +240,14 @@
       "DarknessSet": "Oscurità impostata a {value}%",
       "SettingsSaved": "Impostazioni luci salvate."
     }
+  },
+  "IMAGE_SHARE": {
+    "FeatureName": "Condivisione Immagine",
+    "FeatureDescription": "Condividi immagini a schermo intero visibili a tutti i giocatori connessi.",
+    "ShareFullscreen": "Condividi a Schermo Intero",
+    "StopSharing": "Interrompi Condivisione",
+    "Warn": {
+      "NoImage": "Nessuna immagine trovata."
+    }
   }
 }
