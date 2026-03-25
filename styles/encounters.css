@@ -216,6 +216,116 @@
 }
 
 /* ============================================ */
+/*  Encounter Preview                           */
+/* ============================================ */
+
+.encounters.encounter-preview .encounter-preview-content {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
+.encounters.encounter-preview .preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+}
+
+.encounters.encounter-preview .preview-count {
+  font-size: 0.9rem;
+}
+
+.encounters.encounter-preview .reroll-all-btn {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+}
+
+.encounters.encounter-preview .preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 80px;
+}
+
+.encounters.encounter-preview .preview-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: background 0.15s;
+}
+
+.encounters.encounter-preview .preview-entry:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.encounters.encounter-preview .preview-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid var(--color-border-light-tertiary, #999);
+  flex-shrink: 0;
+}
+
+.encounters.encounter-preview .preview-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.encounters.encounter-preview .preview-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.encounters.encounter-preview .preview-folder {
+  font-size: 0.75rem;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.encounters.encounter-preview .preview-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.encounters.encounter-preview .preview-actions button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  border-radius: 3px;
+}
+
+.encounters.encounter-preview .preview-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-border-light-tertiary, #ccc);
+}
+
+.encounters.encounter-preview .confirm-btn {
+  font-weight: bold;
+}
+
+/* ============================================ */
 /*  Encounter Settings                          */
 /* ============================================ */
 

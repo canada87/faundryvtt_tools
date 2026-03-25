@@ -1,5 +1,6 @@
 import { MODULE_ID } from "../../shared/constants.mjs";
 import { EncounterSystem } from "../EncounterSystem.mjs";
+import { EncounterPreview } from "./EncounterPreview.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -180,6 +181,7 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
     // Determine active mode
     const activeMode = el.querySelector(".mode-btn.active")?.dataset.mode ?? "difficulty";
     let drawn;
+    let drawContext;
 
     if (activeMode === "difficulty") {
       const partyLevel = Math.max(1, Number(el.querySelector("#party-level")?.value) || 1);
@@ -191,6 +193,16 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
         partyLevel, partySize, difficulty,
         typePath, includedTypes, excludedTypes
       );
+
+      drawContext = {
+        mode: "difficulty",
+        index: this.#index,
+        folderMap: this.#folderMap,
+        groups, typePath,
+        included: includedTypes,
+        excluded: excludedTypes,
+        partyLevel, partySize, difficulty
+      };
     } else {
       // Manual mode
       const counts = groups.map((_, i) =>
@@ -200,6 +212,16 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
         this.#index, this.#folderMap, groups, counts,
         typePath, includedTypes, excludedTypes
       );
+
+      drawContext = {
+        mode: "manual",
+        index: this.#index,
+        folderMap: this.#folderMap,
+        groups, typePath,
+        included: includedTypes,
+        excluded: excludedTypes,
+        counts
+      };
     }
 
     if (drawn.length === 0) {
@@ -207,19 +229,8 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
       return;
     }
 
-    // Capture reference before closing
-    const pack = this.#pack;
+    // Open preview window and close generator
     this.close();
-
-    ui.notifications.info(game.i18n.localize("ENCOUNTERS.Info.ClickMap"));
-
-    // Wait for a canvas click, then spawn
-    const handleClick = async event => {
-      canvas.stage.off("mousedown", handleClick);
-      const pos = event.data.getLocalPosition(canvas.stage);
-      await EncounterSystem.spawnEncounter(pack, drawn, pos);
-    };
-
-    canvas.stage.on("mousedown", handleClick);
+    new EncounterPreview(this.#pack, drawn, drawContext).render(true);
   }
 }

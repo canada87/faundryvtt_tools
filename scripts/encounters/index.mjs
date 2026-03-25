@@ -2,6 +2,7 @@ import { MODULE_ID } from "../shared/constants.mjs";
 import { HubMenu } from "../hub/HubMenu.mjs";
 import { EncounterSystem } from "./EncounterSystem.mjs";
 import { EncounterGenerator } from "./apps/EncounterGenerator.mjs";
+import { EncounterPreview } from "./apps/EncounterPreview.mjs";
 import { EncounterSettings } from "./apps/EncounterSettings.mjs";
 
 class EncounterSettingsLauncher extends FormApplication {
@@ -89,6 +90,7 @@ export function initEncounters() {
   game.faundryvttTools.encounters = {
     EncounterSystem,
     EncounterGenerator,
+    EncounterPreview,
     EncounterSettings,
     openGenerator() {
       new EncounterGenerator().render(true);

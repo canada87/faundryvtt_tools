@@ -1,0 +1,47 @@
+<div class="encounter-preview-content">
+
+  {{#if hasMonsters}}
+
+    <div class="preview-header">
+      <span class="preview-count">
+        {{localize "ENCOUNTERS.PreviewCount"}}: <strong>{{count}}</strong>
+      </span>
+      <button type="button" data-action="rerollAll" class="reroll-all-btn">
+        <i class="fas fa-dice"></i> {{localize "ENCOUNTERS.RerollAll"}}
+      </button>
+    </div>
+
+    <div class="preview-list">
+      {{#each monsters}}
+        <div class="preview-entry" data-index="{{this.index}}">
+          <img src="{{this.img}}" class="preview-img" />
+          <div class="preview-info">
+            <span class="preview-name">{{this.name}}</span>
+            <span class="preview-folder">{{this.folder}}</span>
+          </div>
+          <div class="preview-actions">
+            <button type="button" data-action="rerollOne" title="{{localize 'ENCOUNTERS.RerollOne'}}">
+              <i class="fas fa-dice"></i>
+            </button>
+            <button type="button" data-action="removeOne" title="{{localize 'ENCOUNTERS.RemoveOne'}}">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    <div class="preview-footer">
+      <button type="button" data-action="confirmEncounter" class="confirm-btn">
+        <i class="fas fa-map-marked-alt"></i> {{localize "ENCOUNTERS.ConfirmPlace"}}
+      </button>
+    </div>
+
+  {{else}}
+    <div class="empty-state">
+      <i class="fas fa-ghost"></i>
+      <p>{{localize "ENCOUNTERS.Warn.NoMonsters"}}</p>
+    </div>
+  {{/if}}
+
+</div>
