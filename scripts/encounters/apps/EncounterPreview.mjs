@@ -56,18 +56,18 @@ export class EncounterPreview extends HandlebarsApplicationMixin(ApplicationV2) 
   /* ---------------------------------------- */
 
   async _prepareContext(options) {
-    const folderIdToName = new Map();
-    for (const [name, id] of this.#drawContext.folderMap) {
-      folderIdToName.set(id, name);
-    }
+    const ctx = this.#drawContext;
 
     return {
-      monsters: this.#drawn.map((entry, i) => ({
-        index: i,
-        name: entry.name,
-        img: entry.img,
-        folder: folderIdToName.get(entry.folder) || ""
-      })),
+      monsters: this.#drawn.map((entry, i) => {
+        const level = Number(EncounterSystem.getNestedValue(entry, ctx.levelPath));
+        return {
+          index: i,
+          name: entry.name,
+          img: entry.img,
+          level: isNaN(level) ? "?" : level
+        };
+      }),
       count: this.#drawn.length,
       hasMonsters: this.#drawn.length > 0
     };
@@ -78,12 +78,15 @@ export class EncounterPreview extends HandlebarsApplicationMixin(ApplicationV2) 
   /* ---------------------------------------- */
 
   /**
-   * Get filtered candidates from the same folder as the given entry.
+   * Get filtered candidates with the same level as the given entry.
    */
   #getCandidatesForEntry(entry) {
     const ctx = this.#drawContext;
+    const entryLevel = Number(EncounterSystem.getNestedValue(entry, ctx.levelPath));
+
     return ctx.index.filter(i => {
-      if (i.folder !== entry.folder) return false;
+      const level = Number(EncounterSystem.getNestedValue(i, ctx.levelPath));
+      if (isNaN(level) || level !== entryLevel) return false;
       const type = EncounterSystem.getNestedValue(i, ctx.typePath)?.trim();
       if (!type) return false;
       if (ctx.excluded.includes(type)) return false;
@@ -127,14 +130,14 @@ export class EncounterPreview extends HandlebarsApplicationMixin(ApplicationV2) 
 
     if (ctx.mode === "difficulty") {
       drawn = EncounterSystem.drawByDifficulty(
-        ctx.index, ctx.folderMap, ctx.groups,
+        ctx.index, ctx.groups,
         ctx.partyLevel, ctx.partySize, ctx.difficulty,
-        ctx.typePath, ctx.included, ctx.excluded
+        ctx.typePath, ctx.levelPath, ctx.included, ctx.excluded
       );
     } else {
       drawn = EncounterSystem.drawMonsters(
-        ctx.index, ctx.folderMap, ctx.groups, ctx.counts,
-        ctx.typePath, ctx.included, ctx.excluded
+        ctx.index, ctx.groups, ctx.counts,
+        ctx.typePath, ctx.levelPath, ctx.included, ctx.excluded
       );
     }
 

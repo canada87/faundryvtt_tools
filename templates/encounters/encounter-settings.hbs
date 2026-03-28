@@ -15,6 +15,13 @@
   </div>
 
   <div class="form-group">
+    <label>{{localize "ENCOUNTERS.LevelPath"}}</label>
+    <input type="text" name="levelPath" value="{{levelPath}}"
+           placeholder="system.details.level" />
+    <small class="hint">{{localize "ENCOUNTERS.LevelPathHint"}}</small>
+  </div>
+
+  <div class="form-group">
     <label>{{localize "ENCOUNTERS.TargetFolder"}}</label>
     <input type="text" name="targetFolder" value="{{targetFolder}}"
            placeholder="mostri" />
@@ -33,7 +40,8 @@
 
     <div class="groups-table-header">
       <span class="col-label">{{localize "ENCOUNTERS.GroupLabel"}}</span>
-      <span class="col-folders">{{localize "ENCOUNTERS.GroupFolders"}}</span>
+      <span class="col-level">{{localize "ENCOUNTERS.GroupMinLevel"}}</span>
+      <span class="col-level">{{localize "ENCOUNTERS.GroupMaxLevel"}}</span>
       <span class="col-action"></span>
     </div>
 
@@ -41,8 +49,10 @@
       <div class="group-entry" data-group-index="{{@index}}">
         <input type="text" name="groups.{{@index}}.label"
                value="{{this.label}}" placeholder="CR 1-2" class="col-label" />
-        <input type="text" name="groups.{{@index}}.folders"
-               value="{{this.foldersStr}}" placeholder="CR1, CR2" class="col-folders" />
+        <input type="number" name="groups.{{@index}}.minLevel"
+               value="{{this.minLevel}}" min="0" class="col-level" />
+        <input type="number" name="groups.{{@index}}.maxLevel"
+               value="{{this.maxLevel}}" min="0" class="col-level" />
         <button type="button" data-action="removeGroup" class="col-action"
                 title="{{localize 'ENCOUNTERS.RemoveGroup'}}">
           <i class="fas fa-trash"></i>

@@ -55,7 +55,7 @@
     <div class="mode-section manual-section" style="display: none;">
       {{#each groups}}
         <div class="form-group group-input">
-          <label><strong>{{this.label}}</strong></label>
+          <label><strong>{{this.label}}</strong> <small>(Lv {{this.minLevel}}–{{this.maxLevel}})</small></label>
           <input type="number" data-group-index="{{@index}}" value="0" min="0" />
         </div>
       {{/each}}

@@ -292,7 +292,7 @@
   text-overflow: ellipsis;
 }
 
-.encounters.encounter-preview .preview-folder {
+.encounters.encounter-preview .preview-level {
   font-size: 0.75rem;
   color: var(--color-text-dark-secondary, #666);
 }
@@ -381,8 +381,9 @@
   flex: 1;
 }
 
-.encounters.encounter-settings .groups-table-header .col-folders {
-  flex: 2;
+.encounters.encounter-settings .groups-table-header .col-level {
+  width: 70px;
+  text-align: center;
 }
 
 .encounters.encounter-settings .groups-table-header .col-action {
@@ -403,8 +404,9 @@
   flex: 1;
 }
 
-.encounters.encounter-settings .group-entry .col-folders {
-  flex: 2;
+.encounters.encounter-settings .group-entry .col-level {
+  width: 70px;
+  text-align: center;
 }
 
 .encounters.encounter-settings .group-entry .col-action {

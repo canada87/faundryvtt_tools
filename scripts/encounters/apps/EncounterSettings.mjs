@@ -4,13 +4,14 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
  * GM form for configuring encounter settings:
- * compendium, creature-type field path, target folder, and CR groups.
+ * compendium, creature-type field path, level field path, target folder, and CR groups.
  */
 export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /** Local form state (survives add/remove group re-renders) */
   #compendium;
   #creatureTypePath;
+  #levelPath;
   #targetFolder;
   #groups;
   #scenarios;
@@ -51,6 +52,7 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     super(options);
     this.#compendium = game.settings.get(MODULE_ID, "encounterCompendium");
     this.#creatureTypePath = game.settings.get(MODULE_ID, "encounterCreatureTypePath");
+    this.#levelPath = game.settings.get(MODULE_ID, "encounterLevelPath");
     this.#targetFolder = game.settings.get(MODULE_ID, "encounterTargetFolder");
     this.#groups = foundry.utils.deepClone(game.settings.get(MODULE_ID, "encounterGroups"));
     this.#scenarios = foundry.utils.deepClone(game.settings.get(MODULE_ID, "encounterScenarios"));
@@ -64,11 +66,9 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     return {
       compendium: this.#compendium,
       creatureTypePath: this.#creatureTypePath,
+      levelPath: this.#levelPath,
       targetFolder: this.#targetFolder,
-      groups: this.#groups.map(g => ({
-        ...g,
-        foldersStr: g.folders.join(", ")
-      })),
+      groups: this.#groups,
       scenarios: this.#scenarios
     };
   }
@@ -85,15 +85,18 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     const el = this.element;
     this.#compendium = el.querySelector('[name="compendium"]')?.value ?? this.#compendium;
     this.#creatureTypePath = el.querySelector('[name="creatureTypePath"]')?.value ?? this.#creatureTypePath;
+    this.#levelPath = el.querySelector('[name="levelPath"]')?.value ?? this.#levelPath;
     this.#targetFolder = el.querySelector('[name="targetFolder"]')?.value ?? this.#targetFolder;
 
     const groups = [];
     el.querySelectorAll(".group-entry").forEach(entry => {
       const label = entry.querySelector('input[name$=".label"]')?.value || "";
-      const folders = entry.querySelector('input[name$=".folders"]')?.value || "";
+      const minLevel = Number(entry.querySelector('input[name$=".minLevel"]')?.value) || 0;
+      const maxLevel = Number(entry.querySelector('input[name$=".maxLevel"]')?.value) || 0;
       groups.push({
         label: label.trim(),
-        folders: folders.split(",").map(s => s.trim()).filter(Boolean)
+        minLevel,
+        maxLevel
       });
     });
     this.#groups = groups;
@@ -111,7 +114,7 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
 
   static async #onAddGroup() {
     this.#syncFormToState();
-    this.#groups.push({ label: "", folders: [] });
+    this.#groups.push({ label: "", minLevel: 1, maxLevel: 1 });
     this.render();
   }
 
@@ -140,6 +143,7 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
 
     await game.settings.set(MODULE_ID, "encounterCompendium", data.compendium || "");
     await game.settings.set(MODULE_ID, "encounterCreatureTypePath", data.creatureTypePath || "");
+    await game.settings.set(MODULE_ID, "encounterLevelPath", data.levelPath || "");
     await game.settings.set(MODULE_ID, "encounterTargetFolder", data.targetFolder || "");
 
     // Parse groups from form data
@@ -147,7 +151,8 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
       .filter(g => g.label?.trim())
       .map(g => ({
         label: g.label.trim(),
-        folders: g.folders.split(",").map(s => s.trim()).filter(Boolean)
+        minLevel: Number(g.minLevel) || 0,
+        maxLevel: Number(g.maxLevel) || 0
       }));
 
     await game.settings.set(MODULE_ID, "encounterGroups", groups);

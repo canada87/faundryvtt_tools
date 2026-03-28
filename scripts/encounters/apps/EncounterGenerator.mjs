@@ -16,7 +16,6 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
   /** Cached compendium data */
   #pack = null;
   #index = null;
-  #folderMap = null;
 
   static DEFAULT_OPTIONS = {
     id: "encounter-generator",
@@ -48,6 +47,7 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
 
   async _prepareContext(options) {
     const typePath = game.settings.get(MODULE_ID, "encounterCreatureTypePath");
+    const levelPath = game.settings.get(MODULE_ID, "encounterLevelPath");
     const groups = game.settings.get(MODULE_ID, "encounterGroups");
 
     const data = await EncounterSystem.loadCompendium();
@@ -57,10 +57,9 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
 
     this.#pack = data.pack;
     this.#index = data.index;
-    this.#folderMap = data.folderMap;
 
     const types = EncounterSystem.extractCreatureTypes(
-      data.index, data.folderMap, groups, typePath
+      data.index, groups, typePath, levelPath
     );
 
     return {
@@ -170,6 +169,7 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
   static async #onGenerate(event, target) {
     const el = this.element;
     const typePath = game.settings.get(MODULE_ID, "encounterCreatureTypePath");
+    const levelPath = game.settings.get(MODULE_ID, "encounterLevelPath");
     const groups = game.settings.get(MODULE_ID, "encounterGroups");
 
     // Collect type filters (shared by both modes)
@@ -189,16 +189,15 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
       const difficulty = Number(el.querySelector("#difficulty")?.value) || 4;
 
       drawn = EncounterSystem.drawByDifficulty(
-        this.#index, this.#folderMap, groups,
+        this.#index, groups,
         partyLevel, partySize, difficulty,
-        typePath, includedTypes, excludedTypes
+        typePath, levelPath, includedTypes, excludedTypes
       );
 
       drawContext = {
         mode: "difficulty",
         index: this.#index,
-        folderMap: this.#folderMap,
-        groups, typePath,
+        groups, typePath, levelPath,
         included: includedTypes,
         excluded: excludedTypes,
         partyLevel, partySize, difficulty
@@ -209,15 +208,14 @@ export class EncounterGenerator extends HandlebarsApplicationMixin(ApplicationV2
         Number(el.querySelector(`input[data-group-index="${i}"]`)?.value) || 0
       );
       drawn = EncounterSystem.drawMonsters(
-        this.#index, this.#folderMap, groups, counts,
-        typePath, includedTypes, excludedTypes
+        this.#index, groups, counts,
+        typePath, levelPath, includedTypes, excludedTypes
       );
 
       drawContext = {
         mode: "manual",
         index: this.#index,
-        folderMap: this.#folderMap,
-        groups, typePath,
+        groups, typePath, levelPath,
         included: includedTypes,
         excluded: excludedTypes,
         counts

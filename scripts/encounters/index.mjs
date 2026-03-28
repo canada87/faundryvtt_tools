@@ -41,6 +41,15 @@ export function initEncounters() {
     default: "system.details.creatureType"
   });
 
+  game.settings.register(MODULE_ID, "encounterLevelPath", {
+    name: "ENCOUNTERS.LevelPath",
+    hint: "ENCOUNTERS.LevelPathHint",
+    scope: "world",
+    config: false,
+    type: String,
+    default: "system.details.level"
+  });
+
   game.settings.register(MODULE_ID, "encounterTargetFolder", {
     name: "ENCOUNTERS.TargetFolder",
     hint: "ENCOUNTERS.TargetFolderHint",

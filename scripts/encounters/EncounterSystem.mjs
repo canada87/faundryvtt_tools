@@ -3,17 +3,20 @@ import { MODULE_ID } from "../shared/constants.mjs";
 /**
  * Core logic for the Random Encounters feature.
  * Handles compendium loading, type extraction, filtering, and token spawning.
+ *
+ * Monster levels are read from a configurable actor field (e.g. system.details.level)
+ * instead of relying on the compendium folder structure.
  */
 export class EncounterSystem {
 
   /**
-   * Default CR groups — matches the compendium folder structure.
+   * Default CR groups — level ranges.
    */
   static DEFAULT_GROUPS = [
-    { label: "CR 1-2", folders: ["CR1", "CR2"] },
-    { label: "CR 3-4", folders: ["CR3", "CR4"] },
-    { label: "CR 5-6", folders: ["CR5", "CR6"] },
-    { label: "CR 8-10", folders: ["CR8", "CR9", "CR10"] }
+    { label: "CR 1-2", minLevel: 1, maxLevel: 2 },
+    { label: "CR 3-4", minLevel: 3, maxLevel: 4 },
+    { label: "CR 5-6", minLevel: 5, maxLevel: 6 },
+    { label: "CR 8-10", minLevel: 8, maxLevel: 10 }
   ];
 
   /**
@@ -57,17 +60,19 @@ export class EncounterSystem {
   }
 
   /**
-   * Return index entries whose `folder` matches one of the given folder names.
+   * Return index entries whose actor level falls within the given range.
+   * @param {Array}  index     Compendium index entries
+   * @param {string} levelPath Dot-path to the level field
+   * @param {number} minLevel
+   * @param {number} maxLevel
+   * @returns {Array}
    */
-  static getEntriesFromFolders(index, folderMap, folderNames) {
-    const entries = [];
-    for (const name of folderNames) {
-      const folderId = folderMap.get(name);
-      if (folderId) {
-        entries.push(...index.filter(i => i.folder === folderId));
-      }
-    }
-    return entries;
+  static getEntriesByLevelRange(index, levelPath, minLevel, maxLevel) {
+    return index.filter(entry => {
+      const level = Number(this.getNestedValue(entry, levelPath));
+      if (isNaN(level)) return false;
+      return level >= minLevel && level <= maxLevel;
+    });
   }
 
   /* ---------------------------------------- */
@@ -75,12 +80,13 @@ export class EncounterSystem {
   /* ---------------------------------------- */
 
   /**
-   * Load the compendium index and build a folder map.
-   * @returns {{ pack, index, folderMap: Map<string,string> } | null}
+   * Load the compendium index with type and level fields.
+   * @returns {{ pack, index } | null}
    */
   static async loadCompendium() {
     const compendiumName = game.settings.get(MODULE_ID, "encounterCompendium");
     const typePath = game.settings.get(MODULE_ID, "encounterCreatureTypePath");
+    const levelPath = game.settings.get(MODULE_ID, "encounterLevelPath");
 
     const pack = game.packs.get(compendiumName);
     if (!pack) {
@@ -90,21 +96,18 @@ export class EncounterSystem {
       return null;
     }
 
-    const index = await pack.getIndex({ fields: [typePath] });
+    const index = await pack.getIndex({ fields: [typePath, levelPath] });
 
-    const folderMap = new Map();
-    pack.folders.forEach(f => folderMap.set(f.name, f.id));
-
-    return { pack, index, folderMap };
+    return { pack, index };
   }
 
   /**
-   * Extract all unique creature types from the configured groups.
+   * Extract all unique creature types from entries that fall within configured groups.
    */
-  static extractCreatureTypes(index, folderMap, groups, typePath) {
+  static extractCreatureTypes(index, groups, typePath, levelPath) {
     const allTypes = new Set();
     for (const group of groups) {
-      const entries = this.getEntriesFromFolders(index, folderMap, group.folders);
+      const entries = this.getEntriesByLevelRange(index, levelPath, group.minLevel, group.maxLevel);
       for (const entry of entries) {
         const type = this.getNestedValue(entry, typePath);
         if (type) allTypes.add(String(type).trim());
@@ -159,64 +162,43 @@ export class EncounterSystem {
   }
 
   /**
-   * Extract the numeric level from a compendium folder name (e.g. "CR5" → 5).
-   * Returns null when no number is found.
-   */
-  static extractFolderLevel(folderName) {
-    const match = folderName.match(/(\d+)/);
-    return match ? parseInt(match[1]) : null;
-  }
-
-  /**
    * Draw monsters based on party parameters and difficulty.
    * Monsters are picked randomly until the point budget is met or exceeded.
-   * Each monster costs points equal to the level of its compendium folder.
+   * Each monster costs points equal to its actor level.
    *
    * @param {Array}    index        Compendium index entries
-   * @param {Map}      folderMap    folder-name → folder-id
-   * @param {Array}    groups       CR group definitions (to enumerate all known folders)
+   * @param {Array}    groups       CR group definitions (used to enumerate all known level ranges)
    * @param {number}   partyLevel
    * @param {number}   partySize
    * @param {number}   difficulty   1–5
    * @param {string}   typePath     Dot-path to creature type field
+   * @param {string}   levelPath    Dot-path to level field
    * @param {string[]} included     Included types (empty = all)
    * @param {string[]} excluded     Excluded types
    * @returns {Array}               Drawn index entries
    */
   static drawByDifficulty(
-    index, folderMap, groups,
+    index, groups,
     partyLevel, partySize, difficulty,
-    typePath, included, excluded
+    typePath, levelPath, included, excluded
   ) {
     const budget = this.calculateBudget(partyLevel, partySize, difficulty);
     const { min, max } = this.calculateLevelRange(partyLevel, difficulty);
 
-    // Collect candidates from all group folders whose level falls in range
+    // Collect candidates: entries whose level falls within the difficulty range
     const allCandidates = [];   // { entry, level }
 
-    for (const group of groups) {
-      for (const folderName of group.folders) {
-        const level = this.extractFolderLevel(folderName);
-        if (level === null || level < min || level > max) continue;
+    for (const entry of index) {
+      const level = Number(this.getNestedValue(entry, levelPath));
+      if (isNaN(level) || level < min || level > max) continue;
 
-        const folderId = folderMap.get(folderName);
-        if (!folderId) continue;
+      // Apply type filters
+      const type = this.getNestedValue(entry, typePath)?.trim();
+      if (!type) continue;
+      if (excluded.includes(type)) continue;
+      if (included.length > 0 && !included.includes(type)) continue;
 
-        let entries = index.filter(i => i.folder === folderId);
-
-        // Apply type filters
-        entries = entries.filter(entry => {
-          const type = this.getNestedValue(entry, typePath)?.trim();
-          if (!type) return false;
-          if (excluded.includes(type)) return false;
-          if (included.length > 0 && !included.includes(type)) return false;
-          return true;
-        });
-
-        for (const entry of entries) {
-          allCandidates.push({ entry, level });
-        }
-      }
+      allCandidates.push({ entry, level });
     }
 
     if (allCandidates.length === 0) return [];
@@ -240,23 +222,25 @@ export class EncounterSystem {
 
   /**
    * Randomly draw monsters from the index, respecting filters.
-   * @param {Array} index           Compendium index entries
-   * @param {Map}   folderMap       folder-name → folder-id
-   * @param {Array} groups          CR group definitions
+   * @param {Array}    index        Compendium index entries
+   * @param {Array}    groups       CR group definitions (level ranges)
    * @param {number[]} counts       How many to draw from each group
-   * @param {string} typePath       Dot-path to creature type field
+   * @param {string}   typePath     Dot-path to creature type field
+   * @param {string}   levelPath    Dot-path to level field
    * @param {string[]} included     Included types (empty = all allowed)
    * @param {string[]} excluded     Excluded types
    * @returns {Array}               Drawn index entries
    */
-  static drawMonsters(index, folderMap, groups, counts, typePath, included, excluded) {
+  static drawMonsters(index, groups, counts, typePath, levelPath, included, excluded) {
     const drawn = [];
 
     for (let i = 0; i < groups.length; i++) {
       const count = counts[i];
       if (count <= 0) continue;
 
-      let candidates = this.getEntriesFromFolders(index, folderMap, groups[i].folders);
+      let candidates = this.getEntriesByLevelRange(
+        index, levelPath, groups[i].minLevel, groups[i].maxLevel
+      );
 
       // Apply type filters
       candidates = candidates.filter(entry => {
