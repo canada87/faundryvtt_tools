@@ -259,6 +259,43 @@
       "NoImage": "Nessuna immagine trovata."
     }
   },
+  "MINDMAP": {
+    "FeatureName": "Mappa Mentale",
+    "FeatureDescription": "Lavagna visiva per mappare relazioni tra journal, PNG, luoghi ed eventi.",
+    "AppTitle": "Mappa Mentale",
+    "DefaultBoardName": "Nuova Lavagna",
+    "NewBoard": "Nuova Lavagna",
+    "RenameBoard": "Rinomina Lavagna",
+    "DeleteBoard": "Elimina Lavagna",
+    "ConnectMode": "Modalità Connessione",
+    "AddNote": "Aggiungi Nota",
+    "NodeColor": "Colore Nodo",
+    "ZoomIn": "Zoom Avanti",
+    "ZoomOut": "Zoom Indietro",
+    "FitView": "Adatta Tutto",
+    "Connect": "Connetti",
+    "EmptyHint": "Trascina journal, attori o oggetti dalla sidebar per costruire la tua mappa mentale.",
+    "EditNote": "Modifica Nota",
+    "ChangeColor": "Cambia Colore",
+    "CustomColor": "Colore Personalizzato",
+    "RenameNode": "Rinomina",
+    "OpenJournal": "Apri Journal",
+    "RemoveNode": "Rimuovi",
+    "EditLabel": "Modifica Etichetta",
+    "LabelPlaceholder": "es. alleato di, si trova a...",
+    "ConnectionColor": "Colore Connessione",
+    "ToggleStyle": "Alterna Continua / Tratteggiata",
+    "ToggleArrow": "Alterna Freccia",
+    "RemoveConnection": "Rimuovi Connessione",
+    "NotePlaceholder": "Testo nota...",
+    "Confirm": {
+      "DeleteBoard": "Eliminare la lavagna \"{name}\" e tutto il suo contenuto?"
+    },
+    "Status": {
+      "ConnectMode": "Modalità connessione attiva — clicca un nodo per iniziare",
+      "SourceSelected": "Nodo sorgente selezionato — clicca un altro nodo per collegarlo"
+    }
+  },
   "SAVING_THROW": {
     "FeatureName": "Tiro Salvezza",
     "FeatureDescription": "Richiedi tiri salvezza ai giocatori con CD personalizzabile e modalità di gruppo.",

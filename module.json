@@ -23,7 +23,8 @@
     "styles/party.css",
     "styles/lighting.css",
     "styles/image-share.css",
-    "styles/saving-throw.css"
+    "styles/saving-throw.css",
+    "styles/mindmap.css"
   ],
   "languages": [
     {

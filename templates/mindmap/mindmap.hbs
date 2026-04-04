@@ -1,0 +1,62 @@
+<div class="mindmap-content">
+
+  {{!-- Toolbar --}}
+  <div class="mindmap-toolbar">
+    <div class="toolbar-section">
+      <select class="board-selector"></select>
+      <button type="button" data-action="newBoard" title="{{localize 'MINDMAP.NewBoard'}}">
+        <i class="fas fa-plus"></i>
+      </button>
+      <button type="button" data-action="renameBoard" title="{{localize 'MINDMAP.RenameBoard'}}">
+        <i class="fas fa-pen"></i>
+      </button>
+      <button type="button" data-action="deleteBoard" title="{{localize 'MINDMAP.DeleteBoard'}}">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+
+    <div class="toolbar-section toolbar-center">
+      <button type="button" data-action="toggleConnect" class="connect-btn" title="{{localize 'MINDMAP.ConnectMode'}}">
+        <i class="fas fa-project-diagram"></i>
+      </button>
+      <button type="button" data-action="addNote" title="{{localize 'MINDMAP.AddNote'}}">
+        <i class="fas fa-sticky-note"></i>
+      </button>
+      <input type="color" class="node-color-picker" value="#4a90d9" title="{{localize 'MINDMAP.NodeColor'}}">
+    </div>
+
+    <div class="toolbar-section toolbar-right">
+      <button type="button" data-action="zoomIn" title="{{localize 'MINDMAP.ZoomIn'}}">
+        <i class="fas fa-search-plus"></i>
+      </button>
+      <span class="zoom-level">100%</span>
+      <button type="button" data-action="zoomOut" title="{{localize 'MINDMAP.ZoomOut'}}">
+        <i class="fas fa-search-minus"></i>
+      </button>
+      <button type="button" data-action="fitView" title="{{localize 'MINDMAP.FitView'}}">
+        <i class="fas fa-expand"></i>
+      </button>
+    </div>
+  </div>
+
+  {{!-- Canvas --}}
+  <div class="mindmap-canvas">
+    <div class="mindmap-viewport">
+      <svg class="mindmap-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="mindmap-nodes"></div>
+    </div>
+
+    {{!-- Empty state --}}
+    <div class="mindmap-empty-state">
+      <i class="fas fa-project-diagram"></i>
+      <p>{{localize "MINDMAP.EmptyHint"}}</p>
+    </div>
+
+    {{!-- Context menu (populated by JS) --}}
+    <div class="mindmap-context-menu"></div>
+
+    {{!-- Status bar (shown in connect mode) --}}
+    <div class="mindmap-status-bar" style="display:none;"></div>
+  </div>
+
+</div>

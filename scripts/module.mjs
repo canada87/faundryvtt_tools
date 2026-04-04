@@ -7,6 +7,7 @@ import { initParty } from "./party/index.mjs";
 import { initLighting } from "./lighting/index.mjs";
 import { initImageShare } from "./image-share/index.mjs";
 import { initSavingThrow } from "./saving-throw/index.mjs";
+import { initMindMap } from "./mindmap/index.mjs";
 
 /* ---------------------------------------- */
 /*  Settings menu launcher (FormApplication */
@@ -54,6 +55,7 @@ Hooks.once("init", () => {
   initLighting();
   initImageShare();
   initSavingThrow();
+  initMindMap();
 
   console.log("Faundryvtt Tools | Module initialized");
 });

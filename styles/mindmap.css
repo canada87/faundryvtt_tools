@@ -1,0 +1,329 @@
+/* ========================================
+   Mind Map — Application
+   ======================================== */
+
+.mindmap .window-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.mindmap-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---- Toolbar ---- */
+
+.mindmap-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--color-border-light-primary);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.mindmap-toolbar .toolbar-section {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mindmap-toolbar .toolbar-right {
+  margin-left: auto;
+}
+
+.mindmap-toolbar select.board-selector {
+  max-width: 160px;
+  height: 26px;
+}
+
+.mindmap-toolbar button {
+  height: 26px;
+  min-width: 26px;
+  padding: 0 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+
+.mindmap-toolbar .connect-btn.active {
+  background: var(--color-shadow-primary);
+  color: var(--color-text-light-highlight);
+  border-color: var(--color-shadow-primary);
+}
+
+.mindmap-toolbar .node-color-picker {
+  width: 26px;
+  height: 26px;
+  padding: 1px;
+  border: 1px solid var(--color-border-light-primary);
+  border-radius: 3px;
+  cursor: pointer;
+  background: none;
+}
+
+.mindmap-toolbar .zoom-level {
+  display: inline-block;
+  min-width: 42px;
+  text-align: center;
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+/* ---- Canvas ---- */
+
+.mindmap-canvas {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+  background-color: #1a1a2e;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.mindmap-viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+/* ---- SVG layer ---- */
+
+.mindmap-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Large explicit size so hit-testing works across the whole board.
+     overflow:visible handles content beyond 20000px. */
+  width: 20000px;
+  height: 20000px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.mindmap-svg .mindmap-connection {
+  pointer-events: auto;
+}
+
+.mindmap-svg .connection-label {
+  font-size: 11px;
+  font-family: var(--font-primary);
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: #1a1a2e;
+  stroke-width: 3px;
+}
+
+/* ---- Nodes ---- */
+
+.mindmap-nodes {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mindmap-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px 6px;
+  background: #2a2a3e;
+  border: 2px solid #4a90d9;
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.15s, transform 0.1s;
+  min-width: 80px;
+  color: #e0e0e0;
+}
+
+.mindmap-node:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.mindmap-node.dragging {
+  opacity: 0.85;
+  cursor: grabbing;
+  z-index: 100;
+  transform: scale(1.04);
+}
+
+.mindmap-node.connect-source {
+  box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.6), 0 0 16px rgba(74, 144, 217, 0.4);
+}
+
+.mindmap-node .node-color-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 6px 6px 0 0;
+}
+
+.mindmap-node .node-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.mindmap-node .node-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.mindmap-node .node-name {
+  font-size: 12px;
+  font-weight: 600;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mindmap-node .node-note-indicator {
+  font-size: 10px;
+  opacity: 0.5;
+  margin-left: auto;
+}
+
+/* Note nodes (sticky-note style) */
+
+.mindmap-node.note-node {
+  background: #3a3a2e;
+  border-style: dashed;
+}
+
+/* In connect mode, all nodes show a crosshair cursor */
+.mindmap-canvas.connect-active .mindmap-node {
+  cursor: crosshair;
+}
+
+/* ---- Status bar ---- */
+
+.mindmap-status-bar {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(74, 144, 217, 0.85);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ---- Empty state ---- */
+
+.mindmap-empty-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
+
+.mindmap-empty-state i {
+  font-size: 56px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.mindmap-empty-state p {
+  font-size: 14px;
+  max-width: 260px;
+}
+
+/* ---- Context menu ---- */
+
+.mindmap-context-menu {
+  position: absolute;
+  display: none;
+  background: #2a2a3e;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  min-width: 170px;
+  padding: 4px 0;
+  color: #e0e0e0;
+}
+
+.mindmap-context-menu .context-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.1s;
+}
+
+.mindmap-context-menu .context-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mindmap-context-menu .context-item i {
+  width: 16px;
+  text-align: center;
+  opacity: 0.7;
+}
+
+/* ---- Color grid (used in dialogs) ---- */
+
+.mindmap-color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+  align-items: center;
+}
+
+.mindmap-color-grid .color-swatch {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.12s, border-color 0.12s;
+}
+
+.mindmap-color-grid .color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.mindmap-color-grid .color-swatch.active {
+  border-color: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.mindmap-color-grid .custom-color-input {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+}

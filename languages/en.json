@@ -259,6 +259,43 @@
       "NoImage": "No image source found."
     }
   },
+  "MINDMAP": {
+    "FeatureName": "Mind Map",
+    "FeatureDescription": "Visual board to map relationships between journals, NPCs, locations and events.",
+    "AppTitle": "Mind Map",
+    "DefaultBoardName": "New Board",
+    "NewBoard": "New Board",
+    "RenameBoard": "Rename Board",
+    "DeleteBoard": "Delete Board",
+    "ConnectMode": "Connect Mode",
+    "AddNote": "Add Note",
+    "NodeColor": "Node Color",
+    "ZoomIn": "Zoom In",
+    "ZoomOut": "Zoom Out",
+    "FitView": "Fit All",
+    "Connect": "Connect",
+    "EmptyHint": "Drag journals, actors or items from the sidebar to build your mind map.",
+    "EditNote": "Edit Note",
+    "ChangeColor": "Change Color",
+    "CustomColor": "Custom Color",
+    "RenameNode": "Rename",
+    "OpenJournal": "Open Journal",
+    "RemoveNode": "Remove",
+    "EditLabel": "Edit Label",
+    "LabelPlaceholder": "e.g. allied with, located in...",
+    "ConnectionColor": "Connection Color",
+    "ToggleStyle": "Toggle Solid / Dashed",
+    "ToggleArrow": "Toggle Arrow",
+    "RemoveConnection": "Remove Connection",
+    "NotePlaceholder": "Note text...",
+    "Confirm": {
+      "DeleteBoard": "Delete the board \"{name}\" and all its contents?"
+    },
+    "Status": {
+      "ConnectMode": "Connect mode active — click a node to start a connection",
+      "SourceSelected": "Source selected — click another node to complete the connection"
+    }
+  },
   "SAVING_THROW": {
     "FeatureName": "Saving Throw",
     "FeatureDescription": "Request saving throws from players with customizable DC and group modes.",

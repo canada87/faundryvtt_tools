@@ -29,11 +29,17 @@ scripts/
     SavingThrowSystem.mjs  — Logica core: sessioni, intercettazione tiri, valutazione
     apps/
       SavingThrowRequest.mjs — UI GM: selezione giocatori, CD, modalità, risultati live
+  mindmap/
+    index.mjs              — Init della feature mind map (settings, API)
+    MindMapSystem.mjs      — Logica core: CRUD lavagne, nodi, connessioni
+    apps/
+      MindMapApp.mjs       — UI GM: lavagna interattiva con pan/zoom, drag-and-drop, connessioni SVG
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
   encounters.css           — Stili di tutte le UI incontri
   saving-throw.css         — Stili UI tiro salvezza e messaggi chat
+  mindmap.css              — Stili lavagna mind map
 templates/
   hub-menu.hbs             — Template hub
   crafting/
@@ -45,6 +51,8 @@ templates/
     encounter-settings.hbs  — Template impostazioni incontri
   saving-throw/
     saving-throw-request.hbs — Template richiesta tiro salvezza
+  mindmap/
+    mindmap.hbs              — Template lavagna mind map
 languages/
   en.json                  — Traduzioni inglese
   it.json                  — Traduzioni italiano
