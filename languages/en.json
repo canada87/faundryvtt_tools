@@ -339,5 +339,36 @@
     "Info": {
       "RollRecorded": "Roll recorded: {result}"
     }
+  },
+  "BACKUP": {
+    "FeatureName": "Backup & Restore",
+    "FeatureDescription": "Export and import a backup of all module data (recipes, mind maps, settings).",
+    "AppTitle": "Backup & Restore",
+    "SelectFeatures": "Select Features",
+    "SelectFeaturesHint": "Choose which features to include in the export / restore.",
+    "FeatureCrafting": "Crafting (recipes + rarities + actor assignments)",
+    "FeatureMindMap": "Mind Map (all boards)",
+    "FeatureEncounters": "Encounters (configuration + groups + scenarios)",
+    "FeatureLoot": "Loot (configuration + groups + gold ranges)",
+    "FeatureLighting": "Lighting (presets + darkness levels)",
+    "ExportTitle": "Export",
+    "ExportHint": "Download a .json backup file with the selected features.",
+    "Export": "Download Backup",
+    "ImportTitle": "Import",
+    "ImportHint": "Select a previously exported .json file, then click Import. This will OVERWRITE current data.",
+    "Import": "Import Backup",
+    "Confirm": {
+      "ImportTitle": "Confirm Import",
+      "ImportBody": "This operation will overwrite all current data for the selected features. Are you sure?"
+    },
+    "Warn": {
+      "NoFeatures": "Select at least one feature.",
+      "NoFile": "Select a backup file first.",
+      "PartialImport": "Import completed with {count} warning(s). Check the console for details."
+    },
+    "Info": {
+      "Exported": "Backup downloaded successfully.",
+      "Imported": "Import completed: {count} setting(s) restored."
+    }
   }
 }

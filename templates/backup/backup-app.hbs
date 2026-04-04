@@ -1,0 +1,38 @@
+<div class="backup-content">
+
+  {{!-- Feature selection --}}
+  <section class="backup-section">
+    <h3>{{localize "BACKUP.SelectFeatures"}}</h3>
+    <p class="backup-hint">{{localize "BACKUP.SelectFeaturesHint"}}</p>
+    <ul class="backup-feature-list">
+      {{#each features}}
+      <li>
+        <label>
+          <input type="checkbox" name="features" value="{{id}}" checked>
+          {{label}}
+        </label>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  {{!-- Export --}}
+  <section class="backup-section">
+    <h3>{{localize "BACKUP.ExportTitle"}}</h3>
+    <p class="backup-hint">{{localize "BACKUP.ExportHint"}}</p>
+    <button type="button" data-action="exportBackup" class="backup-btn">
+      <i class="fas fa-download"></i> {{localize "BACKUP.Export"}}
+    </button>
+  </section>
+
+  {{!-- Import --}}
+  <section class="backup-section">
+    <h3>{{localize "BACKUP.ImportTitle"}}</h3>
+    <p class="backup-hint">{{localize "BACKUP.ImportHint"}}</p>
+    <input type="file" class="backup-file-input" accept=".json">
+    <button type="button" data-action="importBackup" class="backup-btn backup-btn-danger">
+      <i class="fas fa-upload"></i> {{localize "BACKUP.Import"}}
+    </button>
+  </section>
+
+</div>

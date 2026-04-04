@@ -339,5 +339,36 @@
     "Info": {
       "RollRecorded": "Tiro registrato: {result}"
     }
+  },
+  "BACKUP": {
+    "FeatureName": "Backup & Ripristino",
+    "FeatureDescription": "Esporta e importa un backup di tutti i dati del modulo (ricette, mappe mentali, impostazioni).",
+    "AppTitle": "Backup & Ripristino",
+    "SelectFeatures": "Seleziona Funzionalità",
+    "SelectFeaturesHint": "Scegli quali funzionalità includere nell'esportazione / ripristino.",
+    "FeatureCrafting": "Crafting (ricette + rarità + assegnazioni attori)",
+    "FeatureMindMap": "Mappa Mentale (tutte le lavagne)",
+    "FeatureEncounters": "Incontri (configurazione + gruppi + scenari)",
+    "FeatureLoot": "Loot (configurazione + gruppi + fasce oro)",
+    "FeatureLighting": "Luci (preset + livelli oscurità)",
+    "ExportTitle": "Esporta",
+    "ExportHint": "Scarica un file .json di backup con le funzionalità selezionate.",
+    "Export": "Scarica Backup",
+    "ImportTitle": "Importa",
+    "ImportHint": "Seleziona un file .json esportato in precedenza, poi clicca Importa. Questa operazione SOVRASCRIVE i dati attuali.",
+    "Import": "Importa Backup",
+    "Confirm": {
+      "ImportTitle": "Conferma Importazione",
+      "ImportBody": "Questa operazione sovrascriverà tutti i dati attuali per le funzionalità selezionate. Sei sicuro?"
+    },
+    "Warn": {
+      "NoFeatures": "Seleziona almeno una funzionalità.",
+      "NoFile": "Seleziona prima un file di backup.",
+      "PartialImport": "Importazione completata con {count} avviso/i. Controlla la console per i dettagli."
+    },
+    "Info": {
+      "Exported": "Backup scaricato con successo.",
+      "Imported": "Importazione completata: {count} impostazione/i ripristinate."
+    }
   }
 }
