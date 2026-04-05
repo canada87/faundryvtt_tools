@@ -75,6 +75,10 @@
 /*  Loot Settings                               */
 /* ============================================ */
 
+.loot.loot-settings section.window-content {
+  overflow-y: auto;
+}
+
 .loot.loot-settings .loot-settings-content {
   padding: 8px;
   display: flex;

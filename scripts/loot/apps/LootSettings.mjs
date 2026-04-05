@@ -26,7 +26,7 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
     },
     position: {
       width: 520,
-      height: "auto"
+      height: 600
     },
     form: {
       submitOnChange: false,
