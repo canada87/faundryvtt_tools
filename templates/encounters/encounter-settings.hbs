@@ -63,6 +63,53 @@
 
   <hr>
 
+  <div class="difficulty-config-section">
+    <div class="groups-header">
+      <label><strong>{{localize "ENCOUNTERS.DifficultyConfig"}}</strong></label>
+    </div>
+    <small class="hint">{{localize "ENCOUNTERS.DifficultyConfigHint"}}</small>
+
+    <div class="diff-config-grid">
+      <div class="diff-config-header">
+        <span class="col-diff-label">{{localize "ENCOUNTERS.Difficulty"}}</span>
+        <span class="col-diff-mult">{{localize "ENCOUNTERS.BudgetMultiplier"}}</span>
+      </div>
+      <div class="diff-config-row">
+        <label class="col-diff-label">{{localize "ENCOUNTERS.DiffVeryLow"}}</label>
+        <input type="number" name="diffMult.veryLow" value="{{diffMult.veryLow}}"
+               step="0.1" min="0.01" class="col-diff-mult" />
+      </div>
+      <div class="diff-config-row">
+        <label class="col-diff-label">{{localize "ENCOUNTERS.DiffLow"}}</label>
+        <input type="number" name="diffMult.low" value="{{diffMult.low}}"
+               step="0.1" min="0.01" class="col-diff-mult" />
+      </div>
+      <div class="diff-config-row">
+        <label class="col-diff-label">{{localize "ENCOUNTERS.DiffMedium"}}</label>
+        <input type="number" name="diffMult.medium" value="{{diffMult.medium}}"
+               step="0.1" min="0.01" class="col-diff-mult" />
+      </div>
+      <div class="diff-config-row">
+        <label class="col-diff-label">{{localize "ENCOUNTERS.DiffHigh"}}</label>
+        <input type="number" name="diffMult.high" value="{{diffMult.high}}"
+               step="0.1" min="0.01" class="col-diff-mult" />
+      </div>
+      <div class="diff-config-row">
+        <label class="col-diff-label">{{localize "ENCOUNTERS.DiffVeryHigh"}}</label>
+        <input type="number" name="diffMult.veryHigh" value="{{diffMult.veryHigh}}"
+               step="0.1" min="0.01" class="col-diff-mult" />
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 8px;">
+      <label>{{localize "ENCOUNTERS.LevelOffset"}}</label>
+      <input type="number" name="levelOffset" value="{{levelOffset}}" step="1" />
+      <small class="hint">{{localize "ENCOUNTERS.LevelOffsetHint"}}</small>
+    </div>
+  </div>
+
+  <hr>
+
   <div class="scenarios-section">
     <div class="scenarios-header">
       <label><strong>{{localize "ENCOUNTERS.Scenarios"}}</strong></label>

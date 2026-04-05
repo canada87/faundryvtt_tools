@@ -148,6 +148,29 @@ Prima di usare il generatore, apri le **impostazioni incontri** (pulsante ingran
 
 Nella sezione **Gruppi CR** delle impostazioni puoi definire fasce di livello con etichette (es. "Deboli", "Medi", "Forti"). Il generatore in modalità manuale usa questi gruppi per selezionare quanti mostri per fascia.
 
+#### Configurazione Difficoltà
+
+Nella sezione **Configurazione Difficoltà** puoi modificare le formule che calcolano budget e range di livelli:
+
+**Moltiplicatori Budget**
+
+Il budget base è `livello party × numero giocatori`. Ogni livello di difficoltà moltiplica questo valore:
+
+| Difficoltà | Moltiplicatore default |
+|---|---|
+| Molto Bassa | `0.3` |
+| Bassa | `0.5` |
+| Media | `0.8` |
+| Alta | `1.0` |
+| Molto Alta | `1.4` |
+
+Abbassa i moltiplicatori se i tuoi mostri sono più forti del previsto, alzali se sono più deboli.
+
+**Offset Livello Mostri**
+
+Valore intero (positivo o negativo) aggiunto al range di livelli calcolato automaticamente.  
+A difficoltà "Alta" con party livello 5, il range default è `[4, 8]`. Con offset `+2` diventa `[6, 10]`, con `-1` diventa `[3, 7]`.
+
 #### Scenari
 
 Puoi aggiungere testi di scenario (es. "I mostri stanno tendendo un'imboscata") che verranno proposti casualmente con il pulsante **Scenario Casuale**.
@@ -287,7 +310,7 @@ Permette di esportare e importare i dati delle feature del modulo in un file JSO
 |---|---|
 | **Crafting** | Ricette, configurazione rarità, assegnazioni ricette per attore |
 | **Mind Map** | Tutte le lavagne con nodi e connessioni |
-| **Encounters** | Configurazione compendium, gruppi CR, scenari, path campi |
+| **Encounters** | Configurazione compendium, gruppi CR, scenari, path campi, moltiplicatori difficoltà, offset livello |
 
 ### Importare un backup
 

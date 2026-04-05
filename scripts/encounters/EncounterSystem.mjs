@@ -134,11 +134,17 @@ export class EncounterSystem {
   /**
    * Calculate the encounter point budget.
    * High = partySize × partyLevel; other difficulties scale from there.
-   * Always rounds up.
+   * Always rounds up. Multipliers are loaded from settings if available.
    */
   static calculateBudget(partyLevel, partySize, difficulty) {
     const highBudget = partySize * partyLevel;
-    const multiplier = this.DIFFICULTY_MULTIPLIERS[difficulty] ?? 1.0;
+    let multiplier;
+    try {
+      const mults = game.settings.get(MODULE_ID, "encounterDifficultyMultipliers");
+      multiplier = mults?.[difficulty - 1] ?? this.DIFFICULTY_MULTIPLIERS[difficulty] ?? 1.0;
+    } catch {
+      multiplier = this.DIFFICULTY_MULTIPLIERS[difficulty] ?? 1.0;
+    }
     return Math.ceil(highBudget * multiplier);
   }
 
@@ -150,14 +156,19 @@ export class EncounterSystem {
 
   /**
    * Calculate the valid monster-level range for a given difficulty.
-   *   min = max(1, partyLevel + difficulty − 5)  — then clamped by floor
-   *   max = partyLevel + difficulty − 1
+   *   min = max(floor, partyLevel + difficulty − 5 + offset)
+   *   max = partyLevel + difficulty − 1 + offset
+   * The offset is loaded from settings (default 0).
    */
   static calculateLevelRange(partyLevel, difficulty) {
     const floor = this.DIFFICULTY_MIN_FLOORS[difficulty] ?? 1;
+    let offset = 0;
+    try {
+      offset = game.settings.get(MODULE_ID, "encounterLevelOffset") ?? 0;
+    } catch { /* settings not yet ready */ }
     return {
-      min: Math.max(floor, partyLevel + difficulty - 5),
-      max: partyLevel + difficulty - 1
+      min: Math.max(floor, partyLevel + difficulty - 5 + offset),
+      max: partyLevel + difficulty - 1 + offset
     };
   }
 

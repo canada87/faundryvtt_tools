@@ -15,6 +15,8 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
   #targetFolder;
   #groups;
   #scenarios;
+  #difficultyMultipliers;
+  #levelOffset;
 
   static DEFAULT_OPTIONS = {
     id: "encounter-settings",
@@ -27,7 +29,7 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     },
     position: {
       width: 520,
-      height: "auto"
+      height: 600
     },
     form: {
       submitOnChange: false,
@@ -56,6 +58,10 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     this.#targetFolder = game.settings.get(MODULE_ID, "encounterTargetFolder");
     this.#groups = foundry.utils.deepClone(game.settings.get(MODULE_ID, "encounterGroups"));
     this.#scenarios = foundry.utils.deepClone(game.settings.get(MODULE_ID, "encounterScenarios"));
+    this.#difficultyMultipliers = foundry.utils.deepClone(
+      game.settings.get(MODULE_ID, "encounterDifficultyMultipliers")
+    );
+    this.#levelOffset = game.settings.get(MODULE_ID, "encounterLevelOffset");
   }
 
   /* ---------------------------------------- */
@@ -63,13 +69,16 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
   /* ---------------------------------------- */
 
   async _prepareContext(options) {
+    const [m1, m2, m3, m4, m5] = this.#difficultyMultipliers;
     return {
       compendium: this.#compendium,
       creatureTypePath: this.#creatureTypePath,
       levelPath: this.#levelPath,
       targetFolder: this.#targetFolder,
       groups: this.#groups,
-      scenarios: this.#scenarios
+      scenarios: this.#scenarios,
+      diffMult: { veryLow: m1, low: m2, medium: m3, high: m4, veryHigh: m5 },
+      levelOffset: this.#levelOffset
     };
   }
 
@@ -106,6 +115,15 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
       scenarios.push(ta.value);
     });
     this.#scenarios = scenarios;
+
+    this.#difficultyMultipliers = [
+      Number(el.querySelector('[name="diffMult.veryLow"]')?.value) || 0.3,
+      Number(el.querySelector('[name="diffMult.low"]')?.value) || 0.5,
+      Number(el.querySelector('[name="diffMult.medium"]')?.value) || 0.8,
+      Number(el.querySelector('[name="diffMult.high"]')?.value) || 1.0,
+      Number(el.querySelector('[name="diffMult.veryHigh"]')?.value) || 1.4
+    ];
+    this.#levelOffset = Number(el.querySelector('[name="levelOffset"]')?.value) || 0;
   }
 
   /* ---------------------------------------- */
@@ -160,6 +178,18 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
     // Parse scenarios from form data
     const scenarios = Object.values(data.scenarios || {}).filter(s => s.trim());
     await game.settings.set(MODULE_ID, "encounterScenarios", scenarios);
+
+    // Parse difficulty multipliers
+    const dm = data.diffMult || {};
+    const multipliers = [
+      Math.max(0.01, Number(dm.veryLow) || 0.3),
+      Math.max(0.01, Number(dm.low) || 0.5),
+      Math.max(0.01, Number(dm.medium) || 0.8),
+      Math.max(0.01, Number(dm.high) || 1.0),
+      Math.max(0.01, Number(dm.veryHigh) || 1.4)
+    ];
+    await game.settings.set(MODULE_ID, "encounterDifficultyMultipliers", multipliers);
+    await game.settings.set(MODULE_ID, "encounterLevelOffset", Number(data.levelOffset) || 0);
 
     ui.notifications.info(game.i18n.localize("ENCOUNTERS.Info.SettingsSaved"));
   }

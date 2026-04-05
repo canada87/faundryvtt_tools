@@ -75,6 +75,22 @@ export function initEncounters() {
     default: EncounterSystem.DEFAULT_SCENARIOS
   });
 
+  game.settings.register(MODULE_ID, "encounterDifficultyMultipliers", {
+    name: "ENCOUNTERS.BudgetMultipliers",
+    scope: "world",
+    config: false,
+    type: Array,
+    default: [0.3, 0.5, 0.8, 1.0, 1.4]  // index 0 = Very Low (diff 1) … index 4 = Very High (diff 5)
+  });
+
+  game.settings.register(MODULE_ID, "encounterLevelOffset", {
+    name: "ENCOUNTERS.LevelOffset",
+    scope: "world",
+    config: false,
+    type: Number,
+    default: 0
+  });
+
   game.settings.registerMenu(MODULE_ID, "encounterSettingsMenu", {
     name: "ENCOUNTERS.SettingsTitle",
     label: "ENCOUNTERS.OpenSettings",
