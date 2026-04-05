@@ -262,6 +262,10 @@
   "MINDMAP": {
     "FeatureName": "Mappa Mentale",
     "FeatureDescription": "Lavagna visiva per mappare relazioni tra journal, PNG, luoghi ed eventi.",
+    "BrowserTitle": "Le mie Mappe Mentali",
+    "NoBoardsHint": "Nessuna lavagna creata. Clicca 'Nuova Lavagna' per iniziare.",
+    "Nodes": "nodi",
+    "Connections": "connessioni",
     "AppTitle": "Mappa Mentale",
     "DefaultBoardName": "Nuova Lavagna",
     "NewBoard": "Nuova Lavagna",

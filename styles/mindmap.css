@@ -1,4 +1,116 @@
 /* ========================================
+   Mind Map — Board Browser
+   ======================================== */
+
+.mindmap-browser-content {
+  padding: 16px;
+}
+
+.mindmap-browser-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.mindmap-browser-new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.mindmap-board-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.mindmap-board-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 16px 10px 10px;
+  background: var(--color-bg-option);
+  border: 1px solid var(--color-border-light-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: center;
+  overflow: hidden;
+}
+
+.mindmap-board-card:hover {
+  background: var(--color-hover-bg);
+  border-color: var(--color-border-highlight);
+}
+
+.mindmap-board-icon {
+  font-size: 2rem;
+  color: var(--color-text-primary);
+  pointer-events: none;
+}
+
+.mindmap-board-name {
+  font-size: 0.85em;
+  font-weight: 600;
+  word-break: break-word;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+.mindmap-board-meta {
+  font-size: 0.72em;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.mindmap-board-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.mindmap-board-actions button {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  padding: 0;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.1s;
+}
+
+.mindmap-board-actions button:hover {
+  opacity: 1;
+}
+
+.mindmap-browser-empty {
+  text-align: center;
+  padding: 48px 0 24px;
+  opacity: 0.5;
+}
+
+.mindmap-browser-empty i {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.mindmap-browser-empty p {
+  font-size: 13px;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+/* ========================================
    Mind Map — Application
    ======================================== */
 

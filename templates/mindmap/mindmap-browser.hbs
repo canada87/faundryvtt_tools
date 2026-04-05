@@ -1,0 +1,34 @@
+<div class="mindmap-browser-content">
+
+  <div class="mindmap-browser-header">
+    <button type="button" data-action="newBoard" class="mindmap-browser-new-btn">
+      <i class="fas fa-plus"></i> {{localize "MINDMAP.NewBoard"}}
+    </button>
+  </div>
+
+  {{#if boards.length}}
+    <div class="mindmap-board-grid">
+      {{#each boards}}
+        <div class="mindmap-board-card" data-action="openBoard" data-board-id="{{id}}">
+          <i class="fas fa-project-diagram mindmap-board-icon"></i>
+          <span class="mindmap-board-name">{{name}}</span>
+          <span class="mindmap-board-meta">{{nodeCount}} {{localize "MINDMAP.Nodes"}} · {{connectionCount}} {{localize "MINDMAP.Connections"}}</span>
+          <div class="mindmap-board-actions">
+            <button type="button" data-action="renameBoard" data-board-id="{{id}}" title="{{localize 'MINDMAP.RenameBoard'}}">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button type="button" data-action="deleteBoard" data-board-id="{{id}}" title="{{localize 'MINDMAP.DeleteBoard'}}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="mindmap-browser-empty">
+      <i class="fas fa-project-diagram"></i>
+      <p>{{localize "MINDMAP.NoBoardsHint"}}</p>
+    </div>
+  {{/if}}
+
+</div>

@@ -48,6 +48,15 @@ export class MindMapApp extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   };
 
+  constructor(options = {}) {
+    super(options);
+    if (options.boardId) {
+      this.#boardId = options.boardId;
+      const board = MindMapSystem.getBoard(options.boardId);
+      if (board?.viewport) this.#viewport = { ...board.viewport };
+    }
+  }
+
   async _prepareContext() {
     return {};
   }

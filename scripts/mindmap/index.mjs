@@ -2,6 +2,7 @@ import { MODULE_ID } from "../shared/constants.mjs";
 import { HubMenu } from "../hub/HubMenu.mjs";
 import { MindMapSystem } from "./MindMapSystem.mjs";
 import { MindMapApp } from "./apps/MindMapApp.mjs";
+import { MindMapBrowser } from "./apps/MindMapBrowser.mjs";
 
 export function initMindMap() {
 
@@ -22,7 +23,7 @@ export function initMindMap() {
     icon: "fas fa-project-diagram",
     name: "MINDMAP.FeatureName",
     description: "MINDMAP.FeatureDescription",
-    open: () => new MindMapApp().render(true)
+    open: () => new MindMapBrowser().render(true)
   });
 
   /* ---- Public API ---- */
@@ -30,8 +31,9 @@ export function initMindMap() {
   game.faundryvttTools.mindmap = {
     MindMapSystem,
     MindMapApp,
+    MindMapBrowser,
     openMindMap() {
-      new MindMapApp().render(true);
+      new MindMapBrowser().render(true);
     }
   };
 

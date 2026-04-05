@@ -262,6 +262,10 @@
   "MINDMAP": {
     "FeatureName": "Mind Map",
     "FeatureDescription": "Visual board to map relationships between journals, NPCs, locations and events.",
+    "BrowserTitle": "My Mind Maps",
+    "NoBoardsHint": "No boards created yet. Click 'New Board' to get started.",
+    "Nodes": "nodes",
+    "Connections": "connections",
     "AppTitle": "Mind Map",
     "DefaultBoardName": "New Board",
     "NewBoard": "New Board",
