@@ -329,6 +329,10 @@
 /*  Encounter Settings                          */
 /* ============================================ */
 
+.encounters.encounter-settings section.window-content {
+  overflow-y: auto;
+}
+
 .encounters.encounter-settings .encounter-settings-content {
   padding: 8px;
   display: flex;
