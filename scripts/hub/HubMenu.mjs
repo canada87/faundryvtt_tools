@@ -17,7 +17,7 @@ export class HubMenu extends HandlebarsApplicationMixin(ApplicationV2) {
       resizable: true
     },
     position: {
-      width: 420,
+      width: 600,
       height: "auto"
     },
     actions: {
