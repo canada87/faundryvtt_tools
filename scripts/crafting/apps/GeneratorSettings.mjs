@@ -5,9 +5,14 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
  * GM form for configuring the component auto-generator:
- * compendium label, components folder name, and level folder names / points.
+ * compendium label, components folder name, and level definitions (N levels, add/remove).
  */
 export class GeneratorSettings extends HandlebarsApplicationMixin(ApplicationV2) {
+
+  /** Local form state — survives add/remove level re-renders. */
+  #compendiumLabel;
+  #componentsFolder;
+  #levels;
 
   static DEFAULT_OPTIONS = {
     id: "crafting-generator-settings",
@@ -19,13 +24,17 @@ export class GeneratorSettings extends HandlebarsApplicationMixin(ApplicationV2)
       resizable: true
     },
     position: {
-      width: 480,
+      width: 500,
       height: "auto"
     },
     form: {
       submitOnChange: false,
       closeOnSubmit: true,
       handler: GeneratorSettings.#onSubmit
+    },
+    actions: {
+      addLevel: GeneratorSettings.#onAddLevel,
+      removeLevel: GeneratorSettings.#onRemoveLevel
     }
   };
 
@@ -35,37 +44,90 @@ export class GeneratorSettings extends HandlebarsApplicationMixin(ApplicationV2)
     }
   };
 
-  async _prepareContext(options) {
+  constructor(options = {}) {
+    super(options);
     const config = ComponentGenerator.getConfig();
-    const levels = Object.entries(config.levels).map(([key, data]) => ({
-      key: Number(key),
-      folderName: data.folderName,
-      points: data.points
-    }));
+    this.#compendiumLabel = config.compendiumLabel;
+    this.#componentsFolder = config.componentsFolder;
+    this.#levels = foundry.utils.deepClone(config.levels);
+  }
+
+  /* ---------------------------------------- */
+  /*  Context                                  */
+  /* ---------------------------------------- */
+
+  async _prepareContext(options) {
     return {
-      compendiumLabel: config.compendiumLabel,
-      componentsFolder: config.componentsFolder,
-      levels
+      compendiumLabel: this.#compendiumLabel,
+      componentsFolder: this.#componentsFolder,
+      levels: this.#levels.map((data, idx) => ({
+        index: idx,
+        num: idx + 1,
+        folderName: data.folderName,
+        points: data.points
+      }))
     };
   }
+
+  /* ---------------------------------------- */
+  /*  State sync                               */
+  /* ---------------------------------------- */
+
+  /**
+   * Read current DOM values into instance state before a re-render.
+   */
+  #syncFormToState() {
+    const el = this.element;
+    this.#compendiumLabel = el.querySelector('[name="compendiumLabel"]')?.value ?? this.#compendiumLabel;
+    this.#componentsFolder = el.querySelector('[name="componentsFolder"]')?.value ?? this.#componentsFolder;
+
+    const levels = [];
+    el.querySelectorAll(".level-entry").forEach(entry => {
+      levels.push({
+        folderName: entry.querySelector('[name$=".folderName"]')?.value?.trim() || "",
+        points: Math.max(1, Number(entry.querySelector('[name$=".points"]')?.value) || 1)
+      });
+    });
+    this.#levels = levels;
+  }
+
+  /* ---------------------------------------- */
+  /*  Actions                                  */
+  /* ---------------------------------------- */
+
+  static async #onAddLevel() {
+    this.#syncFormToState();
+    const nextNum = this.#levels.length + 1;
+    this.#levels.push({ folderName: `lv${nextNum}`, points: nextNum });
+    this.render();
+  }
+
+  static async #onRemoveLevel(event, target) {
+    if (this.#levels.length <= 1) return;
+    this.#syncFormToState();
+    const index = Number(target.closest("[data-level-index]").dataset.levelIndex);
+    this.#levels.splice(index, 1);
+    this.render();
+  }
+
+  /* ---------------------------------------- */
+  /*  Submit                                   */
+  /* ---------------------------------------- */
 
   static async #onSubmit(event, form, formData) {
     const data = foundry.utils.expandObject(formData.object);
     const defaults = ComponentGenerator.DEFAULT_CONFIG;
 
+    const levels = Object.values(data.levels ?? {}).map(v => ({
+      folderName: v.folderName?.trim() || "lv",
+      points: Math.max(1, Number(v.points) || 1)
+    }));
+
     const config = {
       compendiumLabel: data.compendiumLabel?.trim() || defaults.compendiumLabel,
       componentsFolder: data.componentsFolder?.trim() || defaults.componentsFolder,
-      levels: {}
+      levels: levels.length ? levels : defaults.levels
     };
-
-    for (const [key, values] of Object.entries(data.levels ?? {})) {
-      const levelNum = Number(key);
-      config.levels[levelNum] = {
-        folderName: values.folderName?.trim() || `lv${levelNum}`,
-        points: Math.max(1, Number(values.points) || 1)
-      };
-    }
 
     await game.settings.set(MODULE_ID, "craftingGeneratorConfig", config);
     ui.notifications.info(game.i18n.localize("CRAFTING.Info.GeneratorSettingsSaved"));

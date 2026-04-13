@@ -41,6 +41,8 @@
     "GeneratorLevelNum": "Livello",
     "GeneratorLevelFolder": "Cartella nel Compendio",
     "GeneratorLevelPoints": "Punti",
+    "AddLevel": "Aggiungi Livello",
+    "RemoveLevel": "Rimuovi",
     "RarityName": "Rarità",
     "RarityPoints": "Punti",
     "RarityMinLevel": "Livello Min",

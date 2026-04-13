@@ -13,11 +13,11 @@ export class ComponentGenerator {
   static DEFAULT_CONFIG = {
     compendiumLabel: "Crafting & Consumables",
     componentsFolder: "components",
-    levels: {
-      1: { folderName: "lv1", points: 1 },
-      2: { folderName: "lv2", points: 2 },
-      3: { folderName: "lv3", points: 3 }
-    }
+    levels: [
+      { folderName: "lv1", points: 1 },
+      { folderName: "lv2", points: 2 },
+      { folderName: "lv3", points: 3 }
+    ]
   };
 
   /** Default rarity config — used as fallback and initial setting value. */
@@ -104,18 +104,17 @@ export class ComponentGenerator {
       return null;
     }
 
+    // levels is an array; level number = index + 1
     const result = {};
-    for (const [levelKey, levelData] of Object.entries(config.levels)) {
-      const level = Number(levelKey);
+    config.levels.forEach((levelData, idx) => {
+      const levelNum = idx + 1;
       const lvFolder = folders.find(f =>
         f.name === levelData.folderName && f.folder?.id === compFolder._id
       );
-      if (lvFolder) {
-        result[level] = pack.index.filter(entry => entry.folder === lvFolder._id);
-      } else {
-        result[level] = [];
-      }
-    }
+      result[levelNum] = lvFolder
+        ? pack.index.filter(entry => entry.folder === lvFolder._id)
+        : [];
+    });
     return result;
   }
 
@@ -125,10 +124,12 @@ export class ComponentGenerator {
 
   static _pickComponents(rarity, levelItems, config) {
     const { points: totalPoints, minLevel } = rarity;
-    const levelPointsMap = Object.fromEntries(
-      Object.entries(config.levels).map(([k, v]) => [Number(k), v.points])
-    );
-    const allLevels = Object.keys(config.levels).map(Number);
+    // Build levelNum → points map from the array (level number = index + 1)
+    const levelPointsMap = {};
+    config.levels.forEach((levelData, idx) => {
+      levelPointsMap[idx + 1] = levelData.points;
+    });
+    const allLevels = config.levels.map((_, idx) => idx + 1);
     const picks = [];
     let currentPoints = 0;
 
@@ -212,18 +213,18 @@ export class ComponentGenerator {
       root = await Folder.create({ name: this.WORLD_FOLDER_NAME, type: "Item" });
     }
 
-    // Level subfolders (using configured folder names)
+    // Level subfolders (using configured folder names; level number = index + 1)
     const levelFolders = {};
-    for (const [levelKey, levelData] of Object.entries(config.levels)) {
-      const level = Number(levelKey);
-      const name = levelData.folderName;
+    for (let i = 0; i < config.levels.length; i++) {
+      const levelNum = i + 1;
+      const name = config.levels[i].folderName;
       let folder = game.folders.find(f =>
         f.name === name && f.type === "Item" && f.folder?.id === root.id
       );
       if (!folder) {
         folder = await Folder.create({ name, type: "Item", folder: root.id });
       }
-      levelFolders[level] = folder;
+      levelFolders[levelNum] = folder;
     }
 
     return levelFolders;

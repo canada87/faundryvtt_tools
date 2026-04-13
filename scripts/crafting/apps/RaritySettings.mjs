@@ -1,6 +1,7 @@
 import { MODULE_ID } from "../../shared/constants.mjs";
 import { ComponentGenerator } from "../ComponentGenerator.mjs";
 
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
@@ -37,13 +38,14 @@ export class RaritySettings extends HandlebarsApplicationMixin(ApplicationV2) {
 
   async _prepareContext(options) {
     const rarities = ComponentGenerator.getRarities();
+    const maxLevel = ComponentGenerator.getConfig().levels.length;
     const rows = Object.entries(rarities).map(([key, data]) => ({
       key,
       label: game.i18n.localize(`CRAFTING.Rarity.${key}`),
       points: data.points,
       minLevel: data.minLevel
     }));
-    return { rows };
+    return { rows, maxLevel };
   }
 
   static async #onSubmit(event, form, formData) {
@@ -52,7 +54,7 @@ export class RaritySettings extends HandlebarsApplicationMixin(ApplicationV2) {
     for (const [key, values] of Object.entries(data.rarities)) {
       rarities[key] = {
         points: Math.max(1, Number(values.points) || 1),
-        minLevel: Math.min(3, Math.max(1, Number(values.minLevel) || 1))
+        minLevel: Math.max(1, Number(values.minLevel) || 1)
       };
     }
     await game.settings.set(MODULE_ID, "craftingRarities", rarities);

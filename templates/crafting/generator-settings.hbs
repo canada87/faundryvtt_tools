@@ -12,7 +12,12 @@
     <p class="hint">{{localize "CRAFTING.GeneratorFolderHint"}}</p>
   </div>
 
-  <h3 class="levels-title">{{localize "CRAFTING.GeneratorLevels"}}</h3>
+  <div class="levels-header">
+    <h3 class="levels-title">{{localize "CRAFTING.GeneratorLevels"}}</h3>
+    <button type="button" class="add-level-btn" data-action="addLevel">
+      <i class="fas fa-plus"></i> {{localize "CRAFTING.AddLevel"}}
+    </button>
+  </div>
   <p class="hint">{{localize "CRAFTING.GeneratorLevelsHint"}}</p>
 
   <table class="levels-table">
@@ -21,17 +26,23 @@
         <th>{{localize "CRAFTING.GeneratorLevelNum"}}</th>
         <th>{{localize "CRAFTING.GeneratorLevelFolder"}}</th>
         <th>{{localize "CRAFTING.GeneratorLevelPoints"}}</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       {{#each levels}}
-        <tr>
-          <td class="level-num">{{this.key}}</td>
+        <tr class="level-entry" data-level-index="{{this.index}}">
+          <td class="level-num">{{this.num}}</td>
           <td>
-            <input type="text" name="levels.{{this.key}}.folderName" value="{{this.folderName}}" />
+            <input type="text" name="levels.{{this.index}}.folderName" value="{{this.folderName}}" />
           </td>
           <td>
-            <input type="number" name="levels.{{this.key}}.points" value="{{this.points}}" min="1" />
+            <input type="number" name="levels.{{this.index}}.points" value="{{this.points}}" min="1" />
+          </td>
+          <td>
+            <button type="button" class="remove-level-btn" data-action="removeLevel">
+              <i class="fas fa-trash"></i>
+            </button>
           </td>
         </tr>
       {{/each}}

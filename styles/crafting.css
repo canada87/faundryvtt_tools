@@ -369,9 +369,21 @@
   margin: 0;
 }
 
+.crafting.generator-settings .levels-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
 .crafting.generator-settings .levels-title {
-  margin: 4px 0 0;
+  margin: 0;
   font-size: 0.95rem;
+}
+
+.crafting.generator-settings .add-level-btn {
+  font-size: 0.8rem;
+  padding: 2px 8px;
 }
 
 .crafting.generator-settings .levels-table {
@@ -405,6 +417,12 @@
 .crafting.generator-settings .levels-table input[type="number"] {
   width: 60px;
   text-align: center;
+}
+
+.crafting.generator-settings .remove-level-btn {
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  color: var(--color-level-error, #c41e3a);
 }
 
 .crafting.generator-settings .submit-btn {

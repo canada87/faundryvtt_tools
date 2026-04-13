@@ -41,6 +41,8 @@
     "GeneratorLevelNum": "Level",
     "GeneratorLevelFolder": "Folder in Compendium",
     "GeneratorLevelPoints": "Points",
+    "AddLevel": "Add Level",
+    "RemoveLevel": "Remove",
     "RarityName": "Rarity",
     "RarityPoints": "Points",
     "RarityMinLevel": "Min Level",
