@@ -68,15 +68,22 @@ Hooks.once("init", () => {
 
 Hooks.on("getSceneControlButtons", (controls) => {
   if (!game.user.isGM) return;
-  const tokenControls = controls.find(c => c.name === "token");
-  if (tokenControls) {
-    tokenControls.tools.push({
-      name: "faundryvtt-tools-hub",
-      title: game.i18n.localize("FVTT_TOOLS.HubTitle"),
-      icon: "fas fa-toolbox",
-      button: true,
-      onClick: () => new HubMenu().render(true)
-    });
+  // v12: controls is an array; v13: controls is a plain object keyed by name
+  const tokenControls = Array.isArray(controls)
+    ? controls.find(c => c.name === "token")
+    : controls.token;
+  if (!tokenControls) return;
+  const tool = {
+    name: "faundryvtt-tools-hub",
+    title: game.i18n.localize("FVTT_TOOLS.HubTitle"),
+    icon: "fas fa-toolbox",
+    button: true,
+    onClick: () => new HubMenu().render(true)
+  };
+  if (Array.isArray(tokenControls.tools)) {
+    tokenControls.tools.push(tool);
+  } else if (tokenControls.tools && typeof tokenControls.tools === "object") {
+    tokenControls.tools[tool.name] = tool;
   }
 });
 
