@@ -109,12 +109,24 @@ export function initCrafting() {
 
   /* ---- Actor sheet header button (all users) ---- */
 
+  // Legacy ActorSheet (e.g. DC20 and most non-dnd5e systems)
   Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
     buttons.unshift({
       label: game.i18n.localize("CRAFTING.RecipeBook"),
       class: "open-recipe-book",
       icon: "fas fa-hammer",
       onclick: () => new RecipeBook({ actor: sheet.document }).render(true)
+    });
+  });
+
+  // ApplicationV2-based sheets (e.g. D&D 5e v3+ on FoundryVTT v13)
+  Hooks.on("getApplicationHeaderButtons", (app, buttons) => {
+    if (!app.document || !(app.document instanceof Actor)) return;
+    buttons.unshift({
+      label: game.i18n.localize("CRAFTING.RecipeBook"),
+      class: "open-recipe-book",
+      icon: "fas fa-hammer",
+      onclick: () => new RecipeBook({ actor: app.document }).render(true)
     });
   });
 
