@@ -121,21 +121,24 @@ export function initCrafting() {
 
   // D&D 5e v3+ on FoundryVTT v13: sheets use ApplicationV2 with per-class render hooks.
   // getActorSheetHeaderButtons does not fire for these — inject the button via DOM instead.
+  // Buttons live directly in <header> (no wrapper div); icon is a class on the button itself (FA6).
   for (const hookName of ["renderCharacterActorSheet", "renderNPCActorSheet"]) {
     Hooks.on(hookName, (app, html) => {
       if (!(app.document instanceof Actor)) return;
       const root = html instanceof HTMLElement ? html : html[0];
       if (!root) return;
       if (root.querySelector(".open-recipe-book")) return;
-      const controls = root.querySelector(".window-controls, .header-controls");
-      if (!controls) return;
+      const header = root.querySelector("header");
+      if (!header) return;
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "header-control open-recipe-book";
-      btn.title = game.i18n.localize("CRAFTING.RecipeBook");
-      btn.innerHTML = `<i class="fas fa-hammer"></i>`;
+      btn.className = "header-control icon open-recipe-book fa-solid fa-hammer";
+      btn.dataset.tooltip = game.i18n.localize("CRAFTING.RecipeBook");
+      btn.ariaLabel = game.i18n.localize("CRAFTING.RecipeBook");
       btn.addEventListener("click", () => new RecipeBook({ actor: app.document }).render(true));
-      controls.prepend(btn);
+      const closeBtn = header.querySelector('button[data-action="close"]');
+      if (closeBtn) header.insertBefore(btn, closeBtn);
+      else header.append(btn);
     });
   }
 
