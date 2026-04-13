@@ -7,8 +7,6 @@ import { MODULE_ID } from "../shared/constants.mjs";
  */
 export class ComponentGenerator {
 
-  static WORLD_FOLDER_NAME = "Crafting Components";
-
   /** Default generator config — compendium, folder, and level definitions. */
   static DEFAULT_CONFIG = {
     compendiumLabel: "Crafting & Consumables",
@@ -83,8 +81,8 @@ export class ComponentGenerator {
       return null;
     }
 
-    // Import items to world and return component data
-    return await this._importAndBuild(pack, picks, config);
+    // Build component list directly from compendium (no world import needed)
+    return await this._buildFromCompendium(pack, picks);
   }
 
   /* ---------------------------------------- */
@@ -165,68 +163,30 @@ export class ComponentGenerator {
   }
 
   /* ---------------------------------------- */
-  /*  Import to world & build component list  */
+  /*  Build component list from compendium     */
   /* ---------------------------------------- */
 
-  static async _importAndBuild(pack, picks, config) {
-    // Ensure world folders exist
-    const levelFolders = await this._ensureWorldFolders(config);
-
+  /**
+   * Fetch full item data from the compendium and return the component array.
+   * Items are NOT imported into the world: fromUuid() resolves compendium UUIDs
+   * at craft time, and inventory checks use item names only.
+   */
+  static async _buildFromCompendium(pack, picks) {
     const components = [];
-    for (const { entry, level } of picks) {
-      // Check if already imported in the correct folder
-      const folder = levelFolders[level];
-      let worldItem = game.items.find(i =>
-        i.name === entry.name && i.folder?.id === folder.id
-      );
-
-      if (!worldItem) {
-        const fullItem = await pack.getDocument(entry._id);
-        const data = fullItem.toObject();
-        data.folder = folder.id;
-        worldItem = await Item.create(data);
-      }
-
-      // Merge duplicates
-      const existing = components.find(c => c.uuid === worldItem.uuid);
+    for (const { entry } of picks) {
+      const fullItem = await pack.getDocument(entry._id);
+      const existing = components.find(c => c.name === fullItem.name);
       if (existing) {
         existing.quantity++;
       } else {
         components.push({
-          uuid: worldItem.uuid,
-          name: worldItem.name,
-          img: worldItem.img,
+          uuid: fullItem.uuid,
+          name: fullItem.name,
+          img: fullItem.img,
           quantity: 1
         });
       }
     }
-
     return components;
-  }
-
-  static async _ensureWorldFolders(config) {
-    // Root folder
-    let root = game.folders.find(f =>
-      f.name === this.WORLD_FOLDER_NAME && f.type === "Item" && !f.folder
-    );
-    if (!root) {
-      root = await Folder.create({ name: this.WORLD_FOLDER_NAME, type: "Item" });
-    }
-
-    // Level subfolders (using configured folder names; level number = index + 1)
-    const levelFolders = {};
-    for (let i = 0; i < config.levels.length; i++) {
-      const levelNum = i + 1;
-      const name = config.levels[i].folderName;
-      let folder = game.folders.find(f =>
-        f.name === name && f.type === "Item" && f.folder?.id === root.id
-      );
-      if (!folder) {
-        folder = await Folder.create({ name, type: "Item", folder: root.id });
-      }
-      levelFolders[levelNum] = folder;
-    }
-
-    return levelFolders;
   }
 }
