@@ -1,0 +1,45 @@
+<div class="generator-settings-content">
+
+  <div class="form-group">
+    <label>{{localize "CRAFTING.GeneratorCompendium"}}</label>
+    <input type="text" name="compendiumLabel" value="{{compendiumLabel}}" />
+    <p class="hint">{{localize "CRAFTING.GeneratorCompendiumHint"}}</p>
+  </div>
+
+  <div class="form-group">
+    <label>{{localize "CRAFTING.GeneratorFolder"}}</label>
+    <input type="text" name="componentsFolder" value="{{componentsFolder}}" />
+    <p class="hint">{{localize "CRAFTING.GeneratorFolderHint"}}</p>
+  </div>
+
+  <h3 class="levels-title">{{localize "CRAFTING.GeneratorLevels"}}</h3>
+  <p class="hint">{{localize "CRAFTING.GeneratorLevelsHint"}}</p>
+
+  <table class="levels-table">
+    <thead>
+      <tr>
+        <th>{{localize "CRAFTING.GeneratorLevelNum"}}</th>
+        <th>{{localize "CRAFTING.GeneratorLevelFolder"}}</th>
+        <th>{{localize "CRAFTING.GeneratorLevelPoints"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each levels}}
+        <tr>
+          <td class="level-num">{{this.key}}</td>
+          <td>
+            <input type="text" name="levels.{{this.key}}.folderName" value="{{this.folderName}}" />
+          </td>
+          <td>
+            <input type="number" name="levels.{{this.key}}.points" value="{{this.points}}" min="1" />
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <button type="submit" class="submit-btn">
+    <i class="fas fa-save"></i> {{localize "CRAFTING.Save"}}
+  </button>
+
+</div>

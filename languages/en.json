@@ -29,6 +29,18 @@
     "RaritySettings": "Rarity Configuration",
     "OpenRaritySettings": "Configure Rarities",
     "RaritySettingsHint": "Configure points and minimum component level for each rarity tier.",
+    "GeneratorSettings": "Generator Settings",
+    "OpenGeneratorSettings": "Configure Generator",
+    "GeneratorSettingsHint": "Configure the compendium, component folder, and level tiers used by auto-generation.",
+    "GeneratorCompendium": "Compendium",
+    "GeneratorCompendiumHint": "The label of the compendium to draw components from (e.g. Crafting & Consumables).",
+    "GeneratorFolder": "Components Folder",
+    "GeneratorFolderHint": "Name of the top-level folder inside the compendium that contains the level sub-folders.",
+    "GeneratorLevels": "Component Levels",
+    "GeneratorLevelsHint": "For each level, define the sub-folder name inside the compendium and its point value.",
+    "GeneratorLevelNum": "Level",
+    "GeneratorLevelFolder": "Folder in Compendium",
+    "GeneratorLevelPoints": "Points",
     "RarityName": "Rarity",
     "RarityPoints": "Points",
     "RarityMinLevel": "Min Level",
@@ -64,7 +76,8 @@
       "CraftSuccess": "Successfully crafted {item}!",
       "RecipeSaved": "Recipe saved successfully.",
       "RecipesAssigned": "Recipe assignments updated.",
-      "RaritiesSaved": "Rarity configuration saved."
+      "RaritiesSaved": "Rarity configuration saved.",
+      "GeneratorSettingsSaved": "Generator settings saved."
     },
     "Confirm": {
       "Delete": "Are you sure you want to delete the recipe \"{name}\"?"

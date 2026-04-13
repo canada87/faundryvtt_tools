@@ -29,6 +29,18 @@
     "RaritySettings": "Configurazione Rarità",
     "OpenRaritySettings": "Configura Rarità",
     "RaritySettingsHint": "Configura i punti e il livello minimo dei componenti per ogni grado di rarità.",
+    "GeneratorSettings": "Impostazioni Generatore",
+    "OpenGeneratorSettings": "Configura Generatore",
+    "GeneratorSettingsHint": "Configura il compendio, la cartella dei componenti e i livelli usati dall'auto-generazione.",
+    "GeneratorCompendium": "Compendio",
+    "GeneratorCompendiumHint": "Nome (label) del compendio da cui pescare i componenti (es. Crafting & Consumables).",
+    "GeneratorFolder": "Cartella Componenti",
+    "GeneratorFolderHint": "Nome della cartella principale nel compendio che contiene le sottocartelle per livello.",
+    "GeneratorLevels": "Livelli Componente",
+    "GeneratorLevelsHint": "Per ogni livello, definisci il nome della cartella nel compendio e i punti che vale.",
+    "GeneratorLevelNum": "Livello",
+    "GeneratorLevelFolder": "Cartella nel Compendio",
+    "GeneratorLevelPoints": "Punti",
     "RarityName": "Rarità",
     "RarityPoints": "Punti",
     "RarityMinLevel": "Livello Min",
@@ -64,7 +76,8 @@
       "CraftSuccess": "{item} creato con successo!",
       "RecipeSaved": "Ricetta salvata con successo.",
       "RecipesAssigned": "Assegnazioni ricette aggiornate.",
-      "RaritiesSaved": "Configurazione rarità salvata."
+      "RaritiesSaved": "Configurazione rarità salvata.",
+      "GeneratorSettingsSaved": "Impostazioni generatore salvate."
     },
     "Confirm": {
       "Delete": "Sei sicuro di voler eliminare la ricetta \"{name}\"?"

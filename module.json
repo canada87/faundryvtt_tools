@@ -2,7 +2,7 @@
   "id": "faundryvtt_tools",
   "title": "Faundryvtt Tools",
   "description": "A modular toolkit for FoundryVTT. Currently includes a system-agnostic crafting system with recipes, ingredients, and crafting operations.",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "compatibility": {
     "minimum": "12",
     "verified": "13"

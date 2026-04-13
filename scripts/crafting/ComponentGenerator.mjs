@@ -3,13 +3,22 @@ import { MODULE_ID } from "../shared/constants.mjs";
 /**
  * Auto-generates recipe components by picking random items from a compendium.
  * Items are drawn from folders lv1/lv2/lv3 inside a "components" folder
- * within the "Crafting & Consumables" compendium.
+ * within a configurable compendium (default: "Crafting & Consumables").
  */
 export class ComponentGenerator {
 
-  static COMPENDIUM_LABEL = "Crafting & Consumables";
-  static COMPONENTS_FOLDER = "components";
   static WORLD_FOLDER_NAME = "Crafting Components";
+
+  /** Default generator config — compendium, folder, and level definitions. */
+  static DEFAULT_CONFIG = {
+    compendiumLabel: "Crafting & Consumables",
+    componentsFolder: "components",
+    levels: {
+      1: { folderName: "lv1", points: 1 },
+      2: { folderName: "lv2", points: 2 },
+      3: { folderName: "lv3", points: 3 }
+    }
+  };
 
   /** Default rarity config — used as fallback and initial setting value. */
   static DEFAULT_RARITIES = {
@@ -23,7 +32,14 @@ export class ComponentGenerator {
     unique:        { points: 20, minLevel: 3 }
   };
 
-  static LEVEL_POINTS = { 1: 1, 2: 2, 3: 3 };
+  /**
+   * Get current generator config from settings (falls back to defaults).
+   */
+  static getConfig() {
+    const saved = game.settings.get(MODULE_ID, "craftingGeneratorConfig");
+    if (saved && Object.keys(saved).length) return saved;
+    return this.DEFAULT_CONFIG;
+  }
 
   /**
    * Get current rarities config from settings (falls back to defaults).
@@ -43,11 +59,13 @@ export class ComponentGenerator {
     const rarity = this.getRarities()[rarityKey];
     if (!rarity) return null;
 
+    const config = this.getConfig();
+
     // Find compendium
-    const pack = game.packs.find(p => p.metadata.label === this.COMPENDIUM_LABEL);
+    const pack = game.packs.find(p => p.metadata.label === config.compendiumLabel);
     if (!pack) {
       ui.notifications.error(game.i18n.format("CRAFTING.Error.CompendiumNotFound",
-        { name: this.COMPENDIUM_LABEL }));
+        { name: config.compendiumLabel }));
       return null;
     }
 
@@ -55,41 +73,42 @@ export class ComponentGenerator {
     await pack.getIndex({ fields: ["folder", "img"] });
 
     // Build level → items map
-    const levelItems = this._getLevelItems(pack);
+    const levelItems = this._getLevelItems(pack, config);
     if (!levelItems) return null;
 
     // Generate random component picks
-    const picks = this._pickComponents(rarity, levelItems);
+    const picks = this._pickComponents(rarity, levelItems, config);
     if (!picks.length) {
       ui.notifications.warn(game.i18n.localize("CRAFTING.Warn.NoComponentsFound"));
       return null;
     }
 
     // Import items to world and return component data
-    return await this._importAndBuild(pack, picks);
+    return await this._importAndBuild(pack, picks, config);
   }
 
   /* ---------------------------------------- */
   /*  Compendium folder traversal             */
   /* ---------------------------------------- */
 
-  static _getLevelItems(pack) {
+  static _getLevelItems(pack, config) {
     const folders = pack.folders;
 
-    // Find the top-level "components" folder
+    // Find the top-level components folder
     const compFolder = folders.find(f =>
-      f.name.toLowerCase() === this.COMPONENTS_FOLDER.toLowerCase() && !f.folder
+      f.name.toLowerCase() === config.componentsFolder.toLowerCase() && !f.folder
     );
     if (!compFolder) {
       ui.notifications.error(game.i18n.format("CRAFTING.Error.FolderNotFound",
-        { name: this.COMPONENTS_FOLDER }));
+        { name: config.componentsFolder }));
       return null;
     }
 
     const result = {};
-    for (const level of [1, 2, 3]) {
+    for (const [levelKey, levelData] of Object.entries(config.levels)) {
+      const level = Number(levelKey);
       const lvFolder = folders.find(f =>
-        f.name === `lv${level}` && f.folder?.id === compFolder._id
+        f.name === levelData.folderName && f.folder?.id === compFolder._id
       );
       if (lvFolder) {
         result[level] = pack.index.filter(entry => entry.folder === lvFolder._id);
@@ -104,8 +123,12 @@ export class ComponentGenerator {
   /*  Random component selection              */
   /* ---------------------------------------- */
 
-  static _pickComponents(rarity, levelItems) {
+  static _pickComponents(rarity, levelItems, config) {
     const { points: totalPoints, minLevel } = rarity;
+    const levelPointsMap = Object.fromEntries(
+      Object.entries(config.levels).map(([k, v]) => [Number(k), v.points])
+    );
+    const allLevels = Object.keys(config.levels).map(Number);
     const picks = [];
     let currentPoints = 0;
 
@@ -113,14 +136,14 @@ export class ComponentGenerator {
     const first = this._pickRandom(levelItems[minLevel]);
     if (first) {
       picks.push({ entry: first, level: minLevel });
-      currentPoints += this.LEVEL_POINTS[minLevel];
+      currentPoints += levelPointsMap[minLevel] ?? 1;
     }
 
     // Fill remaining budget
     while (currentPoints < totalPoints) {
       const remaining = totalPoints - currentPoints;
-      const possibleLevels = [1, 2, 3].filter(l =>
-        this.LEVEL_POINTS[l] <= remaining && levelItems[l]?.length
+      const possibleLevels = allLevels.filter(l =>
+        (levelPointsMap[l] ?? 1) <= remaining && levelItems[l]?.length
       );
       if (!possibleLevels.length) break;
 
@@ -128,7 +151,7 @@ export class ComponentGenerator {
       const entry = this._pickRandom(levelItems[level]);
       if (entry) {
         picks.push({ entry, level });
-        currentPoints += this.LEVEL_POINTS[level];
+        currentPoints += levelPointsMap[level] ?? 1;
       }
     }
 
@@ -144,9 +167,9 @@ export class ComponentGenerator {
   /*  Import to world & build component list  */
   /* ---------------------------------------- */
 
-  static async _importAndBuild(pack, picks) {
+  static async _importAndBuild(pack, picks, config) {
     // Ensure world folders exist
-    const levelFolders = await this._ensureWorldFolders();
+    const levelFolders = await this._ensureWorldFolders(config);
 
     const components = [];
     for (const { entry, level } of picks) {
@@ -180,7 +203,7 @@ export class ComponentGenerator {
     return components;
   }
 
-  static async _ensureWorldFolders() {
+  static async _ensureWorldFolders(config) {
     // Root folder
     let root = game.folders.find(f =>
       f.name === this.WORLD_FOLDER_NAME && f.type === "Item" && !f.folder
@@ -189,10 +212,11 @@ export class ComponentGenerator {
       root = await Folder.create({ name: this.WORLD_FOLDER_NAME, type: "Item" });
     }
 
-    // Level subfolders
+    // Level subfolders (using configured folder names)
     const levelFolders = {};
-    for (const level of [1, 2, 3]) {
-      const name = `lv${level}`;
+    for (const [levelKey, levelData] of Object.entries(config.levels)) {
+      const level = Number(levelKey);
+      const name = levelData.folderName;
       let folder = game.folders.find(f =>
         f.name === name && f.type === "Item" && f.folder?.id === root.id
       );

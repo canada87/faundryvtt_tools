@@ -6,11 +6,22 @@ import { RecipeBook } from "./apps/RecipeBook.mjs";
 import { RecipeEditor } from "./apps/RecipeEditor.mjs";
 import { RecipeManager } from "./apps/RecipeManager.mjs";
 import { RaritySettings } from "./apps/RaritySettings.mjs";
+import { GeneratorSettings } from "./apps/GeneratorSettings.mjs";
 
 class RaritySettingsLauncher extends FormApplication {
   constructor(...args) {
     super(...args);
     new RaritySettings().render(true);
+    this.close();
+  }
+  async _updateObject() {}
+  render() { return this; }
+}
+
+class GeneratorSettingsLauncher extends FormApplication {
+  constructor(...args) {
+    super(...args);
+    new GeneratorSettings().render(true);
     this.close();
   }
   async _updateObject() {}
@@ -41,12 +52,29 @@ export function initCrafting() {
     default: ComponentGenerator.DEFAULT_RARITIES
   });
 
+  game.settings.register(MODULE_ID, "craftingGeneratorConfig", {
+    name: "CRAFTING.GeneratorSettings",
+    scope: "world",
+    config: false,
+    type: Object,
+    default: ComponentGenerator.DEFAULT_CONFIG
+  });
+
   game.settings.registerMenu(MODULE_ID, "raritySettingsMenu", {
     name: "CRAFTING.RaritySettings",
     label: "CRAFTING.OpenRaritySettings",
     hint: "CRAFTING.RaritySettingsHint",
     icon: "fas fa-sliders-h",
     type: RaritySettingsLauncher,
+    restricted: true
+  });
+
+  game.settings.registerMenu(MODULE_ID, "generatorSettingsMenu", {
+    name: "CRAFTING.GeneratorSettings",
+    label: "CRAFTING.OpenGeneratorSettings",
+    hint: "CRAFTING.GeneratorSettingsHint",
+    icon: "fas fa-cogs",
+    type: GeneratorSettingsLauncher,
     restricted: true
   });
 
