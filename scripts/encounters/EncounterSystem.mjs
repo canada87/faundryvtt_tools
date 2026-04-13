@@ -204,10 +204,9 @@ export class EncounterSystem {
       const level = Number(this.getNestedValue(entry, levelPath));
       if (isNaN(level) || level < min || level > max) continue;
 
-      // Apply type filters
-      const type = this.getNestedValue(entry, typePath)?.trim();
-      if (!type) continue;
-      if (excluded.includes(type)) continue;
+      // Apply type filters (entries with no type are included unless an inclusion list is active)
+      const type = this.getNestedValue(entry, typePath)?.trim() ?? "";
+      if (type && excluded.includes(type)) continue;
       if (included.length > 0 && !included.includes(type)) continue;
 
       allCandidates.push({ entry, level });
@@ -254,11 +253,10 @@ export class EncounterSystem {
         index, levelPath, groups[i].minLevel, groups[i].maxLevel
       );
 
-      // Apply type filters
+      // Apply type filters (entries with no type are included unless an inclusion list is active)
       candidates = candidates.filter(entry => {
-        const type = this.getNestedValue(entry, typePath)?.trim();
-        if (!type) return false;
-        if (excluded.includes(type)) return false;
+        const type = this.getNestedValue(entry, typePath)?.trim() ?? "";
+        if (type && excluded.includes(type)) return false;
         if (included.length > 0 && !included.includes(type)) return false;
         return true;
       });
