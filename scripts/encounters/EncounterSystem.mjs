@@ -88,7 +88,8 @@ export class EncounterSystem {
     const typePath = game.settings.get(MODULE_ID, "encounterCreatureTypePath");
     const levelPath = game.settings.get(MODULE_ID, "encounterLevelPath");
 
-    const pack = game.packs.get(compendiumName);
+    const pack = game.packs.get(compendiumName)
+      ?? game.packs.find(p => p.metadata.label === compendiumName);
     if (!pack) {
       ui.notifications.error(
         game.i18n.format("ENCOUNTERS.Error.CompendiumNotFound", { name: compendiumName })
