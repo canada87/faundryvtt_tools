@@ -121,6 +121,7 @@ export function initCrafting() {
 
   // ApplicationV2-based sheets (e.g. D&D 5e v3+ on FoundryVTT v13)
   Hooks.on("getApplicationHeaderButtons", (app, buttons) => {
+    console.log("Faundryvtt Tools | getApplicationHeaderButtons fired", app?.constructor?.name, app?.document?.constructor?.name);
     if (!app.document || !(app.document instanceof Actor)) return;
     buttons.unshift({
       label: game.i18n.localize("CRAFTING.RecipeBook"),
@@ -128,6 +129,13 @@ export function initCrafting() {
       icon: "fas fa-hammer",
       onclick: () => new RecipeBook({ actor: app.document }).render(true)
     });
+  });
+
+  // DEBUG: log every render hook that fires with an Actor document
+  Hooks.on("renderApplication", (app, html) => {
+    if (app.document instanceof Actor) {
+      console.log("Faundryvtt Tools | renderApplication (Actor sheet):", app?.constructor?.name);
+    }
   });
 
   console.log("Faundryvtt Tools | Crafting feature initialized");
