@@ -275,6 +275,8 @@
     "FeatureDescription": "Share images as fullscreen overlays visible to all connected players.",
     "ShareFullscreen": "Share Fullscreen",
     "StopSharing": "Stop Sharing",
+    "Collapse": "Collapse",
+    "Expand": "Reopen Image",
     "Warn": {
       "NoImage": "No image source found."
     }

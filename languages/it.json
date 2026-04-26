@@ -275,6 +275,8 @@
     "FeatureDescription": "Condividi immagini a schermo intero visibili a tutti i giocatori connessi.",
     "ShareFullscreen": "Condividi a Schermo Intero",
     "StopSharing": "Interrompi Condivisione",
+    "Collapse": "Riduci",
+    "Expand": "Riapri Immagine",
     "Warn": {
       "NoImage": "Nessuna immagine trovata."
     }

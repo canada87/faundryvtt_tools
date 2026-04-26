@@ -74,3 +74,63 @@
 #fullscreen-image-overlay .stop-sharing-btn i {
   margin-right: 6px;
 }
+
+/* ---- GM collapse button ---- */
+
+#fullscreen-image-overlay .collapse-sharing-btn {
+  position: absolute;
+  top: 20px;
+  right: 240px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(60, 100, 160, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+#fullscreen-image-overlay .collapse-sharing-btn:hover {
+  background: rgba(80, 130, 200, 1);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+#fullscreen-image-overlay .collapse-sharing-btn i {
+  margin-right: 6px;
+}
+
+/* ---- Collapsed state (GM only, local) ---- */
+
+#fullscreen-image-overlay.gm-collapsed {
+  display: none !important;
+}
+
+/* ---- Floating restore button (GM only, local) ---- */
+
+#image-share-floating-restore {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 6;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(60, 100, 160, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+#image-share-floating-restore:hover {
+  background: rgba(80, 130, 200, 1);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+#image-share-floating-restore i {
+  margin-right: 6px;
+}
