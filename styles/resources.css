@@ -87,7 +87,7 @@
 
 .resource-row {
   display: grid;
-  grid-template-columns: 110px 1fr 50px 130px 200px 36px;
+  grid-template-columns: 120px minmax(160px, 1fr) 44px 130px 250px 32px;
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
@@ -117,10 +117,12 @@
   flex: 1;
   min-width: 0;
   font-size: 11px;
+  padding: 2px 4px;
 }
 
 .resource-row .resource-col-label input {
   width: 100%;
+  min-width: 0;
 }
 
 .resource-row .resource-col-color input[type="color"] {

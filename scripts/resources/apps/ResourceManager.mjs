@@ -13,10 +13,11 @@ export class ResourceManager extends HandlebarsApplicationMixin(ApplicationV2) {
     classes: ["faundryvtt-tools", "resource-manager"],
     window: {
       icon: "fas fa-list-ol",
-      title: "RESOURCES.ManagerTitle"
+      title: "RESOURCES.ManagerTitle",
+      resizable: true
     },
     position: {
-      width: 560,
+      width: 820,
       height: "auto"
     },
     actions: {
