@@ -396,5 +396,28 @@
       "Exported": "Backup downloaded successfully.",
       "Imported": "Import completed: {count} setting(s) restored."
     }
+  },
+  "RESOURCES": {
+    "FeatureName": "Resources",
+    "FeatureDescription": "Track on-screen counters (survivors, supplies, etc.) visible to GM and/or players.",
+    "ManagerTitle": "Resource Manager",
+    "AddResource": "Add Resource",
+    "DeleteResource": "Delete Resource",
+    "DefaultLabel": "New Resource",
+    "Icon": "Icon",
+    "Label": "Label",
+    "Color": "Color",
+    "Value": "Value",
+    "Visibility": "Visibility",
+    "Active": "Visible",
+    "Inactive": "Hidden",
+    "AllPlayers": "All Players",
+    "GMOnly": "GM Only",
+    "ToggleActiveHint": "Toggle whether this resource is shown on screen.",
+    "ToggleVisibleHint": "Toggle whether players can see this resource (GM always sees it).",
+    "EmptyHint": "No resources yet. Click 'Add Resource' to create one.",
+    "Confirm": {
+      "Delete": "Delete the resource \"{name}\"?"
+    }
   }
 }

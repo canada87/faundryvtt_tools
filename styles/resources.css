@@ -1,0 +1,205 @@
+/* ========================================
+   Resources — On-screen HUD
+   ======================================== */
+
+.faundryvtt-resources-hud {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  z-index: 70;
+  pointer-events: none;
+  max-width: 80vw;
+}
+
+.faundryvtt-resources-hud .resource-chip {
+  --resource-color: #d4af37;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(20, 20, 20, 0.78);
+  color: #f0f0f0;
+  border: 1px solid var(--resource-color);
+  border-radius: 18px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  font-family: var(--font-primary, "Signika", sans-serif);
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.faundryvtt-resources-hud .resource-chip i {
+  color: var(--resource-color);
+  font-size: 14px;
+}
+
+.faundryvtt-resources-hud .resource-chip-label {
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.faundryvtt-resources-hud .resource-chip-value {
+  font-weight: 700;
+  color: var(--resource-color);
+  min-width: 1.2em;
+  text-align: right;
+}
+
+.faundryvtt-resources-hud .resource-chip-gm-only {
+  opacity: 0.78;
+  border-style: dashed;
+}
+
+/* ========================================
+   Resources — Manager
+   ======================================== */
+
+.resource-manager-content {
+  padding: 12px;
+}
+
+.resource-manager-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.resource-manager-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.resource-manager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resource-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 50px 130px 200px 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--color-bg-option, rgba(0, 0, 0, 0.05));
+  border: 1px solid var(--color-border-light-primary, rgba(0, 0, 0, 0.1));
+  border-radius: 6px;
+}
+
+.resource-row-head {
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  opacity: 0.7;
+  padding: 2px 8px;
+}
+
+.resource-row .resource-col-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.resource-row .resource-col-icon input {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+}
+
+.resource-row .resource-col-label input {
+  width: 100%;
+}
+
+.resource-row .resource-col-color input[type="color"] {
+  width: 100%;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-border-light-primary, rgba(0, 0, 0, 0.15));
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.resource-row .resource-col-value {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.resource-row .resource-col-value input[type="number"] {
+  width: 60px;
+  text-align: center;
+}
+
+.resource-row .resource-col-value button,
+.resource-row .resource-col-actions button,
+.resource-row .resource-col-toggles .resource-toggle {
+  cursor: pointer;
+}
+
+.resource-row .resource-col-value button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 4px;
+}
+
+.resource-row .resource-col-toggles {
+  display: flex;
+  gap: 4px;
+}
+
+.resource-row .resource-toggle {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 4px 6px;
+  font-size: 11px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--color-border-light-primary, rgba(0, 0, 0, 0.15));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resource-row .resource-toggle.is-on {
+  background: rgba(78, 154, 110, 0.25);
+  border-color: rgba(78, 154, 110, 0.7);
+}
+
+.resource-row .resource-col-actions button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 4px;
+  color: #b94a48;
+}
+
+.resource-manager-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  opacity: 0.7;
+  text-align: center;
+}
+
+.resource-manager-empty i {
+  font-size: 30px;
+}

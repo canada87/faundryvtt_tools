@@ -34,12 +34,19 @@ scripts/
     MindMapSystem.mjs      — Logica core: CRUD lavagne, nodi, connessioni
     apps/
       MindMapApp.mjs       — UI GM: lavagna interattiva con pan/zoom, drag-and-drop, connessioni SVG
+  resources/
+    index.mjs              — Init della feature risorse (settings, hub, API)
+    ResourceSystem.mjs     — Logica core: CRUD risorse, valori, visibilità
+    ResourcesHUD.mjs       — HUD on-screen in alto al centro, sync via setting
+    apps/
+      ResourceManager.mjs  — UI GM: lista risorse, +/-, toggle visibilità/attivo
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
   encounters.css           — Stili di tutte le UI incontri
   saving-throw.css         — Stili UI tiro salvezza e messaggi chat
   mindmap.css              — Stili lavagna mind map
+  resources.css            — Stili HUD risorse e gestore
 templates/
   hub-menu.hbs             — Template hub
   crafting/
@@ -53,6 +60,8 @@ templates/
     saving-throw-request.hbs — Template richiesta tiro salvezza
   mindmap/
     mindmap.hbs              — Template lavagna mind map
+  resources/
+    resource-manager.hbs     — Template gestore risorse
 languages/
   en.json                  — Traduzioni inglese
   it.json                  — Traduzioni italiano

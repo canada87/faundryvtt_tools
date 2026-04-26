@@ -396,5 +396,28 @@
       "Exported": "Backup scaricato con successo.",
       "Imported": "Importazione completata: {count} impostazione/i ripristinate."
     }
+  },
+  "RESOURCES": {
+    "FeatureName": "Risorse",
+    "FeatureDescription": "Traccia contatori a schermo (sopravvissuti, scorte, ecc.) visibili al GM e/o ai giocatori.",
+    "ManagerTitle": "Gestore Risorse",
+    "AddResource": "Aggiungi Risorsa",
+    "DeleteResource": "Elimina Risorsa",
+    "DefaultLabel": "Nuova Risorsa",
+    "Icon": "Icona",
+    "Label": "Etichetta",
+    "Color": "Colore",
+    "Value": "Valore",
+    "Visibility": "Visibilità",
+    "Active": "Visibile",
+    "Inactive": "Nascosta",
+    "AllPlayers": "Tutti i Giocatori",
+    "GMOnly": "Solo GM",
+    "ToggleActiveHint": "Mostra o nascondi la risorsa a schermo.",
+    "ToggleVisibleHint": "Decidi se i giocatori possono vedere questa risorsa (il GM la vede sempre).",
+    "EmptyHint": "Nessuna risorsa creata. Clicca 'Aggiungi Risorsa' per iniziare.",
+    "Confirm": {
+      "Delete": "Eliminare la risorsa \"{name}\"?"
+    }
   }
 }

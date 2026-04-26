@@ -1,0 +1,83 @@
+<div class="resource-manager-content">
+
+  <div class="resource-manager-header">
+    <button type="button" data-action="addResource" class="resource-manager-add-btn">
+      <i class="fas fa-plus"></i> {{localize "RESOURCES.AddResource"}}
+    </button>
+  </div>
+
+  {{#if resources.length}}
+    <div class="resource-manager-list">
+
+      <div class="resource-row resource-row-head">
+        <span class="resource-col-icon">{{localize "RESOURCES.Icon"}}</span>
+        <span class="resource-col-label">{{localize "RESOURCES.Label"}}</span>
+        <span class="resource-col-color">{{localize "RESOURCES.Color"}}</span>
+        <span class="resource-col-value">{{localize "RESOURCES.Value"}}</span>
+        <span class="resource-col-toggles">{{localize "RESOURCES.Visibility"}}</span>
+        <span class="resource-col-actions"></span>
+      </div>
+
+      {{#each resources}}
+        <div class="resource-row" data-resource-id="{{id}}">
+
+          <div class="resource-col-icon">
+            <i class="{{icon}}"></i>
+            <input type="text" data-resource-id="{{id}}" data-field="icon" value="{{icon}}" placeholder="fas fa-cube" />
+          </div>
+
+          <div class="resource-col-label">
+            <input type="text" data-resource-id="{{id}}" data-field="label" value="{{label}}" />
+          </div>
+
+          <div class="resource-col-color">
+            <input type="color" data-resource-id="{{id}}" data-field="color" value="{{color}}" />
+          </div>
+
+          <div class="resource-col-value">
+            <button type="button" data-action="decrement" data-resource-id="{{id}}" title="-1">
+              <i class="fas fa-minus"></i>
+            </button>
+            <input type="number" data-resource-id="{{id}}" data-field="value" value="{{value}}" />
+            <button type="button" data-action="increment" data-resource-id="{{id}}" title="+1">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+
+          <div class="resource-col-toggles">
+            <button type="button"
+                    class="resource-toggle{{#if active}} is-on{{/if}}"
+                    data-action="toggleActive"
+                    data-resource-id="{{id}}"
+                    title="{{localize 'RESOURCES.ToggleActiveHint'}}">
+              <i class="fas {{#if active}}fa-eye{{else}}fa-eye-slash{{/if}}"></i>
+              <span>{{#if active}}{{localize "RESOURCES.Active"}}{{else}}{{localize "RESOURCES.Inactive"}}{{/if}}</span>
+            </button>
+            <button type="button"
+                    class="resource-toggle{{#if visibleToPlayers}} is-on{{/if}}"
+                    data-action="toggleVisible"
+                    data-resource-id="{{id}}"
+                    title="{{localize 'RESOURCES.ToggleVisibleHint'}}">
+              <i class="fas {{#if visibleToPlayers}}fa-users{{else}}fa-user-shield{{/if}}"></i>
+              <span>{{#if visibleToPlayers}}{{localize "RESOURCES.AllPlayers"}}{{else}}{{localize "RESOURCES.GMOnly"}}{{/if}}</span>
+            </button>
+          </div>
+
+          <div class="resource-col-actions">
+            <button type="button" data-action="deleteResource" data-resource-id="{{id}}" title="{{localize 'RESOURCES.DeleteResource'}}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+
+        </div>
+      {{/each}}
+
+    </div>
+  {{else}}
+    <div class="resource-manager-empty">
+      <i class="fas fa-list-ol"></i>
+      <p>{{localize "RESOURCES.EmptyHint"}}</p>
+    </div>
+  {{/if}}
+
+</div>
