@@ -70,6 +70,21 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
 
   async _prepareContext(options) {
     const [m1, m2, m3, m4, m5] = this.#difficultyMultipliers;
+
+    const availablePacks = game.packs
+      .filter(p => p.metadata.type === "Actor")
+      .map(p => ({
+        value: p.collection,
+        label: p.metadata.label,
+        selected: p.collection === this.#compendium
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+
+    const availableWorldFolders = game.folders
+      .filter(f => f.type === "Actor")
+      .map(f => f.name)
+      .sort();
+
     return {
       compendium: this.#compendium,
       creatureTypePath: this.#creatureTypePath,
@@ -78,7 +93,9 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
       groups: this.#groups,
       scenarios: this.#scenarios,
       diffMult: { veryLow: m1, low: m2, medium: m3, high: m4, veryHigh: m5 },
-      levelOffset: this.#levelOffset
+      levelOffset: this.#levelOffset,
+      availablePacks,
+      availableWorldFolders
     };
   }
 

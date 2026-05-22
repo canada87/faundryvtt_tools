@@ -57,6 +57,25 @@ export class GeneratorSettings extends HandlebarsApplicationMixin(ApplicationV2)
   /* ---------------------------------------- */
 
   async _prepareContext(options) {
+    const availablePacks = game.packs
+      .filter(p => p.metadata.type === "Item")
+      .map(p => ({
+        value: p.metadata.label,
+        label: p.metadata.label,
+        selected: p.metadata.label === this.#compendiumLabel
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+
+    let availableCompendiumFolders = [];
+    const selectedPack = game.packs.find(p => p.metadata.label === this.#compendiumLabel);
+    if (selectedPack) {
+      await selectedPack.getIndex({ fields: ["folder"] });
+      availableCompendiumFolders = selectedPack.folders
+        .filter(f => !f.folder)
+        .map(f => ({ name: f.name, selected: f.name === this.#componentsFolder }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
     return {
       compendiumLabel: this.#compendiumLabel,
       componentsFolder: this.#componentsFolder,
@@ -65,13 +84,23 @@ export class GeneratorSettings extends HandlebarsApplicationMixin(ApplicationV2)
         num: idx + 1,
         folderName: data.folderName,
         points: data.points
-      }))
+      })),
+      availablePacks,
+      availableCompendiumFolders
     };
   }
 
   /* ---------------------------------------- */
   /*  State sync                               */
   /* ---------------------------------------- */
+
+  _onRender(context, options) {
+    this.element.querySelector('[name="compendiumLabel"]')
+      ?.addEventListener("change", () => {
+        this.#syncFormToState();
+        this.render();
+      });
+  }
 
   /**
    * Read current DOM values into instance state before a re-render.

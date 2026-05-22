@@ -2,8 +2,12 @@
 
   <div class="form-group">
     <label>{{localize "ENCOUNTERS.CompendiumName"}}</label>
-    <input type="text" name="compendium" value="{{compendium}}"
-           placeholder="module.Compendium" />
+    <select name="compendium">
+      <option value="">{{localize "ENCOUNTERS.SelectCompendium"}}</option>
+      {{#each availablePacks}}
+        <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+      {{/each}}
+    </select>
     <small class="hint">{{localize "ENCOUNTERS.CompendiumHint"}}</small>
   </div>
 
@@ -24,7 +28,12 @@
   <div class="form-group">
     <label>{{localize "ENCOUNTERS.TargetFolder"}}</label>
     <input type="text" name="targetFolder" value="{{targetFolder}}"
-           placeholder="mostri" />
+           list="world-folders-list" placeholder="mostri" />
+    <datalist id="world-folders-list">
+      {{#each availableWorldFolders}}
+        <option value="{{this}}">{{this}}</option>
+      {{/each}}
+    </datalist>
     <small class="hint">{{localize "ENCOUNTERS.TargetFolderHint"}}</small>
   </div>
 
