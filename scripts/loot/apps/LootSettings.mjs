@@ -26,7 +26,7 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
     },
     position: {
       width: 520,
-      height: 600
+      height: 650
     },
     form: {
       submitOnChange: false,
@@ -36,6 +36,8 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
     actions: {
       addGroup: LootSettings.#onAddGroup,
       removeGroup: LootSettings.#onRemoveGroup,
+      addFolder: LootSettings.#onAddFolder,
+      removeFolder: LootSettings.#onRemoveFolder,
       addGoldRange: LootSettings.#onAddGoldRange,
       removeGoldRange: LootSettings.#onRemoveGoldRange
     }
@@ -57,19 +59,60 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   /* ---------------------------------------- */
+  /*  Lifecycle                                */
+  /* ---------------------------------------- */
+
+  _onRender(context, options) {
+    this.element.querySelector('[name="compendium"]')
+      ?.addEventListener("change", () => {
+        this.#syncFormToState();
+        this.render();
+      });
+  }
+
+  /* ---------------------------------------- */
   /*  Context                                  */
   /* ---------------------------------------- */
 
   async _prepareContext(options) {
+    const availablePacks = game.packs
+      .filter(p => p.metadata.type === "Item")
+      .map(p => ({
+        value: p.metadata.label,
+        label: p.metadata.label,
+        selected: p.metadata.label === this.#compendium
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+
+    let availableCompendiumFolders = [];
+    const selectedPack = game.packs.find(p => p.metadata.label === this.#compendium);
+    if (selectedPack) {
+      await selectedPack.getIndex({ fields: ["folder"] });
+      availableCompendiumFolders = selectedPack.folders
+        .filter(f => !f.folder)
+        .map(f => f.name)
+        .sort();
+    }
+
     return {
       compendium: this.#compendium,
       actorName: this.#actorName,
       currencyPath: this.#currencyPath,
-      groups: this.#groups.map(g => ({
-        ...g,
-        foldersStr: g.folders.join(", ")
+      groups: this.#groups.map((g, gi) => ({
+        index: gi,
+        label: g.label,
+        folders: g.folders.map((fname, fi) => ({
+          groupIndex: gi,
+          folderIndex: fi,
+          options: availableCompendiumFolders.map(fn => ({
+            value: fn,
+            label: fn,
+            selected: fn === fname
+          }))
+        }))
       })),
-      goldRanges: this.#goldRanges
+      goldRanges: this.#goldRanges,
+      availablePacks
     };
   }
 
@@ -85,12 +128,10 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const groups = [];
     el.querySelectorAll(".group-entry").forEach(entry => {
-      const label = entry.querySelector('input[name$=".label"]')?.value || "";
-      const folders = entry.querySelector('input[name$=".folders"]')?.value || "";
-      groups.push({
-        label: label.trim(),
-        folders: folders.split(",").map(s => s.trim()).filter(Boolean)
-      });
+      const label = entry.querySelector('[name$=".label"]')?.value || "";
+      const folderSelects = entry.querySelectorAll('select[name*=".folders."]');
+      const folders = Array.from(folderSelects).map(s => s.value).filter(Boolean);
+      groups.push({ label: label.trim(), folders });
     });
     this.#groups = groups;
 
@@ -122,6 +163,21 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
     this.render();
   }
 
+  static async #onAddFolder(event, target) {
+    this.#syncFormToState();
+    const groupIndex = Number(target.dataset.groupIndex);
+    this.#groups[groupIndex].folders.push("");
+    this.render();
+  }
+
+  static async #onRemoveFolder(event, target) {
+    this.#syncFormToState();
+    const groupIndex = Number(target.dataset.groupIndex);
+    const folderIndex = Number(target.dataset.folderIndex);
+    this.#groups[groupIndex].folders.splice(folderIndex, 1);
+    this.render();
+  }
+
   static async #onAddGoldRange() {
     this.#syncFormToState();
     this.#goldRanges.push({ label: "", min: 0, max: 0 });
@@ -142,16 +198,14 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
     await game.settings.set(MODULE_ID, "lootActorName", data.actorName || "Tesoro");
     await game.settings.set(MODULE_ID, "lootCurrencyPath", data.currencyPath || "system.currency.gp");
 
-    // Parse groups
     const groups = Object.values(data.groups || {})
       .filter(g => g.label?.trim())
       .map(g => ({
         label: g.label.trim(),
-        folders: g.folders.split(",").map(s => s.trim()).filter(Boolean)
+        folders: Object.values(g.folders || {}).filter(Boolean)
       }));
     await game.settings.set(MODULE_ID, "lootGroups", groups);
 
-    // Parse gold ranges
     const goldRanges = Object.values(data.goldRanges || {})
       .filter(r => r.label?.trim())
       .map(r => ({

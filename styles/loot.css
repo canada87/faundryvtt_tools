@@ -118,50 +118,59 @@
 
 /* --- Groups --- */
 
-.loot.loot-settings .groups-table-header {
-  display: flex;
-  gap: 6px;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  opacity: 0.7;
-  padding: 2px 4px;
-  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
-  margin-bottom: 4px;
-}
-
-.loot.loot-settings .groups-table-header .col-label {
-  flex: 1;
-}
-
-.loot.loot-settings .groups-table-header .col-folders {
-  flex: 2;
-}
-
-.loot.loot-settings .groups-table-header .col-action {
-  width: 32px;
-}
-
 .loot.loot-settings .group-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+
+.loot.loot-settings .group-header {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 4px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 3px;
-  margin-bottom: 4px;
 }
 
-.loot.loot-settings .group-entry .col-label {
+.loot.loot-settings .group-label-input {
   flex: 1;
 }
 
-.loot.loot-settings .group-entry .col-folders {
-  flex: 2;
+.loot.loot-settings .remove-group-btn {
+  width: 28px;
+  flex-shrink: 0;
 }
 
-.loot.loot-settings .group-entry .col-action {
-  width: 32px;
-  text-align: center;
+.loot.loot-settings .group-folders {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 8px;
+}
+
+.loot.loot-settings .folder-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.loot.loot-settings .folder-row select {
+  flex: 1;
+}
+
+.loot.loot-settings .folder-row button {
+  width: 24px;
+  flex-shrink: 0;
+  padding: 2px;
+}
+
+.loot.loot-settings .add-folder-btn {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  align-self: flex-start;
+  margin-top: 2px;
 }
 
 /* --- Gold ranges --- */

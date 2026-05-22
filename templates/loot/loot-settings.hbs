@@ -3,8 +3,12 @@
   <!-- ========== Compendium ========== -->
   <div class="form-group">
     <label>{{localize "LOOT.CompendiumName"}}</label>
-    <input type="text" name="compendium" value="{{compendium}}"
-           placeholder="Crafting & Consumables" />
+    <select name="compendium">
+      <option value="">{{localize "LOOT.SelectCompendium"}}</option>
+      {{#each availablePacks}}
+        <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+      {{/each}}
+    </select>
     <small class="hint">{{localize "LOOT.CompendiumHint"}}</small>
   </div>
 
@@ -36,22 +40,39 @@
     </div>
     <small class="hint">{{localize "LOOT.GroupsHint"}}</small>
 
-    <div class="groups-table-header">
-      <span class="col-label">{{localize "LOOT.GroupLabel"}}</span>
-      <span class="col-folders">{{localize "LOOT.GroupFolders"}}</span>
-      <span class="col-action"></span>
-    </div>
-
     {{#each groups}}
-      <div class="group-entry" data-group-index="{{@index}}">
-        <input type="text" name="groups.{{@index}}.label"
-               value="{{this.label}}" placeholder="Componenti lv1" class="col-label" />
-        <input type="text" name="groups.{{@index}}.folders"
-               value="{{this.foldersStr}}" placeholder="lv1, lv2" class="col-folders" />
-        <button type="button" data-action="removeGroup" class="col-action"
-                title="{{localize 'LOOT.RemoveGroup'}}">
-          <i class="fas fa-trash"></i>
-        </button>
+      <div class="group-entry" data-group-index="{{this.index}}">
+        <div class="group-header">
+          <input type="text" name="groups.{{this.index}}.label"
+                 value="{{this.label}}" placeholder="Componenti lv1"
+                 class="group-label-input" />
+          <button type="button" data-action="removeGroup" class="remove-group-btn"
+                  title="{{localize 'LOOT.RemoveGroup'}}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+        <div class="group-folders">
+          {{#each this.folders}}
+            <div class="folder-row">
+              <select name="groups.{{this.groupIndex}}.folders.{{this.folderIndex}}">
+                <option value="">{{localize "LOOT.SelectFolder"}}</option>
+                {{#each this.options}}
+                  <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+                {{/each}}
+              </select>
+              <button type="button" data-action="removeFolder"
+                      data-group-index="{{this.groupIndex}}"
+                      data-folder-index="{{this.folderIndex}}"
+                      title="{{localize 'LOOT.RemoveFolder'}}">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          {{/each}}
+          <button type="button" data-action="addFolder"
+                  data-group-index="{{this.index}}" class="add-folder-btn">
+            <i class="fas fa-plus"></i> {{localize "LOOT.AddFolder"}}
+          </button>
+        </div>
       </div>
     {{/each}}
   </div>
