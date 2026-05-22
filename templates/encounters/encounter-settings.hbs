@@ -28,12 +28,7 @@
   <div class="form-group">
     <label>{{localize "ENCOUNTERS.TargetFolder"}}</label>
     <input type="text" name="targetFolder" value="{{targetFolder}}"
-           list="world-folders-list" placeholder="mostri" />
-    <datalist id="world-folders-list">
-      {{#each availableWorldFolders}}
-        <option value="{{this}}">{{this}}</option>
-      {{/each}}
-    </datalist>
+           placeholder="mostri" />
     <small class="hint">{{localize "ENCOUNTERS.TargetFolderHint"}}</small>
   </div>
 
@@ -86,27 +81,27 @@
       <div class="diff-config-row">
         <label class="col-diff-label">{{localize "ENCOUNTERS.DiffVeryLow"}}</label>
         <input type="number" name="diffMult.veryLow" value="{{diffMult.veryLow}}"
-               step="0.1" min="0.01" class="col-diff-mult" />
+               step="any" min="0.01" class="col-diff-mult" />
       </div>
       <div class="diff-config-row">
         <label class="col-diff-label">{{localize "ENCOUNTERS.DiffLow"}}</label>
         <input type="number" name="diffMult.low" value="{{diffMult.low}}"
-               step="0.1" min="0.01" class="col-diff-mult" />
+               step="any" min="0.01" class="col-diff-mult" />
       </div>
       <div class="diff-config-row">
         <label class="col-diff-label">{{localize "ENCOUNTERS.DiffMedium"}}</label>
         <input type="number" name="diffMult.medium" value="{{diffMult.medium}}"
-               step="0.1" min="0.01" class="col-diff-mult" />
+               step="any" min="0.01" class="col-diff-mult" />
       </div>
       <div class="diff-config-row">
         <label class="col-diff-label">{{localize "ENCOUNTERS.DiffHigh"}}</label>
         <input type="number" name="diffMult.high" value="{{diffMult.high}}"
-               step="0.1" min="0.01" class="col-diff-mult" />
+               step="any" min="0.01" class="col-diff-mult" />
       </div>
       <div class="diff-config-row">
         <label class="col-diff-label">{{localize "ENCOUNTERS.DiffVeryHigh"}}</label>
         <input type="number" name="diffMult.veryHigh" value="{{diffMult.veryHigh}}"
-               step="0.1" min="0.01" class="col-diff-mult" />
+               step="any" min="0.01" class="col-diff-mult" />
       </div>
     </div>
 

@@ -80,11 +80,6 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
 
-    const availableWorldFolders = game.folders
-      .filter(f => f.type === "Actor")
-      .map(f => f.name)
-      .sort();
-
     return {
       compendium: this.#compendium,
       creatureTypePath: this.#creatureTypePath,
@@ -94,8 +89,7 @@ export class EncounterSettings extends HandlebarsApplicationMixin(ApplicationV2)
       scenarios: this.#scenarios,
       diffMult: { veryLow: m1, low: m2, medium: m3, high: m4, veryHigh: m5 },
       levelOffset: this.#levelOffset,
-      availablePacks,
-      availableWorldFolders
+      availablePacks
     };
   }
 
