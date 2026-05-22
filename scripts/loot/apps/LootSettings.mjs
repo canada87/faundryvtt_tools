@@ -88,8 +88,11 @@ export class LootSettings extends HandlebarsApplicationMixin(ApplicationV2) {
     const selectedPack = game.packs.find(p => p.metadata.label === this.#compendium);
     if (selectedPack) {
       await selectedPack.getIndex({ fields: ["folder"] });
+      const parentIds = new Set(
+        selectedPack.folders.filter(f => f.folder).map(f => f.folder.id)
+      );
       availableCompendiumFolders = selectedPack.folders
-        .filter(f => !f.folder)
+        .filter(f => !parentIds.has(f.id))
         .map(f => f.name)
         .sort();
     }
