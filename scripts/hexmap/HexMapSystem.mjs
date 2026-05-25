@@ -193,7 +193,7 @@ export class HexMapSystem {
       const folder = key === "__poi__" ? settings.poiFolder : settings.terrainFolders[key];
       if (!folder) continue;
       try {
-        const result = await FilePicker.browse("public", folder);
+        const result = await FilePicker.browse("data", folder);
         fileCache[key] = result.files.filter(f => /\.(png|jpg|jpeg|webp)$/i.test(f));
       } catch (e) {
         console.warn(`HexMap | Could not browse folder "${folder}":`, e);
