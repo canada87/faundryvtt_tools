@@ -404,6 +404,59 @@
       "Imported": "Importazione completata: {count} impostazione/i ripristinate."
     }
   },
+  "HEXMAP": {
+    "FeatureName": "Generatore Hex Map",
+    "FeatureDescription": "Genera mappe esagonali procedurali posizionando tile di terreno su una scena con griglia hex.",
+    "GeneratorTitle": "Generatore Hex Map",
+    "SettingsTitle": "Impostazioni Hex Map",
+    "OpenSettings": "Configura Terreni",
+    "MapSize": "Dimensioni Mappa",
+    "Width": "Larghezza",
+    "Height": "Altezza",
+    "Hexagons": "esagoni",
+    "GenerationMode": "Modalità Generazione",
+    "ModeBiome": "Bioma",
+    "ModeManual": "Manuale",
+    "BiomeLabel": "Bioma",
+    "Cities": "Città",
+    "CityCount": "Numero di Città",
+    "MinCityDistance": "Distanza Minima",
+    "Generate": "Genera Mappa",
+    "Save": "Salva",
+    "TerrainFolders": "Cartelle Terreni",
+    "TerrainFoldersHint": "Per ogni tipo di terreno, specifica il percorso della cartella contenente le immagini delle tile.",
+    "PoiFolder": "Cartella Punti di Interesse",
+    "PoiFolderHint": "Percorso della cartella contenente le tile per città e punti di interesse.",
+    "Terrain": {
+      "Grass": "Erba",
+      "Forest": "Foresta",
+      "Hills": "Colline",
+      "Mountains": "Montagne",
+      "Fields": "Campi",
+      "Desert": "Deserto",
+      "Deadlands": "Terre Desolate",
+      "Wetlands": "Paludi",
+      "Sea": "Mare",
+      "Rivers": "Fiumi",
+      "Paths": "Sentieri"
+    },
+    "Biome": {
+      "Temperate": "Temperato",
+      "Desert": "Desertico",
+      "Coastal": "Costiero",
+      "Mountain": "Montagnoso",
+      "Swamp": "Paludoso"
+    },
+    "Warn": {
+      "NoScene": "Nessuna scena attiva trovata.",
+      "NoTerrains": "Nessun terreno configurato con cartelle. Configura prima le cartelle dei terreni.",
+      "NoConfiguration": "Nessuna cartella terreno configurata. Clicca 'Configura Terreni' per impostare."
+    },
+    "Info": {
+      "Generated": "{count} tile posizionate con successo.",
+      "SettingsSaved": "Impostazioni hex map salvate."
+    }
+  },
   "RESOURCES": {
     "FeatureName": "Risorse",
     "FeatureDescription": "Traccia contatori a schermo (sopravvissuti, scorte, ecc.) visibili al GM e/o ai giocatori.",

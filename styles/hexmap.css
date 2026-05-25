@@ -1,0 +1,229 @@
+/* ── Shared layout ─────────────────────────────────────────────────────────── */
+
+.hexmap-generator-content,
+.hexmap-settings-content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hexmap-section {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+
+.hexmap-section h3 {
+  margin: 0 0 8px;
+  font-size: 0.82em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+}
+
+.hint {
+  font-size: 0.8em;
+  font-style: italic;
+  opacity: 0.65;
+  margin: 0 0 8px;
+}
+
+/* ── Row layout ────────────────────────────────────────────────────────────── */
+
+.hexmap-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.hexmap-row:last-child {
+  margin-bottom: 0;
+}
+
+.hexmap-row label {
+  min-width: 130px;
+  font-size: 0.9em;
+}
+
+.hexmap-row input[type="number"] {
+  width: 64px;
+  text-align: center;
+}
+
+.hexmap-separator {
+  font-size: 1.1em;
+  opacity: 0.5;
+}
+
+.hexmap-unit {
+  font-size: 0.82em;
+  opacity: 0.6;
+}
+
+.hexmap-select {
+  flex: 1;
+}
+
+/* ── Mode toggle ───────────────────────────────────────────────────────────── */
+
+.hexmap-mode-toggle {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.hexmap-mode-btn {
+  flex: 1;
+  padding: 5px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: transparent;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 0.88em;
+  opacity: 0.55;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.hexmap-mode-btn:hover {
+  opacity: 0.85;
+}
+
+.hexmap-mode-btn.active {
+  background: rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.35);
+  opacity: 1;
+  font-weight: bold;
+}
+
+/* ── Manual weights ────────────────────────────────────────────────────────── */
+
+.hexmap-manual-weights {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hexmap-weight-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hexmap-weight-row label {
+  min-width: 110px;
+  font-size: 0.9em;
+}
+
+.hexmap-weight-row input {
+  width: 60px;
+  text-align: center;
+}
+
+/* ── Terrain folder list ───────────────────────────────────────────────────── */
+
+.hexmap-terrain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hexmap-terrain-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hexmap-terrain-row label {
+  min-width: 110px;
+  font-size: 0.88em;
+  flex-shrink: 0;
+}
+
+.hexmap-terrain-row input,
+.hexmap-full-input {
+  flex: 1;
+  font-family: monospace;
+  font-size: 0.82em;
+}
+
+.hexmap-full-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Warning banner ────────────────────────────────────────────────────────── */
+
+.hexmap-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(230, 150, 0, 0.12);
+  border: 1px solid rgba(230, 150, 0, 0.35);
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+
+.hexmap-warning i {
+  color: #c87800;
+  flex-shrink: 0;
+}
+
+.hexmap-warning-btn {
+  margin-left: auto;
+  padding: 3px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.88em;
+  white-space: nowrap;
+}
+
+.hexmap-empty-hint {
+  font-style: italic;
+  opacity: 0.55;
+  font-size: 0.88em;
+  margin: 4px 0;
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────────── */
+
+.hexmap-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.hexmap-btn-primary {
+  padding: 6px 18px;
+  background: #4a90d9;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background 0.15s;
+}
+
+.hexmap-btn-primary:hover {
+  background: #3578c0;
+}
+
+.hexmap-btn-secondary {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9em;
+  opacity: 0.75;
+  transition: opacity 0.15s;
+}
+
+.hexmap-btn-secondary:hover {
+  opacity: 1;
+}

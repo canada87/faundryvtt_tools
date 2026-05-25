@@ -404,6 +404,59 @@
       "Imported": "Import completed: {count} setting(s) restored."
     }
   },
+  "HEXMAP": {
+    "FeatureName": "Hex Map Generator",
+    "FeatureDescription": "Generate procedural hexagon maps by placing terrain tiles on an existing hex grid scene.",
+    "GeneratorTitle": "Hex Map Generator",
+    "SettingsTitle": "Hex Map Settings",
+    "OpenSettings": "Configure Terrain",
+    "MapSize": "Map Size",
+    "Width": "Width",
+    "Height": "Height",
+    "Hexagons": "hexagons",
+    "GenerationMode": "Generation Mode",
+    "ModeBiome": "Biome",
+    "ModeManual": "Manual",
+    "BiomeLabel": "Biome",
+    "Cities": "Cities",
+    "CityCount": "Number of Cities",
+    "MinCityDistance": "Min Distance",
+    "Generate": "Generate Map",
+    "Save": "Save",
+    "TerrainFolders": "Terrain Folders",
+    "TerrainFoldersHint": "For each terrain type, specify the folder path containing the tile images.",
+    "PoiFolder": "Points of Interest Folder",
+    "PoiFolderHint": "Folder path containing tiles for cities and points of interest.",
+    "Terrain": {
+      "Grass": "Grass",
+      "Forest": "Forest",
+      "Hills": "Hills",
+      "Mountains": "Mountains",
+      "Fields": "Fields",
+      "Desert": "Desert",
+      "Deadlands": "Deadlands",
+      "Wetlands": "Wetlands",
+      "Sea": "Sea",
+      "Rivers": "Rivers",
+      "Paths": "Paths"
+    },
+    "Biome": {
+      "Temperate": "Temperate",
+      "Desert": "Desert",
+      "Coastal": "Coastal",
+      "Mountain": "Mountain",
+      "Swamp": "Swamp"
+    },
+    "Warn": {
+      "NoScene": "No active scene found.",
+      "NoTerrains": "No terrain types configured with folders. Configure terrain folders first.",
+      "NoConfiguration": "No terrain folders configured. Click 'Configure Terrain' to set up."
+    },
+    "Info": {
+      "Generated": "{count} tiles placed successfully.",
+      "SettingsSaved": "Hex map settings saved."
+    }
+  },
   "RESOURCES": {
     "FeatureName": "Resources",
     "FeatureDescription": "Track on-screen counters (survivors, supplies, etc.) visible to GM and/or players.",

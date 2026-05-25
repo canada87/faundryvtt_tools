@@ -10,6 +10,7 @@ import { initSavingThrow } from "./saving-throw/index.mjs";
 import { initMindMap } from "./mindmap/index.mjs";
 import { initBackup } from "./backup/index.mjs";
 import { initResources } from "./resources/index.mjs";
+import { initHexMap } from "./hexmap/index.mjs";
 
 /* ---------------------------------------- */
 /*  Settings menu launcher (FormApplication */
@@ -60,6 +61,7 @@ Hooks.once("init", () => {
   initMindMap();
   initBackup();
   initResources();
+  initHexMap();
 
   console.log("Faundryvtt Tools | Module initialized");
 });

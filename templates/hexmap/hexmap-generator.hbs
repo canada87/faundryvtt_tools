@@ -1,0 +1,86 @@
+<div class="hexmap-generator-content">
+
+  {{#unless hasTerrains}}
+    <div class="hexmap-warning">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>{{localize "HEXMAP.Warn.NoConfiguration"}}</span>
+      <button type="button" data-action="openSettings" class="hexmap-warning-btn">
+        {{localize "HEXMAP.OpenSettings"}}
+      </button>
+    </div>
+  {{/unless}}
+
+  <section class="hexmap-section">
+    <h3>{{localize "HEXMAP.MapSize"}}</h3>
+    <div class="hexmap-row">
+      <label>{{localize "HEXMAP.Width"}}</label>
+      <input type="number" name="width" value="{{width}}" min="1" max="60" />
+      <span class="hexmap-separator">×</span>
+      <label>{{localize "HEXMAP.Height"}}</label>
+      <input type="number" name="height" value="{{height}}" min="1" max="60" />
+      <span class="hexmap-unit">{{localize "HEXMAP.Hexagons"}}</span>
+    </div>
+  </section>
+
+  <section class="hexmap-section">
+    <h3>{{localize "HEXMAP.GenerationMode"}}</h3>
+    <div class="hexmap-mode-toggle">
+      <button type="button" data-action="setMode" data-mode="biome"
+              class="hexmap-mode-btn{{#if isBiomeMode}} active{{/if}}">
+        <i class="fas fa-leaf"></i> {{localize "HEXMAP.ModeBiome"}}
+      </button>
+      <button type="button" data-action="setMode" data-mode="manual"
+              class="hexmap-mode-btn{{#if isManualMode}} active{{/if}}">
+        <i class="fas fa-sliders-h"></i> {{localize "HEXMAP.ModeManual"}}
+      </button>
+    </div>
+
+    {{#if isBiomeMode}}
+      <div class="hexmap-row">
+        <label>{{localize "HEXMAP.BiomeLabel"}}</label>
+        <select name="biome" class="hexmap-select">
+          {{#each biomes}}
+            <option value="{{id}}"{{#if selected}} selected{{/if}}>{{label}}</option>
+          {{/each}}
+        </select>
+      </div>
+    {{else}}
+      <div class="hexmap-manual-weights">
+        {{#if terrains.length}}
+          {{#each terrains}}
+            <div class="hexmap-weight-row">
+              <label>{{label}}</label>
+              <input type="number" data-weight-terrain="{{id}}" value="{{weight}}" min="0" max="100" step="5" />
+              <span class="hexmap-unit">%</span>
+            </div>
+          {{/each}}
+        {{else}}
+          <p class="hexmap-empty-hint">{{localize "HEXMAP.Warn.NoTerrains"}}</p>
+        {{/if}}
+      </div>
+    {{/if}}
+  </section>
+
+  <section class="hexmap-section">
+    <h3>{{localize "HEXMAP.Cities"}}</h3>
+    <div class="hexmap-row">
+      <label>{{localize "HEXMAP.CityCount"}}</label>
+      <input type="number" name="cityCount" value="{{cityCount}}" min="0" max="30" />
+    </div>
+    <div class="hexmap-row">
+      <label>{{localize "HEXMAP.MinCityDistance"}}</label>
+      <input type="number" name="minCityDistance" value="{{minCityDistance}}" min="1" max="30" />
+      <span class="hexmap-unit">{{localize "HEXMAP.Hexagons"}}</span>
+    </div>
+  </section>
+
+  <div class="hexmap-footer">
+    <button type="button" data-action="openSettings" class="hexmap-btn-secondary">
+      <i class="fas fa-cog"></i> {{localize "HEXMAP.OpenSettings"}}
+    </button>
+    <button type="button" data-action="generate" class="hexmap-btn-primary">
+      <i class="fas fa-magic"></i> {{localize "HEXMAP.Generate"}}
+    </button>
+  </div>
+
+</div>
