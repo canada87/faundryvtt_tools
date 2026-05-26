@@ -77,16 +77,27 @@ export class HexMapSystem {
          + d * ux       * uy;
   }
 
-  /** Map a noise value [0,1] to a terrain type via cumulative weight thresholds */
-  static _noiseToTerrain(value, distribution) {
+  /**
+   * Assign terrain types to an array of cells by percentile rank.
+   * Cells are sorted by their noise value and then divided into terrain bands
+   * proportional to the specified weights — guarantees exact proportions
+   * regardless of how the noise is distributed.
+   */
+  static _assignTerrainsByPercentile(cells, distribution) {
+    const totalWeight = Object.values(distribution).reduce((s, w) => s + w, 0);
+    const sorted = [...cells].sort((a, b) => a.noise - b.noise);
     const entries = Object.entries(distribution);
-    const total = entries.reduce((s, [, w]) => s + w, 0);
-    let cumulative = 0;
-    for (const [terrain, weight] of entries) {
-      cumulative += weight / total;
-      if (value <= cumulative) return terrain;
+    let idx = 0;
+    for (let ti = 0; ti < entries.length; ti++) {
+      const [terrain, weight] = entries[ti];
+      const isLast = ti === entries.length - 1;
+      const count = isLast
+        ? sorted.length - idx
+        : Math.round((weight / totalWeight) * sorted.length);
+      for (let i = 0; i < count && idx < sorted.length; i++, idx++) {
+        sorted[idx].terrain = terrain;
+      }
     }
-    return entries[entries.length - 1][0];
   }
 
   /** Approximate hex distance via pixel distance / grid size */
@@ -161,7 +172,7 @@ export class HexMapSystem {
     const startJ = centerOffset.j - Math.floor(width / 2);
     const maxOffset = canvas.grid.getOffset({ x: scene.width - 1, y: scene.height - 1 });
 
-    // Generate cell grid
+    // First pass: generate all in-bounds cells with noise values
     const seed = Math.floor(Math.random() * 1_000_000);
     const validCells = [];
 
@@ -170,9 +181,12 @@ export class HexMapSystem {
         const gi = startI + row;
         const gj = startJ + col;
         if (gi < 0 || gj < 0 || gi > maxOffset.i || gj > maxOffset.j) continue;
-        const noise = this._valueNoise(col, row, seed);
-        const terrain = this._noiseToTerrain(noise, distribution);
-        validCells.push({ row, col, gridI: gi, gridJ: gj, terrain, isCity: false });
+        validCells.push({
+          row, col, gridI: gi, gridJ: gj,
+          noise: this._valueNoise(col, row, seed),
+          terrain: null,
+          isCity: false
+        });
       }
     }
 
@@ -180,6 +194,9 @@ export class HexMapSystem {
       ui.notifications.warn(game.i18n.localize("HEXMAP.Warn.NoScene"));
       return;
     }
+
+    // Second pass: assign terrain by percentile rank (exact proportions guaranteed)
+    this._assignTerrainsByPercentile(validCells, distribution);
 
     // Place cities
     if (cityCount > 0 && settings.poiFolder) {
