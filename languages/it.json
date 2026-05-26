@@ -410,6 +410,9 @@
     "GeneratorTitle": "Generatore Hex Map",
     "SettingsTitle": "Impostazioni Hex Map",
     "OpenSettings": "Configura Terreni",
+    "SettingsMenuName": "Terreni Hex Map",
+    "SettingsMenuLabel": "Configura Terreni",
+    "SettingsMenuHint": "Configura i percorsi delle cartelle per ogni tipo di terreno e i punti di interesse.",
     "MapSize": "Dimensioni Mappa",
     "Width": "Larghezza",
     "Height": "Altezza",
@@ -436,9 +439,7 @@
       "Desert": "Deserto",
       "Deadlands": "Terre Desolate",
       "Wetlands": "Paludi",
-      "Sea": "Mare",
-      "Rivers": "Fiumi",
-      "Paths": "Sentieri"
+      "Sea": "Mare"
     },
     "Biome": {
       "Temperate": "Temperato",

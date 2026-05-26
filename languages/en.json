@@ -410,6 +410,9 @@
     "GeneratorTitle": "Hex Map Generator",
     "SettingsTitle": "Hex Map Settings",
     "OpenSettings": "Configure Terrain",
+    "SettingsMenuName": "Hex Map Terrains",
+    "SettingsMenuLabel": "Configure Terrain",
+    "SettingsMenuHint": "Configure the folder paths for each terrain type and points of interest.",
     "MapSize": "Map Size",
     "Width": "Width",
     "Height": "Height",
@@ -436,9 +439,7 @@
       "Desert": "Desert",
       "Deadlands": "Deadlands",
       "Wetlands": "Wetlands",
-      "Sea": "Sea",
-      "Rivers": "Rivers",
-      "Paths": "Paths"
+      "Sea": "Sea"
     },
     "Biome": {
       "Temperate": "Temperate",

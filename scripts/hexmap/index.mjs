@@ -4,6 +4,16 @@ import { HexMapSystem } from "./HexMapSystem.mjs";
 import { HexMapGenerator } from "./apps/HexMapGenerator.mjs";
 import { HexMapSettings } from "./apps/HexMapSettings.mjs";
 
+class HexMapSettingsLauncher extends FormApplication {
+  constructor(...args) {
+    super(...args);
+    new HexMapSettings().render(true);
+    this.close();
+  }
+  async _updateObject() {}
+  render() { return this; }
+}
+
 export function initHexMap() {
 
   game.settings.register(MODULE_ID, "hexmapSettings", {
@@ -12,6 +22,15 @@ export function initHexMap() {
     config: false,
     type: Object,
     default: HexMapSystem.getDefaultSettings()
+  });
+
+  game.settings.registerMenu(MODULE_ID, "hexmapTerrainSettings", {
+    name: "HEXMAP.SettingsMenuName",
+    label: "HEXMAP.SettingsMenuLabel",
+    hint: "HEXMAP.SettingsMenuHint",
+    icon: "fas fa-map",
+    type: HexMapSettingsLauncher,
+    restricted: true
   });
 
   HubMenu.registerFeature({

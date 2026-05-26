@@ -10,8 +10,6 @@ export const TERRAIN_TYPES = [
   { id: "deadlands",  labelKey: "HEXMAP.Terrain.Deadlands" },
   { id: "wetlands",   labelKey: "HEXMAP.Terrain.Wetlands" },
   { id: "sea",        labelKey: "HEXMAP.Terrain.Sea" },
-  { id: "rivers",     labelKey: "HEXMAP.Terrain.Rivers" },
-  { id: "paths",      labelKey: "HEXMAP.Terrain.Paths" },
 ];
 
 export const BIOME_PRESETS = {
@@ -33,7 +31,7 @@ export const BIOME_PRESETS = {
   },
   swamp: {
     labelKey: "HEXMAP.Biome.Swamp",
-    distribution: { wetlands: 40, forest: 25, grass: 20, rivers: 15 }
+    distribution: { wetlands: 55, forest: 25, grass: 20 }
   }
 };
 
@@ -48,9 +46,20 @@ export class HexMapSystem {
   }
 
   static getDefaultSettings() {
-    const folders = {};
-    for (const t of TERRAIN_TYPES) folders[t.id] = "";
-    return { terrainFolders: folders, poiFolder: "" };
+    return {
+      terrainFolders: {
+        grass:     "",
+        forest:    "modules/hexcrawl-hex-tiles/hextiles/forest",
+        hills:     "modules/hexcrawl-hex-tiles/hextiles/hills",
+        mountains: "modules/hexcrawl-hex-tiles/hextiles/mountains",
+        fields:    "modules/hexcrawl-hex-tiles/hextiles/fields",
+        desert:    "modules/hexcrawl-hex-tiles/hextiles/desert",
+        deadlands: "modules/hexcrawl-hex-tiles/hextiles/deadlands",
+        wetlands:  "modules/hexcrawl-hex-tiles/hextiles/wetlands",
+        sea:       "modules/hexcrawl-hex-tiles/hextiles/sea"
+      },
+      poiFolder: "modules/hexcrawl-hex-tiles/hextiles/points_of_interest"
+    };
   }
 
   /** Integer hash → [0, 1) */
@@ -222,7 +231,8 @@ export class HexMapSystem {
     await this._clearArea(validCells);
 
     // Build tile create data
-    const tileSize = canvas.grid.size;
+    const tileW = canvas.grid.size;
+    const tileH = Math.round(canvas.grid.size * 480 / 420);
     const tileDefs = [];
     for (const cell of validCells) {
       const key = cell.isCity ? "__poi__" : cell.terrain;
@@ -234,8 +244,8 @@ export class HexMapSystem {
         texture: { src },
         x: pt.x,
         y: pt.y,
-        width: tileSize,
-        height: tileSize,
+        width: tileW,
+        height: tileH,
         overhead: false,
         locked: false,
         hidden: false
