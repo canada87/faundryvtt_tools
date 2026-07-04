@@ -1,4 +1,5 @@
 import { MODULE_ID } from "../shared/constants.mjs";
+import { snapToGrid } from "../shared/gridUtils.mjs";
 
 /**
  * Core logic for the Random Encounters feature.
@@ -290,18 +291,8 @@ export class EncounterSystem {
       targetFolder = await Folder.create({ name: targetFolderName, type: "Actor", parent: null });
     }
 
-    // Visual template
-    const [templateDoc] = await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [{
-      t: "circle",
-      user: game.user.id,
-      x: position.x,
-      y: position.y,
-      distance: 5,
-      fillColor: "#cc2865"
-    }]);
-
-    const tokenDataArray = [];
     const radiusPixels = 5 * canvas.grid.size;
+    const tokenDataArray = [];
 
     for (const entry of entries) {
       // Check if already imported
@@ -326,7 +317,7 @@ export class EncounterSystem {
       const distance = Math.random() * radiusPixels;
       const tokenX = position.x + Math.cos(angle) * distance;
       const tokenY = position.y + Math.sin(angle) * distance;
-      const snapped = canvas.grid.getSnappedPosition(tokenX, tokenY, 1);
+      const snapped = snapToGrid(tokenX, tokenY);
 
       const tokenProto = await worldActor.getTokenDocument();
       tokenDataArray.push({
@@ -338,12 +329,6 @@ export class EncounterSystem {
     }
 
     await canvas.scene.createEmbeddedDocuments("Token", tokenDataArray);
-
-    // Remove visual template after a short delay
-    setTimeout(
-      () => canvas.scene.deleteEmbeddedDocuments("MeasuredTemplate", [templateDoc.id]),
-      500
-    );
 
     ui.notifications.info(game.i18n.localize("ENCOUNTERS.Info.SpawnComplete"));
   }

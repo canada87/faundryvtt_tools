@@ -1,4 +1,5 @@
 import { MODULE_ID } from "../shared/constants.mjs";
+import { snapToGrid } from "../shared/gridUtils.mjs";
 
 /**
  * Core logic for the Loot Generator feature.
@@ -131,7 +132,7 @@ export class LootSystem {
    * @returns {Actor|null}  The token's synthetic actor, or null on failure
    */
   static async spawnTreasureToken(templateActor, position) {
-    const snapped = canvas.grid.getSnappedPosition(position.x, position.y, 1);
+    const snapped = snapToGrid(position.x, position.y);
     const tokenProto = await templateActor.getTokenDocument();
 
     const [tokenDoc] = await canvas.scene.createEmbeddedDocuments("Token", [{

@@ -1,3 +1,5 @@
+import { snapToGrid } from "../shared/gridUtils.mjs";
+
 /**
  * Core logic for the Party Placer feature.
  * Handles retrieving player-assigned actors and spawning their tokens.
@@ -38,11 +40,7 @@ export class PartySystem {
       const angle = (i / actorIds.length) * 2 * Math.PI;
       const offsetX = Math.cos(angle) * radius;
       const offsetY = Math.sin(angle) * radius;
-      const snapped = canvas.grid.getSnappedPosition(
-        position.x + offsetX,
-        position.y + offsetY,
-        1
-      );
+      const snapped = snapToGrid(position.x + offsetX, position.y + offsetY);
 
       const tokenProto = await actor.getTokenDocument();
       tokenDataArray.push({
