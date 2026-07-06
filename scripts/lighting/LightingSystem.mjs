@@ -69,7 +69,7 @@ export class LightingSystem {
       ui.notifications.error(game.i18n.localize("LIGHTING.Error.NoScene"));
       return;
     }
-    await scene.update({ darkness: value });
+    await scene.update({ "environment.darknessLevel": value });
     ui.notifications.info(
       game.i18n.format("LIGHTING.Info.DarknessSet", { value: Math.round(value * 100) })
     );
