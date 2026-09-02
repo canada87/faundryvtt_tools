@@ -87,14 +87,25 @@ Hooks.on("getSceneControlButtons", (controls) => {
     button: true,
     onClick: f.open
   }));
-  const allTools = [hubTool, ...featureTools];
+  // Placeholder tool with no effect: Foundry activates the group's
+  // activeTool (calling its onChange) as soon as the group itself is
+  // selected, even for button tools. Using a no-op tool as activeTool
+  // prevents any real feature from opening just by clicking the group icon.
+  const placeholderTool = {
+    name: "placeholder",
+    title: "FVTT_TOOLS.HubTitle",
+    icon: "fas fa-toolbox",
+    visible: false,
+    onChange: () => {}
+  };
+  const allTools = [placeholderTool, hubTool, ...featureTools];
 
   const group = {
     name: "faundryvtt-tools",
     title: "FVTT_TOOLS.HubTitle",
     icon: "fas fa-toolbox",
     visible: true,
-    activeTool: "hub"
+    activeTool: "placeholder"
   };
 
   // v12: controls is an array; v13+: controls is a plain object keyed by name
