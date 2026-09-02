@@ -67,27 +67,44 @@ Hooks.once("init", () => {
 });
 
 /* ---------------------------------------- */
-/*  Scene control button (GM only)          */
+/*  Scene control group (GM only)           */
 /* ---------------------------------------- */
 
 Hooks.on("getSceneControlButtons", (controls) => {
   if (!game.user.isGM) return;
-  // v12: controls is an array; v13: controls is a plain object keyed by name
-  const tokenControls = Array.isArray(controls)
-    ? controls.find(c => c.name === "token")
-    : controls.token;
-  if (!tokenControls) return;
-  const tool = {
-    name: "faundryvtt-tools-hub",
-    title: game.i18n.localize("FVTT_TOOLS.HubTitle"),
+
+  const hubTool = {
+    name: "hub",
+    title: game.i18n.localize("FVTT_TOOLS.OpenHub"),
     icon: "fas fa-toolbox",
     button: true,
     onClick: () => new HubMenu().render(true)
   };
-  if (Array.isArray(tokenControls.tools)) {
-    tokenControls.tools.push(tool);
-  } else if (tokenControls.tools && typeof tokenControls.tools === "object") {
-    tokenControls.tools[tool.name] = tool;
+  const featureTools = HubMenu.features.map(f => ({
+    name: f.id,
+    title: game.i18n.localize(f.name),
+    icon: f.icon,
+    button: true,
+    onClick: f.open
+  }));
+  const allTools = [hubTool, ...featureTools];
+
+  const group = {
+    name: "faundryvtt-tools",
+    title: "FVTT_TOOLS.HubTitle",
+    icon: "fas fa-toolbox",
+    visible: true,
+    activeTool: "hub"
+  };
+
+  // v12: controls is an array; v13+: controls is a plain object keyed by name
+  if (Array.isArray(controls)) {
+    controls.push({ ...group, tools: allTools });
+  } else {
+    controls["faundryvtt-tools"] = {
+      ...group,
+      tools: Object.fromEntries(allTools.map(t => [t.name, t]))
+    };
   }
 });
 
