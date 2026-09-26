@@ -15,6 +15,7 @@
         <span class="resource-col-color">{{localize "RESOURCES.Color"}}</span>
         <span class="resource-col-value">{{localize "RESOURCES.Value"}}</span>
         <span class="resource-col-toggles">{{localize "RESOURCES.Visibility"}}</span>
+        <span class="resource-col-decay">{{localize "RESOURCES.Decay"}}</span>
         <span class="resource-col-actions"></span>
       </div>
 
@@ -63,6 +64,17 @@
             </button>
           </div>
 
+          <div class="resource-col-decay">
+            <button type="button"
+                    class="resource-toggle{{#if decay.enabled}} is-on{{/if}}"
+                    data-action="toggleDecay"
+                    data-resource-id="{{id}}"
+                    title="{{localize 'RESOURCES.ToggleDecayHint'}}">
+              <i class="fas fa-hourglass-half"></i>
+              <span>{{#if decay.enabled}}{{localize "RESOURCES.On"}}{{else}}{{localize "RESOURCES.Off"}}{{/if}}</span>
+            </button>
+          </div>
+
           <div class="resource-col-actions">
             <button type="button" data-action="deleteResource" data-resource-id="{{id}}" title="{{localize 'RESOURCES.DeleteResource'}}">
               <i class="fas fa-trash"></i>
@@ -70,6 +82,31 @@
           </div>
 
         </div>
+
+        {{#if decay.enabled}}
+          <div class="resource-decay-row" data-resource-id="{{id}}">
+            <label>
+              <span>{{localize "RESOURCES.DecayInterval"}}</span>
+              <input type="number" min="1" data-resource-id="{{id}}" data-decay-field="interval" value="{{decay.interval}}" />
+              <span class="resource-decay-unit">{{localize "RESOURCES.Minutes"}}</span>
+            </label>
+            <label>
+              <span>{{localize "RESOURCES.DecayAmount"}}</span>
+              <input type="number" min="0" step="1" data-resource-id="{{id}}" data-decay-field="amount" value="{{decay.amount}}" />
+            </label>
+            <label>
+              <span>{{localize "RESOURCES.DecayDirection"}}</span>
+              <select data-resource-id="{{id}}" data-decay-field="direction">
+                <option value="decrease">{{localize "RESOURCES.Decrease"}}</option>
+                <option value="increase">{{localize "RESOURCES.Increase"}}</option>
+              </select>
+            </label>
+            <label class="resource-decay-loop" title="{{localize 'RESOURCES.DecayLoopHint'}}">
+              <input type="checkbox" data-resource-id="{{id}}" data-decay-field="loop" {{#if decay.loop}}checked{{/if}} />
+              <span>{{localize "RESOURCES.DecayLoop"}}</span>
+            </label>
+          </div>
+        {{/if}}
       {{/each}}
 
     </div>

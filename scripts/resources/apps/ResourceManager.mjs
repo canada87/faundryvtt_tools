@@ -26,7 +26,8 @@ export class ResourceManager extends HandlebarsApplicationMixin(ApplicationV2) {
       decrement: ResourceManager.#onDecrement,
       increment: ResourceManager.#onIncrement,
       toggleVisible: ResourceManager.#onToggleVisible,
-      toggleActive: ResourceManager.#onToggleActive
+      toggleActive: ResourceManager.#onToggleActive,
+      toggleDecay: ResourceManager.#onToggleDecay
     }
   };
 
@@ -37,9 +38,18 @@ export class ResourceManager extends HandlebarsApplicationMixin(ApplicationV2) {
   };
 
   async _prepareContext() {
-    return {
-      resources: ResourceSystem.getResources()
-    };
+    const resources = ResourceSystem.getResources().map(resource => ({
+      ...resource,
+      decay: {
+        enabled: false,
+        interval: 30,
+        amount: 1,
+        direction: "decrease",
+        loop: true,
+        ...resource.decay
+      }
+    }));
+    return { resources };
   }
 
   /** Re-render the manager whenever the resources setting changes. */
@@ -54,6 +64,21 @@ export class ResourceManager extends HandlebarsApplicationMixin(ApplicationV2) {
         let value = ev.currentTarget.value;
         if (field === "value") value = Number(value) || 0;
         await ResourceSystem.updateResource(id, { [field]: value });
+      });
+    });
+
+    root.querySelectorAll("[data-decay-field]").forEach(input => {
+      if (input.dataset.decayField === "direction") {
+        const resource = ResourceSystem.getResource(input.dataset.resourceId);
+        input.value = resource?.decay?.direction ?? "decrease";
+      }
+      input.addEventListener("change", async (ev) => {
+        const id = ev.currentTarget.dataset.resourceId;
+        const field = ev.currentTarget.dataset.decayField;
+        let value = ev.currentTarget.value;
+        if (ev.currentTarget.type === "checkbox") value = ev.currentTarget.checked;
+        else if (field === "interval" || field === "amount") value = Number(value) || 0;
+        await ResourceSystem.updateResourceDecay(id, { [field]: value });
       });
     });
   }
@@ -96,5 +121,12 @@ export class ResourceManager extends HandlebarsApplicationMixin(ApplicationV2) {
     const resource = ResourceSystem.getResource(id);
     if (!resource) return;
     await ResourceSystem.updateResource(id, { active: !resource.active });
+  }
+
+  static async #onToggleDecay(event, target) {
+    const id = target.dataset.resourceId;
+    const resource = ResourceSystem.getResource(id);
+    if (!resource) return;
+    await ResourceSystem.updateResourceDecay(id, { enabled: !resource.decay?.enabled });
   }
 }

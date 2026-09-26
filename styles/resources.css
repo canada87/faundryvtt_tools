@@ -87,7 +87,7 @@
 
 .resource-row {
   display: grid;
-  grid-template-columns: 120px minmax(160px, 1fr) 44px 130px 250px 32px;
+  grid-template-columns: 120px minmax(160px, 1fr) 44px 130px 250px 90px 32px;
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
@@ -184,12 +184,54 @@
   border-color: rgba(78, 154, 110, 0.7);
 }
 
+.resource-row .resource-col-decay .resource-toggle {
+  width: 100%;
+  padding: 4px 6px;
+}
+
 .resource-row .resource-col-actions button {
   width: 28px;
   height: 28px;
   padding: 0;
   border-radius: 4px;
   color: #b94a48;
+}
+
+.resource-decay-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: -4px 0 4px;
+  padding: 6px 10px;
+  background: var(--color-bg-option, rgba(0, 0, 0, 0.03));
+  border: 1px dashed var(--color-border-light-primary, rgba(0, 0, 0, 0.15));
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.resource-decay-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.resource-decay-row input[type="number"] {
+  width: 54px;
+  text-align: center;
+}
+
+.resource-decay-row select {
+  font-size: 12px;
+}
+
+.resource-decay-unit {
+  opacity: 0.7;
+}
+
+.resource-decay-loop {
+  margin-left: auto;
 }
 
 .resource-manager-empty {

@@ -477,6 +477,18 @@
     "ToggleActiveHint": "Mostra o nascondi la risorsa a schermo.",
     "ToggleVisibleHint": "Decidi se i giocatori possono vedere questa risorsa (il GM la vede sempre).",
     "EmptyHint": "Nessuna risorsa creata. Clicca 'Aggiungi Risorsa' per iniziare.",
+    "Decay": "Scadenza",
+    "On": "Attiva",
+    "Off": "Disattiva",
+    "ToggleDecayHint": "Aumenta o riduce automaticamente il valore della risorsa al passare del tempo di gioco.",
+    "DecayInterval": "Ogni",
+    "DecayAmount": "Di",
+    "DecayDirection": "Direzione",
+    "Decrease": "Riduci",
+    "Increase": "Aumenta",
+    "Minutes": "min (tempo di gioco)",
+    "DecayLoop": "Riparte dal valore iniziale a 0",
+    "DecayLoopHint": "Quando il valore raggiunge 0, riparte dal valore che aveva al momento dell'attivazione invece di fermarsi a 0.",
     "Confirm": {
       "Delete": "Eliminare la risorsa \"{name}\"?"
     }

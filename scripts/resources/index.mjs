@@ -50,6 +50,14 @@ export function initResources() {
     ResourcesHUD.init();
   });
 
+  /* ---- Decay ticking (active GM only, avoids duplicate writes) ---- */
+
+  Hooks.on("updateWorldTime", (worldTime) => {
+    if (!game.user.isGM) return;
+    if (game.user.isActiveGM === false) return;
+    ResourceSystem.processDecay(worldTime);
+  });
+
   /* ---- Public API ---- */
 
   game.faundryvttTools.resources = {

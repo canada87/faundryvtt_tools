@@ -477,6 +477,18 @@
     "ToggleActiveHint": "Toggle whether this resource is shown on screen.",
     "ToggleVisibleHint": "Toggle whether players can see this resource (GM always sees it).",
     "EmptyHint": "No resources yet. Click 'Add Resource' to create one.",
+    "Decay": "Decay",
+    "On": "On",
+    "Off": "Off",
+    "ToggleDecayHint": "Automatically increase or decrease this resource's value over game time.",
+    "DecayInterval": "Every",
+    "DecayAmount": "By",
+    "DecayDirection": "Direction",
+    "Decrease": "Decrease",
+    "Increase": "Increase",
+    "Minutes": "min (game time)",
+    "DecayLoop": "Restart from initial value at 0",
+    "DecayLoopHint": "When the value reaches 0, restart it from the value it had when decay was enabled instead of stopping at 0.",
     "Confirm": {
       "Delete": "Delete the resource \"{name}\"?"
     }
