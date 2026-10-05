@@ -71,6 +71,24 @@
   margin-top: 4px;
 }
 
+.lighting.lighting-control .preset-row {
+  flex: 1 1 auto;
+  min-width: 160px;
+  display: flex;
+  gap: 2px;
+}
+
+.lighting.lighting-control .player-toggle-btn {
+  flex: 0 0 32px;
+  padding: 0;
+  opacity: 0.6;
+}
+
+.lighting.lighting-control .player-toggle-btn.active {
+  opacity: 1;
+  background: rgba(60, 140, 60, 0.25);
+}
+
 .lighting.lighting-control .preset-btn {
   flex: 1 1 auto;
   min-width: 120px;
@@ -96,6 +114,81 @@
   text-align: center;
   color: var(--color-text-dark-secondary, #888);
   margin-top: 4px;
+}
+
+/* ============================================ */
+/*  Token HUD light presets                     */
+/* ============================================ */
+
+.faundryvtt-light-hud {
+  position: relative;
+}
+
+.faundryvtt-light-hud .faundryvtt-light-palette {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: calc(100% + 6px);
+  z-index: 10;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 170px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid var(--color-border-dark, #444);
+  border-radius: 5px;
+}
+
+.faundryvtt-light-hud.open .faundryvtt-light-palette {
+  display: flex;
+}
+
+.faundryvtt-light-hud.open > .control-icon {
+  border-color: var(--color-border-highlight, #ff6400);
+}
+
+.faundryvtt-light-entry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 4px 8px;
+  margin: 0;
+  line-height: 1.4;
+  color: var(--color-text-light-highlight, #f0f0e0);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.faundryvtt-light-entry i {
+  width: 16px;
+  text-align: center;
+}
+
+.faundryvtt-light-entry span {
+  flex: 1;
+}
+
+.faundryvtt-light-entry small {
+  opacity: 0.6;
+}
+
+.faundryvtt-light-entry:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.faundryvtt-light-entry.active {
+  border-color: var(--color-border-highlight, #ff6400);
+}
+
+.faundryvtt-light-entry.off {
+  margin-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0 0 3px 3px;
 }
 
 /* ============================================ */

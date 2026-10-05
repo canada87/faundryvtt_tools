@@ -25,7 +25,8 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
       applyPreset: LightingControl.#onApplyPreset,
       turnOff: LightingControl.#onTurnOff,
       applyCustom: LightingControl.#onApplyCustom,
-      applyDarkness: LightingControl.#onApplyDarkness
+      applyDarkness: LightingControl.#onApplyDarkness,
+      togglePlayerPreset: LightingControl.#onTogglePlayerPreset
     }
   };
 
@@ -40,11 +41,12 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
   /* ---------------------------------------- */
 
   async _prepareContext(options) {
-    const presets = game.settings.get(MODULE_ID, "lightingPresets");
+    const presets = LightingSystem.getPresets();
     const darknessLevels = game.settings.get(MODULE_ID, "lightingDarknessLevels");
+    const playerIds = new Set(LightingSystem.getPlayerPresetIds());
 
     return {
-      presets: presets.map((p, i) => ({ ...p, index: i })),
+      presets: presets.map((p, i) => ({ ...p, index: i, forPlayers: playerIds.has(p.id) })),
       hasPresets: presets.length > 0,
       darknessLevels,
       hasDarknessLevels: darknessLevels.length > 0
@@ -58,8 +60,7 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onApplyPreset(event, target) {
     const el = this.element;
     const index = Number(target.closest("[data-preset-index]").dataset.presetIndex);
-    const presets = game.settings.get(MODULE_ID, "lightingPresets");
-    const preset = presets[index];
+    const preset = LightingSystem.getPresets()[index];
     if (!preset) return;
 
     // Allow custom overrides
@@ -85,6 +86,27 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
     const angle = Number(el.querySelector("#custom-angle")?.value) || 360;
 
     await LightingSystem.updateTokenLight(bright, dim, angle);
+  }
+
+  /**
+   * Toggle whether a preset is offered to players in their token HUD.
+   * Updates the button in place so typed custom values are not lost to a re-render.
+   */
+  static async #onTogglePlayerPreset(event, target) {
+    const index = Number(target.closest("[data-preset-index]").dataset.presetIndex);
+    const preset = LightingSystem.getPresets()[index];
+    if (!preset?.id) return;
+
+    const ids = new Set(LightingSystem.getPlayerPresetIds());
+    if (ids.has(preset.id)) ids.delete(preset.id);
+    else ids.add(preset.id);
+
+    await game.settings.set(MODULE_ID, "lightingPlayerPresets", [...ids]);
+
+    const enabled = ids.has(preset.id);
+    target.classList.toggle("active", enabled);
+    target.setAttribute("aria-pressed", String(enabled));
+    target.querySelector("i").className = enabled ? "fas fa-eye" : "fas fa-eye-slash";
   }
 
   static async #onApplyDarkness() {

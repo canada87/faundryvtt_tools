@@ -10,10 +10,10 @@ export class LightingSystem {
    * Default light presets.
    */
   static DEFAULT_PRESETS = [
-    { label: "Torcia",     icon: "fas fa-fire",       bright: 3, dim: 6,  angle: 360 },
-    { label: "Flashlight", icon: "fas fa-flashlight",  bright: 6, dim: 12, angle: 30  },
-    { label: "Lanterna",   icon: "fas fa-lantern",     bright: 6, dim: 12, angle: 360 },
-    { label: "Candela",    icon: "fas fa-candle-holder", bright: 1, dim: 2,  angle: 360 }
+    { id: "torch",      label: "Torcia",     icon: "fas fa-fire",       bright: 3, dim: 6,  angle: 360 },
+    { id: "flashlight", label: "Flashlight", icon: "fas fa-flashlight",  bright: 6, dim: 12, angle: 30  },
+    { id: "lantern",    label: "Lanterna",   icon: "fas fa-lantern",     bright: 6, dim: 12, angle: 360 },
+    { id: "candle",     label: "Candela",    icon: "fas fa-candle-holder", bright: 1, dim: 2,  angle: 360 }
   ];
 
   /**
@@ -33,13 +33,53 @@ export class LightingSystem {
   ];
 
   /**
-   * Update light on all controlled tokens.
+   * All configured presets.
+   * @returns {object[]}
+   */
+  static getPresets() {
+    return game.settings.get(MODULE_ID, "lightingPresets");
+  }
+
+  /**
+   * IDs of the presets the GM made available to players.
+   * @returns {string[]}
+   */
+  static getPlayerPresetIds() {
+    return game.settings.get(MODULE_ID, "lightingPlayerPresets");
+  }
+
+  /**
+   * Presets shown in the token HUD for the current user:
+   * every preset for the GM, only the curated ones for players.
+   * @returns {object[]}
+   */
+  static getHudPresets() {
+    const presets = this.getPresets();
+    if (game.user.isGM) return presets;
+    const allowed = new Set(this.getPlayerPresetIds());
+    return presets.filter(p => p.id && allowed.has(p.id));
+  }
+
+  /**
+   * Give a stable id to presets saved by older versions (which had none).
+   * GM only; runs once at ready.
+   */
+  static async migratePresetIds() {
+    if (!game.user.isGM) return;
+    const presets = this.getPresets();
+    if (presets.every(p => p.id)) return;
+    const migrated = presets.map(p => p.id ? p : { ...p, id: foundry.utils.randomID() });
+    await game.settings.set(MODULE_ID, "lightingPresets", migrated);
+  }
+
+  /**
+   * Update light on the given tokens (defaults to the controlled ones).
    * @param {number} bright
    * @param {number} dim
    * @param {number} angle
+   * @param {Token[]} [tokens]
    */
-  static async updateTokenLight(bright, dim, angle) {
-    const tokens = canvas.tokens.controlled;
+  static async updateTokenLight(bright, dim, angle, tokens = canvas.tokens.controlled) {
     if (tokens.length === 0) {
       ui.notifications.warn(game.i18n.localize("LIGHTING.Warn.NoToken"));
       return;
@@ -53,10 +93,11 @@ export class LightingSystem {
   }
 
   /**
-   * Turn off light on all controlled tokens.
+   * Turn off light on the given tokens (defaults to the controlled ones).
+   * @param {Token[]} [tokens]
    */
-  static async turnOffLight() {
-    await this.updateTokenLight(0, 0, 360);
+  static async turnOffLight(tokens = canvas.tokens.controlled) {
+    await this.updateTokenLight(0, 0, 360, tokens);
   }
 
   /**

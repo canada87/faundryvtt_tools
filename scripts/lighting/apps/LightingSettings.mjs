@@ -69,6 +69,7 @@ export class LightingSettings extends HandlebarsApplicationMixin(ApplicationV2) 
     const presets = [];
     el.querySelectorAll(".preset-entry").forEach(entry => {
       presets.push({
+        id: entry.querySelector('input[name$=".id"]')?.value || foundry.utils.randomID(),
         label: entry.querySelector('input[name$=".label"]')?.value || "",
         icon: entry.querySelector('input[name$=".icon"]')?.value || "fas fa-lightbulb",
         bright: Number(entry.querySelector('input[name$=".bright"]')?.value) || 0,
@@ -94,7 +95,7 @@ export class LightingSettings extends HandlebarsApplicationMixin(ApplicationV2) 
 
   static async #onAddPreset() {
     this.#syncFormToState();
-    this.#presets.push({ label: "", icon: "fas fa-lightbulb", bright: 0, dim: 0, angle: 360 });
+    this.#presets.push({ id: foundry.utils.randomID(), label: "", icon: "fas fa-lightbulb", bright: 0, dim: 0, angle: 360 });
     this.render();
   }
 
@@ -124,6 +125,7 @@ export class LightingSettings extends HandlebarsApplicationMixin(ApplicationV2) 
     const presets = Object.values(data.presets || {})
       .filter(p => p.label?.trim())
       .map(p => ({
+        id: p.id || foundry.utils.randomID(),
         label: p.label.trim(),
         icon: p.icon?.trim() || "fas fa-lightbulb",
         bright: Number(p.bright) || 0,
@@ -131,6 +133,14 @@ export class LightingSettings extends HandlebarsApplicationMixin(ApplicationV2) 
         angle: Number(p.angle) || 360
       }));
     await game.settings.set(MODULE_ID, "lightingPresets", presets);
+
+    // Drop player-visibility entries for presets that no longer exist
+    const validIds = new Set(presets.map(p => p.id));
+    const playerIds = game.settings.get(MODULE_ID, "lightingPlayerPresets");
+    const kept = playerIds.filter(id => validIds.has(id));
+    if (kept.length !== playerIds.length) {
+      await game.settings.set(MODULE_ID, "lightingPlayerPresets", kept);
+    }
 
     const darknessLevels = Object.values(data.darknessLevels || {})
       .filter(d => d.label?.trim())

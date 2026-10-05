@@ -49,12 +49,21 @@
     <div class="presets-section">
       <label><strong>{{localize "LIGHTING.Presets"}}</strong></label>
       <small class="lighting-hint">{{localize "LIGHTING.PresetsHint"}}</small>
+      <small class="lighting-hint">{{localize "LIGHTING.PlayerPresetsHint"}}</small>
       <div class="preset-buttons">
         {{#each presets}}
-          <button type="button" data-action="applyPreset" data-preset-index="{{this.index}}" class="preset-btn">
-            <i class="{{this.icon}}"></i> {{this.label}}
-            <small>({{this.bright}}/{{this.dim}}/{{this.angle}}°)</small>
-          </button>
+          <div class="preset-row" data-preset-index="{{this.index}}">
+            <button type="button" data-action="applyPreset" class="preset-btn">
+              <i class="{{this.icon}}"></i> {{this.label}}
+              <small>({{this.bright}}/{{this.dim}}/{{this.angle}}°)</small>
+            </button>
+            <button type="button" data-action="togglePlayerPreset"
+                    class="player-toggle-btn {{#if this.forPlayers}}active{{/if}}"
+                    aria-pressed="{{#if this.forPlayers}}true{{else}}false{{/if}}"
+                    data-tooltip="LIGHTING.PlayerToggleTooltip">
+              <i class="fas {{#if this.forPlayers}}fa-eye{{else}}fa-eye-slash{{/if}}"></i>
+            </button>
+          </div>
         {{/each}}
         <button type="button" data-action="turnOff" class="preset-btn off-btn">
           <i class="fas fa-power-off"></i> {{localize "LIGHTING.TurnOff"}}

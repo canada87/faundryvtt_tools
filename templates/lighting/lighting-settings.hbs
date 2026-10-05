@@ -21,6 +21,7 @@
 
     {{#each presets}}
       <div class="preset-entry" data-preset-index="{{@index}}">
+        <input type="hidden" name="presets.{{@index}}.id" value="{{this.id}}" />
         <input type="text" name="presets.{{@index}}.label"
                value="{{this.label}}" placeholder="Torcia" class="col-label" />
         <input type="text" name="presets.{{@index}}.icon"

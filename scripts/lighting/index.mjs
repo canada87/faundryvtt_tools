@@ -1,6 +1,7 @@
 import { MODULE_ID } from "../shared/constants.mjs";
 import { HubMenu } from "../hub/HubMenu.mjs";
 import { LightingSystem } from "./LightingSystem.mjs";
+import { TokenHudLighting } from "./TokenHudLighting.mjs";
 import { LightingControl } from "./apps/LightingControl.mjs";
 import { LightingSettings } from "./apps/LightingSettings.mjs";
 
@@ -38,6 +39,14 @@ export function initLighting() {
     default: LightingSystem.DEFAULT_DARKNESS_LEVELS
   });
 
+  game.settings.register(MODULE_ID, "lightingPlayerPresets", {
+    name: "LIGHTING.PlayerPresets",
+    scope: "world",
+    config: false,
+    type: Array,
+    default: []
+  });
+
   game.settings.registerMenu(MODULE_ID, "lightingSettingsMenu", {
     name: "LIGHTING.SettingsTitle",
     label: "LIGHTING.OpenSettings",
@@ -56,6 +65,11 @@ export function initLighting() {
     description: "LIGHTING.FeatureDescription",
     open: () => new LightingControl().render(true)
   });
+
+  /* ---- Hooks ---- */
+
+  Hooks.once("ready", () => LightingSystem.migratePresetIds());
+  Hooks.on("renderTokenHUD", TokenHudLighting.onRender);
 
   /* ---- Public API ---- */
 
