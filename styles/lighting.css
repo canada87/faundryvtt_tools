@@ -18,6 +18,16 @@
 
 /* --- Darkness --- */
 
+.lighting.lighting-control .darkness-quick {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0 6px;
+}
+
+.lighting.lighting-control .darkness-quick button {
+  flex: 1;
+}
+
 .lighting.lighting-control .darkness-row {
   display: flex;
   gap: 6px;

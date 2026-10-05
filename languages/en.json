@@ -245,6 +245,8 @@
     "OpenSettings": "Configure Lighting",
     "SettingsHint": "Configure light presets and darkness levels.",
     "Darkness": "Scene Darkness",
+    "Day": "Day",
+    "Night": "Night",
     "ApplyDarkness": "Set",
     "CustomValues": "Custom Light",
     "CustomHint": "Custom override values. Leave empty to use the preset defaults.",

@@ -26,7 +26,8 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
       turnOff: LightingControl.#onTurnOff,
       applyCustom: LightingControl.#onApplyCustom,
       applyDarkness: LightingControl.#onApplyDarkness,
-      togglePlayerPreset: LightingControl.#onTogglePlayerPreset
+      togglePlayerPreset: LightingControl.#onTogglePlayerPreset,
+      setDarknessQuick: LightingControl.#onSetDarknessQuick
     }
   };
 
@@ -107,6 +108,11 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
     target.classList.toggle("active", enabled);
     target.setAttribute("aria-pressed", String(enabled));
     target.querySelector("i").className = enabled ? "fas fa-eye" : "fas fa-eye-slash";
+  }
+
+  /** Day (0) / night (1) shortcut buttons. */
+  static async #onSetDarknessQuick(event, target) {
+    await LightingSystem.setDarkness(Number(target.dataset.darkness));
   }
 
   static async #onApplyDarkness() {

@@ -245,6 +245,8 @@
     "OpenSettings": "Configura Luci",
     "SettingsHint": "Configura i preset luce e i livelli di oscurità.",
     "Darkness": "Oscurità Scena",
+    "Day": "Giorno",
+    "Night": "Notte",
     "ApplyDarkness": "Imposta",
     "CustomValues": "Luce Personalizzata",
     "CustomHint": "Valori personalizzati. Lasciali vuoti per usare i valori del preset.",

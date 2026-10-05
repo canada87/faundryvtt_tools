@@ -1,9 +1,17 @@
 <div class="lighting-control-content">
 
   <!-- ========== Darkness ========== -->
-  {{#if hasDarknessLevels}}
-    <div class="darkness-section">
-      <label><strong>{{localize "LIGHTING.Darkness"}}</strong></label>
+  <div class="darkness-section">
+    <label><strong>{{localize "LIGHTING.Darkness"}}</strong></label>
+    <div class="darkness-quick">
+      <button type="button" data-action="setDarknessQuick" data-darkness="0" class="day-btn">
+        <i class="fas fa-sun"></i> {{localize "LIGHTING.Day"}}
+      </button>
+      <button type="button" data-action="setDarknessQuick" data-darkness="1" class="night-btn">
+        <i class="fas fa-moon"></i> {{localize "LIGHTING.Night"}}
+      </button>
+    </div>
+    {{#if hasDarknessLevels}}
       <div class="darkness-row">
         <select id="darkness-select">
           {{#each darknessLevels}}
@@ -14,10 +22,10 @@
           <i class="fas fa-moon"></i> {{localize "LIGHTING.ApplyDarkness"}}
         </button>
       </div>
-    </div>
+    {{/if}}
+  </div>
 
-    <hr>
-  {{/if}}
+  <hr>
 
   <!-- ========== Custom overrides ========== -->
   <div class="custom-section">
