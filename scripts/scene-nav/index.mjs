@@ -52,6 +52,14 @@ export function initSceneNav() {
     default: []
   });
 
+  game.settings.register(MODULE_ID, "scenesNavMode", {
+    name: "Scene Navigator Mode",
+    scope: "client",
+    config: false,
+    type: String,
+    default: "grid"
+  });
+
   game.settings.register(MODULE_ID, "scenesNavBarCollapsed", {
     name: "Scene Navigator Bar Collapsed",
     scope: "client",

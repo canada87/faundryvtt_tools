@@ -593,6 +593,26 @@
       "Up": "Vai alla mappa padre",
       "Collapse": "Riduci barra",
       "Expand": "Mostra barra di navigazione"
+    },
+    "Mode": {
+      "Grid": "Griglia",
+      "Graph": "Mappa"
+    },
+    "Graph": {
+      "ZoomIn": "Ingrandisci",
+      "ZoomOut": "Riduci",
+      "Fit": "Adatta alla vista",
+      "AutoLayout": "Riordina automaticamente",
+      "ConfirmAutoLayout": "Dimenticare le posizioni salvate delle scene in questa vista e ridisporle automaticamente?",
+      "LegendChild": "Sotto-mappa",
+      "LegendContinues": "Prosegue in",
+      "Help": "Trascina lo sfondo per spostarti · rotella per lo zoom · trascina una scena per spostarla · trascina il pallino dorato su un'altra scena per collegarle · clic su una linea per rimuoverla · doppio clic per entrare",
+      "LinkHandle": "Trascina su un'altra scena per collegarle",
+      "External": "Scena di un'altra cartella: doppio clic per andarci",
+      "Empty": "Nessuna scena da mostrare in questa vista.",
+      "NewLink": "Nuovo collegamento",
+      "LinkTypeLabel": "La prima scena…",
+      "ConfirmRemoveLink": "Rimuovere il collegamento tra \"{from}\" e \"{to}\"?"
     }
   }
 }

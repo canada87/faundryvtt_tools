@@ -3,6 +3,15 @@
   <header class="scenenav-header">
     <h1><i class="fas fa-map"></i> {{localize "SCENENAV.FeatureName"}}</h1>
 
+    <div class="scenenav-mode">
+      <button type="button" class="{{#unless graphMode}}is-active{{/unless}}" data-action="setMode" data-mode="grid">
+        <i class="fas fa-th-large"></i> {{localize "SCENENAV.Mode.Grid"}}
+      </button>
+      <button type="button" class="{{#if graphMode}}is-active{{/if}}" data-action="setMode" data-mode="graph">
+        <i class="fas fa-project-diagram"></i> {{localize "SCENENAV.Mode.Graph"}}
+      </button>
+    </div>
+
     <div class="scenenav-search">
       <i class="fas fa-search"></i>
       <input type="search" value="{{search}}" placeholder="{{localize "SCENENAV.SearchPlaceholder"}}" />
@@ -80,7 +89,7 @@
     </aside>
 
     {{!-- ---------- Main area ---------- --}}
-    <main class="scenenav-main">
+    <main class="scenenav-main {{#if graphMode}}is-graph{{/if}}">
 
       {{#if breadcrumb}}
         <nav class="scenenav-breadcrumb">
@@ -96,6 +105,10 @@
           {{/if}}
         </nav>
       {{/if}}
+
+      {{#if graphMode}}
+      <div class="scenenav-graph"></div>
+      {{else}}
 
       {{#if subfolders.length}}
         <div class="scenenav-subfolders">
@@ -203,6 +216,8 @@
 
       {{#if isEmpty}}
         <p class="scenenav-empty">{{#if search}}{{localize "SCENENAV.NoResults"}}{{else}}{{localize "SCENENAV.EmptyFolder"}}{{/if}}</p>
+      {{/if}}
+
       {{/if}}
     </main>
   </div>

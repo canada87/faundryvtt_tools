@@ -1,6 +1,7 @@
 import { MODULE_ID } from "../../shared/constants.mjs";
-import { SceneNavSystem } from "../SceneNavSystem.mjs";
+import { SceneNavSystem, LINK_TYPES, DIRECTIONS } from "../SceneNavSystem.mjs";
 import { SceneLinksEditor } from "./SceneLinksEditor.mjs";
+import { SceneGraph, computeLayout } from "./SceneGraph.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 
@@ -36,6 +37,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       editFolder: SceneNavigator.#onEditFolder,
       deleteFolder: SceneNavigator.#onDeleteFolder,
       resetData: SceneNavigator.#onResetData,
+      setMode: SceneNavigator.#onSetMode,
       clearSearch: SceneNavigator.#onClearSearch,
       viewScene: SceneNavigator.#onViewScene,
       activateScene: SceneNavigator.#onActivateScene,
@@ -76,6 +78,13 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   #search = "";
   #searchFocused = false;
   #highlightSceneId = null;
+
+  /** Graph pan/zoom per view, so re-renders keep the camera where it was. */
+  #graphTransforms = new Map();
+
+  get #isGraphMode() {
+    return game.settings.get(MODULE_ID, "scenesNavMode") === "graph";
+  }
 
   /** Esc closes the panel, unless the key is meant for a dialog opened above it. */
   #onKeyDown = (event) => {
@@ -178,6 +187,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     return {
+      graphMode: this.#isGraphMode,
       tree,
       sections,
       breadcrumb,
@@ -314,12 +324,166 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       el.addEventListener("drop", ev => this.#onDrop(ev, el));
     });
 
+    if (this.#isGraphMode) {
+      this.#renderGraph(root.querySelector(".scenenav-graph"));
+      this.#highlightSceneId = null;
+      return;
+    }
+
     // Scroll to and flash a focused scene
     if (this.#highlightSceneId) {
       const card = root.querySelector(`.scenenav-card[data-scene-id="${this.#highlightSceneId}"]`);
       card?.scrollIntoView({ block: "center", behavior: "smooth" });
       this.#highlightSceneId = null;
     }
+  }
+
+  /* ---------------------------------------- */
+  /*  Graph                                   */
+  /* ---------------------------------------- */
+
+  /** Scenes shown as full nodes in the graph for the current view. */
+  #graphSceneIds() {
+    const S = SceneNavSystem;
+    const scenes = S.getScenes();
+    let ids;
+    if (this.#view === VIEWS.ALL) ids = scenes.map(s => s.id);
+    else if (this.#view === VIEWS.FAVORITES) ids = S.getFavoriteScenes().map(s => s.id);
+    else if (this.#view === VIEWS.UNSORTED) ids = S.getScenesInFolder(null).map(s => s.id);
+    else ids = scenes.filter(s => s.folder && S.isFolderWithin(s.folder.id, this.#view)).map(s => s.id);
+    return new Set(ids);
+  }
+
+  #renderGraph(host) {
+    if (!host) return;
+    const S = SceneNavSystem;
+    const data = S.getData();
+    const visible = this.#graphSceneIds();
+    const search = this.#search.trim().toLowerCase();
+    const matches = scene => scene.name.toLowerCase().includes(search)
+      || (scene.navName ?? "").toLowerCase().includes(search);
+
+    // Links touching the view; scenes outside it become "ghost" nodes
+    const links = S.getLinks(data).filter(l => visible.has(l.from) || visible.has(l.to));
+    const ghosts = new Set();
+    for (const l of links) {
+      if (!visible.has(l.from)) ghosts.add(l.from);
+      if (!visible.has(l.to)) ghosts.add(l.to);
+    }
+
+    const nodes = [...visible, ...ghosts].map(id => {
+      const scene = game.scenes.get(id);
+      return {
+        id,
+        name: scene.name,
+        thumb: scene.thumb || "",
+        active: scene.active,
+        isView: scene.isView,
+        ghost: ghosts.has(id),
+        dim: !!search && !matches(scene),
+        highlight: this.#highlightSceneId === id
+      };
+    }).sort(S.sortByName);
+
+    const edges = links.map(l => ({
+      id: l.id,
+      type: l.type,
+      from: l.from,
+      to: l.to,
+      direction: l.direction ?? "",
+      label: l.type === LINK_TYPES.CONTINUES && l.direction ? game.i18n.localize(`SCENENAV.Direction.${l.direction}`) : ""
+    }));
+
+    const positions = computeLayout(nodes, edges, data.layout);
+    const viewKey = this.#view;
+
+    const graph = new SceneGraph(host, { nodes, edges, positions }, {
+      transform: this.#graphTransforms.get(viewKey),
+      onTransform: t => this.#graphTransforms.set(viewKey, t),
+      onMoveNode: (id, x, y) => S.setNodePosition(id, x, y),
+      onViewScene: id => this.#viewScene(id),
+      onOpenGhost: id => {
+        this.#view = S.getSceneFolderId(id) ?? VIEWS.UNSORTED;
+        this.#highlightSceneId = id;
+        this.render();
+      },
+      onLink: (fromId, toId, direction) => this.#promptNewLink(fromId, toId, direction),
+      onEdgeClick: linkId => this.#confirmRemoveLink(linkId),
+      onAutoLayout: () => this.#autoLayout(nodes.map(n => n.id))
+    });
+
+    if (this.#highlightSceneId) graph.focus(this.#highlightSceneId);
+  }
+
+  async #promptNewLink(fromId, toId, direction) {
+    const esc = Handlebars.escapeExpression;
+    const loc = key => game.i18n.localize(key);
+    const from = esc(game.scenes.get(fromId)?.name ?? "");
+    const to = esc(game.scenes.get(toId)?.name ?? "");
+    const directions = DIRECTIONS.map(d => {
+      const label = d ? loc(`SCENENAV.Direction.${d}`) : loc("SCENENAV.Direction.none");
+      return `<option value="${d}" ${d === direction ? "selected" : ""}>${label}</option>`;
+    }).join("");
+
+    const content = `
+      <p><b>${from}</b> → <b>${to}</b></p>
+      <div class="form-group">
+        <label>${loc("SCENENAV.Graph.LinkTypeLabel")}</label>
+        <select name="type">
+          <option value="continues">${loc("SCENENAV.LinkType.continues")}</option>
+          <option value="childOf">${loc("SCENENAV.LinkType.childOf")}</option>
+          <option value="parentOf">${loc("SCENENAV.LinkType.parentOf")}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>${loc("SCENENAV.DirectionHint")}</label>
+        <select name="direction">${directions}</select>
+      </div>`;
+
+    const result = await DialogV2.prompt({
+      window: { title: loc("SCENENAV.Graph.NewLink") },
+      content,
+      rejectClose: false,
+      ok: {
+        label: loc("SCENENAV.Add"),
+        icon: "fas fa-link",
+        callback: (event, button) => ({
+          type: button.form.elements.type.value,
+          direction: button.form.elements.direction.value
+        })
+      }
+    });
+    if (!result) return;
+
+    let ok;
+    if (result.type === "childOf") ok = await SceneNavSystem.setParent(fromId, toId);
+    else if (result.type === "parentOf") ok = await SceneNavSystem.setParent(toId, fromId);
+    else ok = await SceneNavSystem.addContinuation(fromId, toId, result.direction);
+    if (ok === false) ui.notifications.warn(game.i18n.localize("SCENENAV.Warn.LinkCycle"));
+  }
+
+  async #confirmRemoveLink(linkId) {
+    const link = SceneNavSystem.getLinks().find(l => l.id === linkId);
+    if (!link) return;
+    const esc = Handlebars.escapeExpression;
+    const confirmed = await DialogV2.confirm({
+      window: { title: game.i18n.localize("SCENENAV.RemoveLink") },
+      content: `<p>${game.i18n.format("SCENENAV.Graph.ConfirmRemoveLink", {
+        from: esc(game.scenes.get(link.from)?.name ?? ""),
+        to: esc(game.scenes.get(link.to)?.name ?? "")
+      })}</p>`
+    });
+    if (confirmed) await SceneNavSystem.removeLink(linkId);
+  }
+
+  async #autoLayout(sceneIds) {
+    const confirmed = await DialogV2.confirm({
+      window: { title: game.i18n.localize("SCENENAV.Graph.AutoLayout") },
+      content: `<p>${game.i18n.localize("SCENENAV.Graph.ConfirmAutoLayout")}</p>`
+    });
+    if (!confirmed) return;
+    this.#graphTransforms.delete(this.#view);
+    await SceneNavSystem.clearLayout(sceneIds);
   }
 
   async #onDrop(event, target) {
@@ -461,6 +625,11 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!confirmed) return;
     await SceneNavSystem.resetData();
     ui.notifications.info(game.i18n.localize("SCENENAV.Info.Reset"));
+  }
+
+  static async #onSetMode(event, target) {
+    await game.settings.set(MODULE_ID, "scenesNavMode", target.dataset.mode);
+    this.render();
   }
 
   static #onClearSearch() {

@@ -45,7 +45,8 @@ scripts/
     SceneNavSystem.mjs     — Logica core: cartelle scene di Foundry, preferiti, collegamenti padre/figlio e prosegue
     SceneNavBar.mjs        — Barra GM in alto nella scena: percorso padri, sotto-mappe, mappe adiacenti
     apps/
-      SceneNavigator.mjs   — UI GM a tutto schermo: albero cartelle, miniature, entra/attiva/impostazioni
+      SceneNavigator.mjs   — UI GM a tutto schermo: albero cartelle, vista griglia (miniature) e vista mappa (grafo)
+      SceneGraph.mjs       — Grafo scene: layout automatico, pan/zoom, trascina nodi, crea/rimuovi collegamenti
       SceneLinksEditor.mjs — UI GM: modifica collegamenti di una scena
 styles/
   hub.css                  — Stili dell'hub menu

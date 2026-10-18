@@ -593,6 +593,26 @@
       "Up": "Go to parent map",
       "Collapse": "Collapse bar",
       "Expand": "Show navigation bar"
+    },
+    "Mode": {
+      "Grid": "Grid",
+      "Graph": "Map"
+    },
+    "Graph": {
+      "ZoomIn": "Zoom in",
+      "ZoomOut": "Zoom out",
+      "Fit": "Fit to view",
+      "AutoLayout": "Auto arrange",
+      "ConfirmAutoLayout": "Forget the saved positions of the scenes in this view and arrange them automatically?",
+      "LegendChild": "Sub-map",
+      "LegendContinues": "Continues into",
+      "Help": "Drag the background to pan · wheel to zoom · drag a scene to move it · drag the gold dot onto another scene to link them · click a line to remove it · double-click to view",
+      "LinkHandle": "Drag onto another scene to link them",
+      "External": "Scene from another folder: double-click to go there",
+      "Empty": "No scenes to show in this view.",
+      "NewLink": "New link",
+      "LinkTypeLabel": "The first scene…",
+      "ConfirmRemoveLink": "Remove the link between \"{from}\" and \"{to}\"?"
     }
   }
 }

@@ -749,3 +749,352 @@ body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
 .faundryvtt-scenenav-bar .scenenav-bar-link.is-ancestor  { color: #d2bfff; }
 .faundryvtt-scenenav-bar .scenenav-bar-link.is-child     { background: rgba(60, 150, 110, 0.28); color: #a8ecc8; }
 .faundryvtt-scenenav-bar .scenenav-bar-link.is-continues { background: rgba(60, 120, 200, 0.28); color: #b5d4ff; }
+
+/* ========================================
+   Scene Navigator — Grid / Graph switch
+   ======================================== */
+
+.scenenav-mode {
+  display: flex;
+  border: 1px solid var(--scenenav-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.scene-navigator .scenenav-mode button {
+  width: auto;
+  height: 32px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.scene-navigator .scenenav-mode button.is-active {
+  background: rgba(212, 175, 55, 0.25);
+  color: #fff;
+}
+
+/* ========================================
+   Scene Navigator — Graph view
+   ======================================== */
+
+.scenenav-main.is-graph {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 12px 16px 16px;
+}
+
+.scenenav-graph {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--scenenav-border);
+  border-radius: 8px;
+  background-color: #101013;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.scenenav-graph.is-panning {
+  cursor: grabbing;
+}
+
+.scenenav-graph.is-linking,
+.scenenav-graph.is-linking .scenenav-gnode {
+  cursor: crosshair;
+}
+
+.scenenav-graph-world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.scenenav-graph-edges {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.scenenav-graph-nodes {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ---- Edges ---- */
+
+.scenenav-edge-line {
+  stroke-width: 2.5;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.scenenav-edge-hit {
+  stroke: transparent;
+  stroke-width: 14;
+  cursor: pointer;
+  pointer-events: stroke;
+}
+
+.scenenav-edge.edge-child .scenenav-edge-line { stroke: #6fd3a1; }
+.scenenav-edge.edge-continues .scenenav-edge-line { stroke: #6ea8ff; stroke-dasharray: 8 5; }
+.scenenav-graph .arrow-child { fill: #6fd3a1; }
+.scenenav-graph .arrow-continues { fill: #6ea8ff; }
+
+.scenenav-edge:hover .scenenav-edge-line {
+  stroke: #ff7a6b;
+}
+
+.scenenav-graph.has-hover .scenenav-edge:not(.is-hl) .scenenav-edge-line,
+.scenenav-graph.has-hover .scenenav-edge:not(.is-hl) .scenenav-edge-label {
+  opacity: 0.2;
+}
+
+.scenenav-edge.is-hl .scenenav-edge-line {
+  stroke-width: 4;
+}
+
+.scenenav-edge-label {
+  fill: #b5d4ff;
+  font-size: 12px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: #101013;
+  stroke-width: 4px;
+  pointer-events: none;
+}
+
+.scenenav-graph-temp {
+  stroke: #d4af37;
+  stroke-width: 2.5;
+  stroke-dasharray: 6 4;
+  pointer-events: none;
+}
+
+/* ---- Nodes ---- */
+
+.scenenav-gnode {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  border: 1px solid var(--scenenav-border);
+  border-radius: 8px;
+  background: var(--scenenav-panel);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  cursor: move;
+  user-select: none;
+}
+
+.scenenav-gnode:hover {
+  border-color: #8a8a92;
+  z-index: 2;
+}
+
+.scenenav-gnode.is-dragging {
+  z-index: 3;
+  opacity: 0.85;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+}
+
+.scenenav-gnode.is-active {
+  border-color: var(--scenenav-accent);
+  box-shadow: 0 0 0 2px var(--scenenav-accent), 0 2px 10px rgba(212, 175, 55, 0.35);
+}
+
+.scenenav-gnode.is-view .scenenav-gnode-name {
+  color: #9fd0ff;
+}
+
+.scenenav-gnode.is-ghost {
+  opacity: 0.5;
+  border-style: dashed;
+  cursor: pointer;
+}
+
+.scenenav-gnode.is-dim {
+  opacity: 0.25;
+}
+
+.scenenav-gnode.is-highlight {
+  animation: scenenav-flash 1.6s ease-out 2;
+}
+
+.scenenav-gnode-thumb {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+  background: #0a0a0c;
+}
+
+.scenenav-gnode-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+  display: block;
+  pointer-events: none;
+}
+
+.scenenav-gnode-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 26px;
+  opacity: 0.25;
+}
+
+.scenenav-gnode-name {
+  padding: 5px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.scenenav-gnode-name i {
+  margin-right: 4px;
+  color: var(--scenenav-accent);
+}
+
+.scenenav-gnode-actions {
+  position: absolute;
+  inset: auto 4px 4px 4px;
+  display: none;
+  justify-content: center;
+  gap: 4px;
+}
+
+.scenenav-gnode:hover .scenenav-gnode-actions {
+  display: flex;
+}
+
+.scene-navigator .scenenav-gnode-actions button {
+  width: 28px;
+  height: 26px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--scenenav-border);
+  border-radius: 5px;
+  background: rgba(20, 20, 24, 0.9);
+  color: #eee;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.scene-navigator .scenenav-gnode-actions button:hover {
+  border-color: var(--scenenav-accent);
+  color: var(--scenenav-accent);
+}
+
+.scenenav-gnode-handle {
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  border: 2px solid #101013;
+  border-radius: 50%;
+  background: #d4af37;
+  cursor: crosshair;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.scenenav-gnode:hover .scenenav-gnode-handle,
+.scenenav-graph.is-linking .scenenav-gnode-handle {
+  opacity: 1;
+}
+
+/* ---- Overlays ---- */
+
+.scenenav-graph-toolbar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 5;
+}
+
+.scene-navigator .scenenav-graph-toolbar button {
+  width: 34px;
+  height: 34px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--scenenav-border);
+  border-radius: 6px;
+  background: rgba(20, 20, 24, 0.92);
+  color: #eee;
+  cursor: pointer;
+}
+
+.scene-navigator .scenenav-graph-toolbar button:hover {
+  border-color: var(--scenenav-accent);
+  color: var(--scenenav-accent);
+}
+
+.scenenav-graph-legend {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  max-width: calc(100% - 80px);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(20, 20, 24, 0.85);
+  font-size: 12px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.scenenav-graph-legend i {
+  display: inline-block;
+  width: 22px;
+  height: 0;
+  margin-right: 4px;
+  vertical-align: middle;
+  border-top: 3px solid #6fd3a1;
+}
+
+.scenenav-graph-legend .legend-continues i {
+  border-top: 3px dashed #6ea8ff;
+}
+
+.scenenav-graph-legend .legend-help {
+  opacity: 0.65;
+}
+
+.scenenav-graph-empty {
+  position: absolute;
+  inset: 40% 0 auto;
+  text-align: center;
+  font-style: italic;
+  opacity: 0.6;
+}

@@ -22,10 +22,11 @@ const OPPOSITE = {
  *
  * Folders are Foundry's own Scene folders: creating, renaming, moving
  * and deleting them here changes them in the Scenes sidebar too.
- * Module-only data (favorites and typed links) lives in a world setting:
+ * Module-only data (favorites, typed links, graph positions) lives in a world setting:
  * {
  *   sceneMeta: { [sceneId]: { favorite } },
- *   links:     [{ id, type, from, to, direction }]
+ *   links:     [{ id, type, from, to, direction }],
+ *   layout:    { [sceneId]: { x, y } }
  * }
  */
 export class SceneNavSystem {
@@ -38,7 +39,8 @@ export class SceneNavSystem {
     const raw = game.settings.get(MODULE_ID, DATA_SETTING) ?? {};
     return {
       sceneMeta: raw.sceneMeta ?? {},
-      links: Array.isArray(raw.links) ? raw.links : []
+      links: Array.isArray(raw.links) ? raw.links : [],
+      layout: raw.layout ?? {}
     };
   }
 
@@ -51,9 +53,9 @@ export class SceneNavSystem {
     return result ?? true;
   }
 
-  /** Clear all module data (favorites and links). Foundry folders are untouched. */
+  /** Clear all module data (favorites, links, graph positions). Foundry folders are untouched. */
   static async resetData() {
-    await game.settings.set(MODULE_ID, DATA_SETTING, { sceneMeta: {}, links: [] });
+    await game.settings.set(MODULE_ID, DATA_SETTING, { sceneMeta: {}, links: [], layout: {} });
   }
 
   static sortByName(a, b) {
@@ -99,10 +101,12 @@ export class SceneNavSystem {
   /** Remove every reference to a deleted scene. */
   static async pruneScene(sceneId) {
     const data = this.getData();
-    const hasRefs = data.sceneMeta[sceneId] || data.links.some(l => l.from === sceneId || l.to === sceneId);
+    const hasRefs = data.sceneMeta[sceneId] || data.layout[sceneId]
+      || data.links.some(l => l.from === sceneId || l.to === sceneId);
     if (!hasRefs) return;
     return this.#mutate(d => {
       delete d.sceneMeta[sceneId];
+      delete d.layout[sceneId];
       d.links = d.links.filter(l => l.from !== sceneId && l.to !== sceneId);
     });
   }
@@ -290,11 +294,33 @@ export class SceneNavSystem {
     });
   }
 
+  /** Direction of a "continues" link given from the other side. */
+  static oppositeDirection(direction) {
+    return OPPOSITE[direction ?? ""] ?? "";
+  }
+
   static async removeLink(linkId) {
     return this.#mutate(data => {
       const before = data.links.length;
       data.links = data.links.filter(l => l.id !== linkId);
       if (data.links.length === before) return false;
+    });
+  }
+
+  /* ---------------------------------------- */
+  /*  Graph layout                            */
+  /* ---------------------------------------- */
+
+  static async setNodePosition(sceneId, x, y) {
+    return this.#mutate(data => {
+      data.layout[sceneId] = { x: Math.round(x), y: Math.round(y) };
+    });
+  }
+
+  /** Forget saved positions so the automatic layout takes over again. */
+  static async clearLayout(sceneIds) {
+    return this.#mutate(data => {
+      for (const id of sceneIds) delete data.layout[id];
     });
   }
 }
