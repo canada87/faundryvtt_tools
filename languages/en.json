@@ -592,7 +592,8 @@
       "Hint": "Click: view the scene · Shift+click: activate it for everyone",
       "Up": "Go to parent map",
       "Collapse": "Collapse bar",
-      "Expand": "Show navigation bar"
+      "Expand": "Show navigation bar",
+      "NoteHint": "right-click to change journal"
     },
     "Mode": {
       "Grid": "Grid",
@@ -613,6 +614,28 @@
       "NewLink": "New link",
       "LinkTypeLabel": "The first scene…",
       "ConfirmRemoveLink": "Remove the link between \"{from}\" and \"{to}\"?"
+    },
+    "PlayersHere": "Players here",
+    "Note": {
+      "Title": "GM note",
+      "FolderName": "Scene notes",
+      "PageName": "Notes",
+      "DialogHint": "Choose the journal used as the GM note for \"{name}\". It is the same \"Journal\" field as in the scene configuration.",
+      "Journal": "Journal",
+      "None": "— no note —",
+      "CreateNew": "Create new journal",
+      "Open": "Open note",
+      "NoCompendium": "Use a world journal, not one from a compendium.",
+      "Linked": "\"{journal}\" is now the note of \"{scene}\"."
+    },
+    "Pull": {
+      "Title": "Pull players here",
+      "DialogHint": "Choose which players to bring to \"{name}\". The active scene does not change.",
+      "Confirm": "Pull here",
+      "NoPlayers": "No players connected.",
+      "Nowhere": "no scene",
+      "AlreadyHere": "already here",
+      "Done": "Pulled {count} players to \"{name}\"."
     }
   }
 }

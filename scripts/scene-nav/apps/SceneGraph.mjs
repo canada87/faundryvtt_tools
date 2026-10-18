@@ -222,15 +222,28 @@ export class SceneGraph {
         <div class="scenenav-gnode-actions">
           <button type="button" data-action="viewScene" data-tooltip="${loc("SCENENAV.ViewHint")}"><i class="fas fa-eye"></i></button>
           <button type="button" data-action="activateScene" data-tooltip="${loc("SCENENAV.ActivateHint")}"><i class="fas fa-bullseye"></i></button>
+          <button type="button" data-action="pullPlayers" data-tooltip="${loc("SCENENAV.Pull.Title")}"><i class="fas fa-people-arrows"></i></button>
+          <button type="button" data-action="editNote" data-tooltip="${loc("SCENENAV.Note.Title")}"><i class="fas fa-book"></i></button>
           <button type="button" data-action="editLinks" data-tooltip="${loc("SCENENAV.EditLinks")}"><i class="fas fa-link"></i></button>
           <button type="button" data-action="configureScene" data-tooltip="${loc("SCENENAV.Configure")}"><i class="fas fa-cogs"></i></button>
         </div>`;
+      const viewers = node.viewers?.length ? `
+        <div class="scenenav-gnode-players">
+          ${node.viewers.map(v => `
+            <span class="scenenav-viewer" style="--player-color:${esc(v.color)}"
+                  data-tooltip="${esc(v.character ? `${v.name} (${v.character})` : v.name)}"><i class="fas fa-user"></i> ${esc(v.name)}</span>`).join("")}
+        </div>` : "";
+      const note = node.note && !node.ghost
+        ? `<button type="button" class="scenenav-gnode-note" data-action="openNote"
+             data-tooltip="${esc(node.note.preview || node.note.name)}"><i class="fas fa-book-open"></i></button>`
+        : "";
       return `
         <div class="${classes}" data-scene-id="${node.id}" style="left:${pos.x}px; top:${pos.y}px; width:${NODE_W}px; height:${NODE_H}px"
              ${node.ghost ? `data-tooltip="${loc("SCENENAV.Graph.External")}"` : ""}>
+          ${viewers}
           <div class="scenenav-gnode-thumb">${thumb}${actions}</div>
           <div class="scenenav-gnode-name" title="${esc(node.name)}">
-            ${node.active ? `<i class="fas fa-bullseye"></i>` : ""}${esc(node.name)}
+            ${node.active ? `<i class="fas fa-bullseye"></i>` : ""}<span>${esc(node.name)}</span>${note}
           </div>
           ${node.ghost ? "" : `<span class="scenenav-gnode-handle" data-tooltip="${loc("SCENENAV.Graph.LinkHandle")}"></span>`}
         </div>`;

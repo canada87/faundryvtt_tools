@@ -98,6 +98,92 @@ export class SceneNavSystem {
     });
   }
 
+  /* ---------------------------------------- */
+  /*  Players                                 */
+  /* ---------------------------------------- */
+
+  /** Connected non-GM users. */
+  static getPlayers() {
+    return game.users.filter(u => u.active && !u.isGM).sort(this.sortByName);
+  }
+
+  /** Connected players grouped by the scene they are viewing. */
+  static getPlayersByScene() {
+    const map = new Map();
+    for (const user of this.getPlayers()) {
+      if (!user.viewedScene) continue;
+      if (!map.has(user.viewedScene)) map.set(user.viewedScene, []);
+      map.get(user.viewedScene).push({
+        id: user.id,
+        name: user.name,
+        character: user.character?.name ?? "",
+        color: String(user.color ?? "#999")
+      });
+    }
+    return map;
+  }
+
+  /** Pull players to a scene (they view it; the active scene does not change). */
+  static pullPlayers(sceneId, userIds) {
+    for (const userId of userIds) game.socket.emit("pullToScene", sceneId, userId);
+  }
+
+  /* ---------------------------------------- */
+  /*  GM note (the scene's own Journal field) */
+  /* ---------------------------------------- */
+
+  /** @returns {{journal: JournalEntry, page: JournalEntryPage|null}|null} */
+  static getSceneNote(scene) {
+    const journal = scene?.journal;
+    if (!journal) return null;
+    const pageRef = scene.journalEntryPage;
+    const pageId = typeof pageRef === "string" ? pageRef : pageRef?.id;
+    const page = (pageId && journal.pages.get(pageId))
+      || journal.pages.contents.slice().sort((a, b) => a.sort - b.sort)[0]
+      || null;
+    return { journal, page };
+  }
+
+  /** Plain-text preview of a scene's note (first text page). */
+  static getNotePreview(scene, maxLength = 400) {
+    const note = this.getSceneNote(scene);
+    if (note?.page?.type !== "text") return "";
+    const html = note.page.text?.content ?? "";
+    const text = new DOMParser().parseFromString(html, "text/html").body.textContent ?? "";
+    const clean = text.replace(/\s+/g, " ").trim();
+    return clean.length > maxLength ? `${clean.slice(0, maxLength)}…` : clean;
+  }
+
+  static openSceneNote(scene) {
+    const note = this.getSceneNote(scene);
+    if (!note) return;
+    note.journal.sheet.render(true, note.page ? { pageId: note.page.id } : {});
+  }
+
+  static async setSceneNote(scene, journalId) {
+    await scene.update({ journal: journalId || null, journalEntryPage: null });
+  }
+
+  /** Create a GM-only journal for a scene's notes and link it to the scene. */
+  static async createSceneNote(scene) {
+    let folder = game.folders.find(f => f.type === "JournalEntry" && f.getFlag(MODULE_ID, "sceneNotes"));
+    if (!folder) {
+      folder = await Folder.create({
+        name: game.i18n.localize("SCENENAV.Note.FolderName"),
+        type: "JournalEntry",
+        flags: { [MODULE_ID]: { sceneNotes: true } }
+      });
+    }
+    const journal = await JournalEntry.create({
+      name: scene.name,
+      folder: folder.id,
+      ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE },
+      pages: [{ name: game.i18n.localize("SCENENAV.Note.PageName"), type: "text", text: { content: "" } }]
+    });
+    await this.setSceneNote(scene, journal.id);
+    return journal;
+  }
+
   /** Remove every reference to a deleted scene. */
   static async pruneScene(sceneId) {
     const data = this.getData();

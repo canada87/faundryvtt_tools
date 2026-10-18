@@ -592,7 +592,8 @@
       "Hint": "Clic: entra nella scena · Shift+clic: attivala per tutti",
       "Up": "Vai alla mappa padre",
       "Collapse": "Riduci barra",
-      "Expand": "Mostra barra di navigazione"
+      "Expand": "Mostra barra di navigazione",
+      "NoteHint": "clic destro per cambiare journal"
     },
     "Mode": {
       "Grid": "Griglia",
@@ -613,6 +614,28 @@
       "NewLink": "Nuovo collegamento",
       "LinkTypeLabel": "La prima scena…",
       "ConfirmRemoveLink": "Rimuovere il collegamento tra \"{from}\" e \"{to}\"?"
+    },
+    "PlayersHere": "Giocatori presenti",
+    "Note": {
+      "Title": "Nota del GM",
+      "FolderName": "Note delle scene",
+      "PageName": "Note",
+      "DialogHint": "Scegli il journal da usare come nota del GM per \"{name}\". È lo stesso campo \"Journal\" delle impostazioni della scena.",
+      "Journal": "Journal",
+      "None": "— nessuna nota —",
+      "CreateNew": "Crea nuovo journal",
+      "Open": "Apri nota",
+      "NoCompendium": "Usa un journal del mondo, non di un compendio.",
+      "Linked": "\"{journal}\" è ora la nota di \"{scene}\"."
+    },
+    "Pull": {
+      "Title": "Porta qui i giocatori",
+      "DialogHint": "Scegli quali giocatori portare in \"{name}\". La scena attiva non cambia.",
+      "Confirm": "Porta qui",
+      "NoPlayers": "Nessun giocatore connesso.",
+      "Nowhere": "nessuna scena",
+      "AlreadyHere": "già qui",
+      "Done": "{count} giocatori portati in \"{name}\"."
     }
   }
 }

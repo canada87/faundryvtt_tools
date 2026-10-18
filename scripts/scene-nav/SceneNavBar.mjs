@@ -1,12 +1,13 @@
 import { MODULE_ID } from "../shared/constants.mjs";
 import { SceneNavSystem } from "./SceneNavSystem.mjs";
 import { SceneNavigator } from "./apps/SceneNavigator.mjs";
+import { SceneNavDialogs } from "./apps/SceneNavDialogs.mjs";
 
 /**
- * GM-only bar fixed at the top of the screen that shows where the viewed
- * scene sits in the link graph: the parent chain as a breadcrumb, plus
- * sub-maps and adjacent maps as quick-jump chips.
- * Click a scene to view it, Shift+click to activate it.
+ * GM-only bar fixed at the top of the screen for the viewed scene:
+ * the parent chain as a breadcrumb, sub-maps and adjacent maps as
+ * quick-jump chips (click: view, Shift+click: activate), the scene's
+ * GM note, the players currently here and a button to pull players here.
  */
 export class SceneNavBar {
 
@@ -19,6 +20,12 @@ export class SceneNavBar {
       el.id = this.#containerId;
       el.className = "faundryvtt-scenenav-bar";
       el.addEventListener("click", ev => this.#onClick(ev));
+      // Right-click on the note changes which journal it uses
+      el.addEventListener("contextmenu", ev => {
+        if (!ev.target.closest("[data-bar-action=note]")) return;
+        ev.preventDefault();
+        SceneNavDialogs.editNote(canvas.scene);
+      });
       document.body.appendChild(el);
     }
     return el;
@@ -35,7 +42,7 @@ export class SceneNavBar {
     const children = scene ? S.getChildLinks(scene.id, data).map(l => l.to) : [];
     const continues = scene ? S.getContinuations(scene.id, data) : [];
 
-    if (!scene || (!ancestors.length && !children.length && !continues.length)) {
+    if (!scene) {
       container.innerHTML = "";
       container.style.display = "none";
       return;
@@ -48,7 +55,6 @@ export class SceneNavBar {
       `<a class="scenenav-bar-link ${cls}" data-scene-id="${id}">${icon ? `<i class="${icon}"></i> ` : ""}${label}</a>`;
 
     container.style.display = "flex";
-    container.dataset.tooltip = loc("SCENENAV.Bar.Hint");
 
     if (game.settings.get(MODULE_ID, "scenesNavBarCollapsed")) {
       container.classList.add("is-collapsed");
@@ -73,12 +79,33 @@ export class SceneNavBar {
       return sceneLink(c.sceneId, "is-continues", "fas fa-arrow-right", `${dir}${nameOf(c.sceneId)}`);
     }).join("");
 
+    const note = S.getSceneNote(scene);
+    const noteHtml = note
+      ? `<a class="scenenav-bar-note" data-bar-action="note"
+            data-tooltip="${esc(`${S.getNotePreview(scene) || loc("SCENENAV.Note.Open")} — ${loc("SCENENAV.Bar.NoteHint")}`)}">
+           <i class="fas fa-book-open"></i> ${esc(note.journal.name)}
+         </a>`
+      : `<button type="button" class="scenenav-bar-btn" data-bar-action="editNote" data-tooltip="${loc("SCENENAV.Note.Title")}"><i class="fas fa-book"></i></button>`;
+
+    const here = S.getPlayersByScene().get(scene.id) ?? [];
+    const playersHtml = here.length
+      ? `<span class="scenenav-bar-players" data-tooltip="${esc(here.map(p => p.name).join(", "))}">
+           ${here.map(p => `<span class="scenenav-bar-player" style="--player-color:${esc(p.color)}"></span>`).join("")}
+           ${here.length}
+         </span>`
+      : "";
+
     container.innerHTML = `
       <button type="button" class="scenenav-bar-btn" data-bar-action="open" data-tooltip="${loc("SCENENAV.Toggle")}"><i class="fas fa-map"></i></button>
       ${ancestors.length ? `<button type="button" class="scenenav-bar-btn" data-bar-action="up" data-tooltip="${loc("SCENENAV.Bar.Up")}"><i class="fas fa-level-up-alt"></i></button>` : ""}
-      <div class="scenenav-bar-crumbs">${crumbs}</div>
-      ${childLinks ? `<div class="scenenav-bar-group">${childLinks}</div>` : ""}
-      ${continueLinks ? `<div class="scenenav-bar-group">${continueLinks}</div>` : ""}
+      <div class="scenenav-bar-crumbs" data-tooltip="${loc("SCENENAV.Bar.Hint")}">${crumbs}</div>
+      ${childLinks ? `<div class="scenenav-bar-group" data-tooltip="${loc("SCENENAV.Bar.Hint")}">${childLinks}</div>` : ""}
+      ${continueLinks ? `<div class="scenenav-bar-group" data-tooltip="${loc("SCENENAV.Bar.Hint")}">${continueLinks}</div>` : ""}
+      <div class="scenenav-bar-group">
+        ${noteHtml}
+        ${playersHtml}
+        <button type="button" class="scenenav-bar-btn" data-bar-action="pull" data-tooltip="${loc("SCENENAV.Pull.Title")}"><i class="fas fa-people-arrows"></i></button>
+      </div>
       <button type="button" class="scenenav-bar-btn" data-bar-action="collapse" data-tooltip="${loc("SCENENAV.Bar.Collapse")}"><i class="fas fa-chevron-up"></i></button>
     `;
   }
@@ -88,6 +115,9 @@ export class SceneNavBar {
     if (actionEl) {
       switch (actionEl.dataset.barAction) {
         case "open": return SceneNavigator.toggle();
+        case "note": return SceneNavSystem.openSceneNote(canvas.scene);
+        case "editNote": return SceneNavDialogs.editNote(canvas.scene);
+        case "pull": return SceneNavDialogs.pullPlayers(canvas.scene);
         case "collapse": return this.#setCollapsed(true);
         case "expand": return this.#setCollapsed(false);
         case "up": {

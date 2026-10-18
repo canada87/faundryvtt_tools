@@ -76,6 +76,7 @@
             {{/if}}
             <i class="fas {{#if selected}}fa-folder-open{{else}}fa-folder{{/if}} scenenav-folder-icon"></i>
             <span class="scenenav-tree-name">{{name}}</span>
+            {{#if players}}<span class="scenenav-players-count" data-tooltip="{{localize "SCENENAV.PlayersHere"}}"><i class="fas fa-user"></i> {{players}}</span>{{/if}}
             <span class="scenenav-count">{{count}}</span>
             <span class="scenenav-tree-actions">
               <button type="button" class="scenenav-icon-btn" data-action="editFolder" data-tooltip="{{localize "SCENENAV.EditFolder"}}"><i class="fas fa-pen"></i></button>
@@ -117,6 +118,7 @@
                style="--folder-color: {{#if color}}{{color}}{{else}}#6b7a8f{{/if}}">
               <i class="fas fa-folder"></i>
               <span class="scenenav-subfolder-name">{{name}}</span>
+              {{#if players}}<span class="scenenav-players-count" data-tooltip="{{localize "SCENENAV.PlayersHere"}}"><i class="fas fa-user"></i> {{players}}</span>{{/if}}
               <span class="scenenav-count">{{count}}</span>
             </a>
           {{/each}}
@@ -160,7 +162,10 @@
                   {{#if viewers.length}}
                     <div class="scenenav-viewers">
                       {{#each viewers}}
-                        <span class="scenenav-viewer" style="background: {{color}}" data-tooltip="{{name}}">{{name}}</span>
+                        <span class="scenenav-viewer" style="--player-color: {{color}}"
+                              data-tooltip="{{name}}{{#if character}} ({{character}}){{/if}}">
+                          <i class="fas fa-user"></i> {{name}}
+                        </span>
                       {{/each}}
                     </div>
                   {{/if}}
@@ -169,6 +174,13 @@
                 <div class="scenenav-card-body">
                   <div class="scenenav-card-title" title="{{name}}">{{name}}</div>
                   {{#if navName}}<div class="scenenav-card-sub">{{navName}}</div>{{/if}}
+
+                  {{#if note}}
+                    <a class="scenenav-note" data-action="openNote"
+                       data-tooltip="{{#if note.preview}}{{note.preview}}{{else}}{{localize "SCENENAV.Note.Open"}}{{/if}}">
+                      <i class="fas fa-book-open"></i> {{note.name}}
+                    </a>
+                  {{/if}}
 
                   {{#if hasLinks}}
                     <div class="scenenav-links">
@@ -196,10 +208,16 @@
 
                 <footer class="scenenav-card-actions">
                   <button type="button" data-action="viewScene" data-tooltip="{{localize "SCENENAV.ViewHint"}}">
-                    <i class="fas fa-eye"></i> {{localize "SCENENAV.View"}}
+                    <i class="fas fa-eye"></i> <span class="btn-label">{{localize "SCENENAV.View"}}</span>
                   </button>
                   <button type="button" data-action="activateScene" data-tooltip="{{localize "SCENENAV.ActivateHint"}}">
-                    <i class="fas fa-bullseye"></i> {{localize "SCENENAV.Activate"}}
+                    <i class="fas fa-bullseye"></i> <span class="btn-label">{{localize "SCENENAV.Activate"}}</span>
+                  </button>
+                  <button type="button" class="scenenav-icon-btn" data-action="pullPlayers" data-tooltip="{{localize "SCENENAV.Pull.Title"}}">
+                    <i class="fas fa-people-arrows"></i>
+                  </button>
+                  <button type="button" class="scenenav-icon-btn {{#if note}}has-note{{/if}}" data-action="editNote" data-tooltip="{{localize "SCENENAV.Note.Title"}}">
+                    <i class="fas fa-book"></i>
                   </button>
                   <button type="button" class="scenenav-icon-btn" data-action="editLinks" data-tooltip="{{localize "SCENENAV.EditLinks"}}">
                     <i class="fas fa-link"></i>

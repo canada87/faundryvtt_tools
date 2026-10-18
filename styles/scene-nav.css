@@ -374,6 +374,7 @@
 }
 
 .scenenav-card {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -485,12 +486,26 @@
 }
 
 .scenenav-viewer {
-  padding: 1px 6px;
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 600;
+  --player-color: #999;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid var(--player-color);
+  border-left: 4px solid var(--player-color);
+  border-radius: 10px;
+  background: rgba(10, 10, 12, 0.85);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
   color: #fff;
-  text-shadow: 0 0 2px #000;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.scenenav-viewer i {
+  color: var(--player-color);
+  font-size: 10px;
 }
 
 .scenenav-card-body {
@@ -1097,4 +1112,180 @@ body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
   text-align: center;
   font-style: italic;
   opacity: 0.6;
+}
+
+/* ========================================
+   Scene Navigator — GM notes & players
+   ======================================== */
+
+/* Narrow cards: icon-only View/Activate buttons */
+@container (max-width: 300px) {
+  .scenenav-card-actions .btn-label {
+    display: none;
+  }
+}
+
+.scenenav-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  margin-top: 6px;
+  padding: 2px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 9px;
+  background: rgba(212, 175, 55, 0.18);
+  color: #f0dc9a;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.scenenav-note:hover {
+  text-shadow: none;
+  background: rgba(212, 175, 55, 0.32);
+}
+
+.scene-navigator .scenenav-card-actions .has-note {
+  color: var(--scenenav-accent);
+  border-color: rgba(212, 175, 55, 0.6);
+}
+
+.scenenav-players-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background: rgba(90, 170, 255, 0.22);
+  color: #b5d4ff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Graph: player tags above the node, note button next to the name */
+.scenenav-gnode-players {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 4px);
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
+  gap: 3px;
+  pointer-events: auto;
+}
+
+.scenenav-gnode-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.scenenav-gnode-name span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scene-navigator .scenenav-gnode-note {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 20px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--scenenav-accent);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Pull players dialog */
+.scenenav-pull-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.scenenav-pull-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+.scenenav-pull-row.is-here {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.scenenav-pull-dot {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.scenenav-pull-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.scenenav-pull-char {
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.scenenav-pull-where {
+  font-size: 12px;
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* Bar: note and players here */
+.faundryvtt-scenenav-bar .scenenav-bar-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 220px;
+  padding: 3px 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 10px;
+  background: rgba(212, 175, 55, 0.22);
+  color: #f0dc9a;
+  cursor: pointer;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-note:hover {
+  background: rgba(212, 175, 55, 0.38);
+  text-shadow: none;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-players {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(90, 170, 255, 0.18);
+  color: #b5d4ff;
+  font-weight: 700;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-player {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--player-color);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
 }

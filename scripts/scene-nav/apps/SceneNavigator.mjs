@@ -2,6 +2,7 @@ import { MODULE_ID } from "../../shared/constants.mjs";
 import { SceneNavSystem, LINK_TYPES, DIRECTIONS } from "../SceneNavSystem.mjs";
 import { SceneLinksEditor } from "./SceneLinksEditor.mjs";
 import { SceneGraph, computeLayout } from "./SceneGraph.mjs";
+import { SceneNavDialogs } from "./SceneNavDialogs.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 
@@ -44,6 +45,9 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       configureScene: SceneNavigator.#onConfigureScene,
       toggleFavorite: SceneNavigator.#onToggleFavorite,
       editLinks: SceneNavigator.#onEditLinks,
+      openNote: SceneNavigator.#onOpenNote,
+      editNote: SceneNavigator.#onEditNote,
+      pullPlayers: SceneNavigator.#onPullPlayers,
       focusScene: SceneNavigator.#onFocusScene
     }
   };
@@ -79,6 +83,9 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   #searchFocused = false;
   #highlightSceneId = null;
 
+  /** Connected players by viewed scene, refreshed on every render. */
+  #players = new Map();
+
   /** Graph pan/zoom per view, so re-renders keep the camera where it was. */
   #graphTransforms = new Map();
 
@@ -107,6 +114,12 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     const isFolderView = !Object.values(VIEWS).includes(this.#view);
     if (isFolderView && !S.getFolder(this.#view)) this.#view = VIEWS.ALL;
 
+    this.#players = S.getPlayersByScene();
+    const playersInFolder = folderId => [...this.#players].reduce((sum, [sceneId, users]) => {
+      const fid = game.scenes.get(sceneId)?.folder?.id;
+      return fid && S.isFolderWithin(fid, folderId) ? sum + users.length : sum;
+    }, 0);
+
     const collapsed = new Set(game.settings.get(MODULE_ID, "scenesNavCollapsed") ?? []);
     const tree = [];
     const walk = (parentId, depth) => {
@@ -119,6 +132,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
           color: S.folderColor(folder),
           indent: depth * 14,
           count: S.countScenesDeep(folder.id),
+          players: playersInFolder(folder.id),
           hasChildren,
           collapsed: isCollapsed,
           selected: this.#view === folder.id
@@ -175,7 +189,8 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
         id: f.id,
         name: f.name,
         color: S.folderColor(f),
-        count: S.countScenesDeep(f.id)
+        count: S.countScenesDeep(f.id),
+        players: playersInFolder(f.id)
       }));
       canCreateSubfolder = S.canCreateSubfolder(folder.id);
       sections.push({
@@ -221,9 +236,8 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       direction: c.direction ? game.i18n.localize(`SCENENAV.Direction.${c.direction}`) : ""
     }));
 
-    const viewers = game.users
-      .filter(u => u.active && !u.isGM && u.viewedScene === scene.id)
-      .map(u => ({ name: u.name, color: String(u.color ?? "#999") }));
+    const viewers = this.#players.get(scene.id) ?? [];
+    const note = S.getSceneNote(scene);
 
     return {
       id: scene.id,
@@ -239,6 +253,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       continues,
       hasLinks: !!parentId || children.length > 0 || continues.length > 0,
       viewers,
+      note: note ? { name: note.journal.name, preview: S.getNotePreview(scene) } : null,
       highlight: this.#highlightSceneId === scene.id
     };
   }
@@ -293,6 +308,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     // Scene cards: drag, double-click to view
     root.querySelectorAll(".scenenav-card[data-scene-id]").forEach(card => {
       const sceneId = card.dataset.sceneId;
+      card.addEventListener("drop", ev => this.#onDropJournal(ev, sceneId));
       card.addEventListener("dragstart", ev => {
         ev.dataTransfer.setData("text/plain", JSON.stringify({ type: DRAG_TYPE, kind: "scene", id: sceneId }));
         ev.dataTransfer.effectAllowed = "move";
@@ -381,7 +397,9 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
         isView: scene.isView,
         ghost: ghosts.has(id),
         dim: !!search && !matches(scene),
-        highlight: this.#highlightSceneId === id
+        highlight: this.#highlightSceneId === id,
+        viewers: this.#players.get(id) ?? [],
+        note: S.getSceneNote(scene) ? { name: S.getSceneNote(scene).journal.name, preview: S.getNotePreview(scene, 200) } : null
       };
     }).sort(S.sortByName);
 
@@ -485,6 +503,28 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!confirmed) return;
     this.#graphTransforms.delete(this.#view);
     await SceneNavSystem.clearViewLayout(this.#view);
+  }
+
+  /** Dropping a Journal (or page) from the sidebar on a card makes it the scene's note. */
+  async #onDropJournal(event, sceneId) {
+    let payload;
+    try {
+      payload = JSON.parse(event.dataTransfer.getData("text/plain"));
+    } catch {
+      return;
+    }
+    if (!["JournalEntry", "JournalEntryPage"].includes(payload?.type) || !payload.uuid) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.currentTarget.closest("[data-drop-folder]")?.classList.remove("drag-over");
+    const doc = await fromUuid(payload.uuid);
+    const scene = game.scenes.get(sceneId);
+    if (!doc || !scene) return;
+    const isPage = doc.documentName === "JournalEntryPage";
+    const journal = isPage ? doc.parent : doc;
+    if (journal?.pack) return ui.notifications.warn(game.i18n.localize("SCENENAV.Note.NoCompendium"));
+    await scene.update({ journal: journal.id, journalEntryPage: isPage ? doc.id : null });
+    ui.notifications.info(game.i18n.format("SCENENAV.Note.Linked", { journal: journal.name, scene: scene.name }));
   }
 
   async #onDrop(event, target) {
@@ -653,6 +693,21 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onToggleFavorite(event, target) {
     await SceneNavSystem.toggleFavorite(target.closest("[data-scene-id]").dataset.sceneId);
+  }
+
+  static #onOpenNote(event, target) {
+    const scene = game.scenes.get(target.closest("[data-scene-id]").dataset.sceneId);
+    SceneNavDialogs.openOrEditNote(scene);
+  }
+
+  static #onEditNote(event, target) {
+    const scene = game.scenes.get(target.closest("[data-scene-id]").dataset.sceneId);
+    SceneNavDialogs.editNote(scene);
+  }
+
+  static #onPullPlayers(event, target) {
+    const scene = game.scenes.get(target.closest("[data-scene-id]").dataset.sceneId);
+    SceneNavDialogs.pullPlayers(scene);
   }
 
   static #onEditLinks(event, target) {

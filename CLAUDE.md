@@ -43,11 +43,12 @@ scripts/
   scene-nav/
     index.mjs              — Init navigatore scene (disattivo di default: setting scenesNavEnabled)
     SceneNavSystem.mjs     — Logica core: cartelle scene di Foundry, preferiti, collegamenti padre/figlio e prosegue
-    SceneNavBar.mjs        — Barra GM in alto nella scena: percorso padri, sotto-mappe, mappe adiacenti
+    SceneNavBar.mjs        — Barra GM in alto nella scena: percorso padri, collegamenti, nota, giocatori presenti
     apps/
       SceneNavigator.mjs   — UI GM a tutto schermo: albero cartelle, vista griglia (miniature) e vista mappa (grafo)
       SceneGraph.mjs       — Grafo scene: layout automatico, pan/zoom, trascina nodi, crea/rimuovi collegamenti
       SceneLinksEditor.mjs — UI GM: modifica collegamenti di una scena
+      SceneNavDialogs.mjs  — Dialoghi condivisi: nota GM (journal della scena), porta qui i giocatori
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting

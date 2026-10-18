@@ -107,8 +107,20 @@ export function initSceneNav() {
   // In-scene navigation bar (GM only)
   Hooks.on("canvasReady", () => SceneNavBar.render());
   Hooks.on("updateScene", (scene, changes) => {
-    if ("name" in changes) SceneNavBar.render();
+    if ("name" in changes || "journal" in changes || "journalEntryPage" in changes) SceneNavBar.render();
   });
+
+  // Player positions and scene notes are shown in both the panel and the bar
+  const refreshAll = foundry.utils.debounce(() => {
+    SceneNavigator.refresh();
+    SceneNavBar.render();
+  }, 150);
+  const hooks = [
+    "userActivity", "renderSceneNavigation", "updateUser", "userConnected",
+    "updateJournalEntry", "deleteJournalEntry",
+    "createJournalEntryPage", "updateJournalEntryPage", "deleteJournalEntryPage"
+  ];
+  for (const hook of hooks) Hooks.on(hook, () => refreshAll());
 
   Hooks.on("deleteScene", (scene) => {
     SceneNavigator.refresh();
