@@ -60,6 +60,14 @@ export function initSceneNav() {
     default: "grid"
   });
 
+  game.settings.register(MODULE_ID, "scenesNavGraphSnap", {
+    name: "Scene Navigator Graph Snap",
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: false
+  });
+
   game.settings.register(MODULE_ID, "scenesNavBarCollapsed", {
     name: "Scene Navigator Bar Collapsed",
     scope: "client",

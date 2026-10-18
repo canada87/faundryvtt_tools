@@ -821,6 +821,18 @@ body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
   touch-action: none;
 }
 
+.scenenav-graph.is-snap {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+}
+
+.scene-navigator .scenenav-graph-toolbar button.is-active {
+  border-color: var(--scenenav-accent);
+  background: rgba(212, 175, 55, 0.25);
+  color: var(--scenenav-accent);
+}
+
 .scenenav-graph.is-panning {
   cursor: grabbing;
 }

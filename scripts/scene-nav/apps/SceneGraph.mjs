@@ -6,6 +6,13 @@ const NODE_H = 132;
 const CELL_W = 230;
 const CELL_H = 190;
 
+/** Snap step: half a layout cell, so snapped nodes line up with the automatic layout. */
+const SNAP_X = CELL_W / 2;
+const SNAP_Y = CELL_H / 2;
+
+/** Spacing of the background dots when snapping is off. */
+const DOT_STEP = 24;
+
 const MIN_ZOOM = 0.15;
 const MAX_ZOOM = 2.5;
 
@@ -153,7 +160,9 @@ export class SceneGraph {
     this.model = model;
     this.options = options;
     this.transform = options.transform ? { ...options.transform } : null;
+    this.snap = !!options.snap;
     this.#build();
+    this.host.classList.toggle("is-snap", this.snap);
     if (!this.transform) this.fit();
     else this.#applyTransform();
   }
@@ -186,6 +195,7 @@ export class SceneGraph {
         <button type="button" data-graph="zoomIn" data-tooltip="${loc("SCENENAV.Graph.ZoomIn")}"><i class="fas fa-search-plus"></i></button>
         <button type="button" data-graph="zoomOut" data-tooltip="${loc("SCENENAV.Graph.ZoomOut")}"><i class="fas fa-search-minus"></i></button>
         <button type="button" data-graph="fit" data-tooltip="${loc("SCENENAV.Graph.Fit")}"><i class="fas fa-expand"></i></button>
+        <button type="button" data-graph="snap" class="${this.snap ? "is-active" : ""}" data-tooltip="${loc("SCENENAV.Graph.Snap")}"><i class="fas fa-border-all"></i></button>
         <button type="button" data-graph="autoLayout" data-tooltip="${loc("SCENENAV.Graph.AutoLayout")}"><i class="fas fa-magic"></i></button>
       </div>
       <div class="scenenav-graph-legend">
@@ -302,6 +312,10 @@ export class SceneGraph {
     const { x, y, k } = this.transform;
     this.world.style.transform = `translate(${x}px, ${y}px) scale(${k})`;
     this.host.style.setProperty("--graph-zoom", k);
+    // Background grid follows pan and zoom; it shows the snap grid when snapping is on
+    const [gx, gy] = this.snap ? [SNAP_X, SNAP_Y] : [DOT_STEP, DOT_STEP];
+    this.host.style.backgroundSize = `${gx * k}px ${gy * k}px`;
+    this.host.style.backgroundPosition = `${x}px ${y}px`;
     this.options.onTransform?.({ ...this.transform });
   }
 
@@ -376,6 +390,7 @@ export class SceneGraph {
         case "zoomOut": return this.zoomAt(0.8);
         case "fit": return this.fit();
         case "autoLayout": return this.options.onAutoLayout?.();
+        case "snap": return this.#toggleSnap(btn);
       }
     });
 
@@ -396,6 +411,14 @@ export class SceneGraph {
       const edge = ev.target.closest(".scenenav-edge");
       if (edge) this.options.onEdgeClick?.(edge.dataset.linkId);
     });
+  }
+
+  #toggleSnap(button) {
+    this.snap = !this.snap;
+    button.classList.toggle("is-active", this.snap);
+    this.host.classList.toggle("is-snap", this.snap);
+    this.#applyTransform();
+    this.options.onSnapChange?.(this.snap);
   }
 
   #highlightEdges(id) {
@@ -454,6 +477,10 @@ export class SceneGraph {
       el.classList.add("is-dragging");
       pos.x = origin.x + dx;
       pos.y = origin.y + dy;
+      if (this.snap) {
+        pos.x = Math.round(pos.x / SNAP_X) * SNAP_X;
+        pos.y = Math.round(pos.y / SNAP_Y) * SNAP_Y;
+      }
       el.style.left = `${pos.x}px`;
       el.style.top = `${pos.y}px`;
       this.#drawEdges();

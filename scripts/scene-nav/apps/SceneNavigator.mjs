@@ -418,6 +418,8 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     const graph = new SceneGraph(host, { nodes, edges, positions }, {
       transform: this.#graphTransforms.get(viewKey),
       onTransform: t => this.#graphTransforms.set(viewKey, t),
+      snap: game.settings.get(MODULE_ID, "scenesNavGraphSnap"),
+      onSnapChange: value => game.settings.set(MODULE_ID, "scenesNavGraphSnap", value),
       // Moving one node freezes the whole view, so the others stay where they are
       onMoveNode: () => S.setViewLayout(viewKey, Object.fromEntries(positions)),
       onViewScene: id => this.#viewScene(id),

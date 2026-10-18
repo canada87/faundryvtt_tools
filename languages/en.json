@@ -613,7 +613,8 @@
       "Empty": "No scenes to show in this view.",
       "NewLink": "New link",
       "LinkTypeLabel": "The first scene…",
-      "ConfirmRemoveLink": "Remove the link between \"{from}\" and \"{to}\"?"
+      "ConfirmRemoveLink": "Remove the link between \"{from}\" and \"{to}\"?",
+      "Snap": "Snap to grid"
     },
     "PlayersHere": "Players here",
     "Note": {

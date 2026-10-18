@@ -613,7 +613,8 @@
       "Empty": "Nessuna scena da mostrare in questa vista.",
       "NewLink": "Nuovo collegamento",
       "LinkTypeLabel": "La prima scena…",
-      "ConfirmRemoveLink": "Rimuovere il collegamento tra \"{from}\" e \"{to}\"?"
+      "ConfirmRemoveLink": "Rimuovere il collegamento tra \"{from}\" e \"{to}\"?",
+      "Snap": "Aggancia alla griglia"
     },
     "PlayersHere": "Giocatori presenti",
     "Note": {
