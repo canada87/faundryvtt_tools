@@ -414,8 +414,11 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const viewKey = this.#view;
     const positions = computeLayout(nodes, edges, S.getViewLayout(viewKey, data));
+    const groups = this.#graphFolderGroups(visible);
 
-    const graph = new SceneGraph(host, { nodes, edges, positions }, {
+    const graph = new SceneGraph(host, { nodes, edges, positions, groups }, {
+      showGroups: game.settings.get(MODULE_ID, "scenesNavGraphGroups"),
+      onGroupsChange: value => game.settings.set(MODULE_ID, "scenesNavGraphGroups", value),
       transform: this.#graphTransforms.get(viewKey),
       onTransform: t => this.#graphTransforms.set(viewKey, t),
       snap: game.settings.get(MODULE_ID, "scenesNavGraphSnap"),
@@ -434,6 +437,36 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     });
 
     if (this.#highlightSceneId) graph.focus(this.#highlightSceneId);
+  }
+
+  /**
+   * Nested folder boxes for the graph: every folder below the current view
+   * that contains visible scenes, with all the scenes inside it (subfolders included).
+   * @returns {Array<{id, name, color, parentId, sceneIds: string[]}>}
+   */
+  #graphFolderGroups(visible) {
+    const S = SceneNavSystem;
+    const isFolderView = !Object.values(VIEWS).includes(this.#view);
+    // In a folder view, that folder and its ancestors are the whole view: no box for them
+    const baseDepth = isFolderView ? S.getFolderDepth(this.#view) : 0;
+    const groups = new Map();
+    for (const id of visible) {
+      const path = S.getFolderPath(game.scenes.get(id)?.folder?.id);
+      path.forEach((folder, i) => {
+        if (i < baseDepth) return;
+        if (!groups.has(folder.id)) {
+          groups.set(folder.id, {
+            id: folder.id,
+            name: folder.name,
+            color: S.folderColor(folder),
+            parentId: i > baseDepth ? path[i - 1].id : null,
+            sceneIds: []
+          });
+        }
+        groups.get(folder.id).sceneIds.push(id);
+      });
+    }
+    return [...groups.values()];
   }
 
   async #promptNewLink(fromId, toId, direction) {

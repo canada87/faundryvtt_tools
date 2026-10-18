@@ -60,6 +60,14 @@ export function initSceneNav() {
     default: "grid"
   });
 
+  game.settings.register(MODULE_ID, "scenesNavGraphGroups", {
+    name: "Scene Navigator Graph Folder Boxes",
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: true
+  });
+
   game.settings.register(MODULE_ID, "scenesNavGraphSnap", {
     name: "Scene Navigator Graph Snap",
     scope: "client",

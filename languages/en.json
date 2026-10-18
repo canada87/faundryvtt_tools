@@ -614,7 +614,8 @@
       "NewLink": "New link",
       "LinkTypeLabel": "The first scene…",
       "ConfirmRemoveLink": "Remove the link between \"{from}\" and \"{to}\"?",
-      "Snap": "Snap to grid"
+      "Snap": "Snap to grid",
+      "Groups": "Show folder boxes"
     },
     "PlayersHere": "Players here",
     "Note": {

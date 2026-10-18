@@ -161,6 +161,7 @@ export class SceneGraph {
     this.options = options;
     this.transform = options.transform ? { ...options.transform } : null;
     this.snap = !!options.snap;
+    this.showGroups = options.showGroups !== false;
     this.#build();
     this.host.classList.toggle("is-snap", this.snap);
     if (!this.transform) this.fit();
@@ -177,6 +178,7 @@ export class SceneGraph {
 
     this.host.innerHTML = `
       <div class="scenenav-graph-world">
+        <div class="scenenav-graph-groups"></div>
         <svg class="scenenav-graph-edges" width="1" height="1">
           <defs>
             <marker id="scenenav-arrow-child" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -195,6 +197,7 @@ export class SceneGraph {
         <button type="button" data-graph="zoomIn" data-tooltip="${loc("SCENENAV.Graph.ZoomIn")}"><i class="fas fa-search-plus"></i></button>
         <button type="button" data-graph="zoomOut" data-tooltip="${loc("SCENENAV.Graph.ZoomOut")}"><i class="fas fa-search-minus"></i></button>
         <button type="button" data-graph="fit" data-tooltip="${loc("SCENENAV.Graph.Fit")}"><i class="fas fa-expand"></i></button>
+        <button type="button" data-graph="groups" class="${this.showGroups ? "is-active" : ""}" data-tooltip="${loc("SCENENAV.Graph.Groups")}"><i class="fas fa-object-group"></i></button>
         <button type="button" data-graph="snap" class="${this.snap ? "is-active" : ""}" data-tooltip="${loc("SCENENAV.Graph.Snap")}"><i class="fas fa-border-all"></i></button>
         <button type="button" data-graph="autoLayout" data-tooltip="${loc("SCENENAV.Graph.AutoLayout")}"><i class="fas fa-magic"></i></button>
       </div>
@@ -207,6 +210,8 @@ export class SceneGraph {
 
     this.world = this.host.querySelector(".scenenav-graph-world");
     this.edgeLayer = this.host.querySelector(".scenenav-graph-edge-layer");
+    this.groupLayer = this.host.querySelector(".scenenav-graph-groups");
+    this.host.classList.toggle("show-groups", this.showGroups);
     this.tempLine = this.host.querySelector(".scenenav-graph-temp");
     const nodeLayer = this.host.querySelector(".scenenav-graph-nodes");
 
@@ -261,6 +266,7 @@ export class SceneGraph {
 
     this.nodeEls = new Map([...nodeLayer.querySelectorAll(".scenenav-gnode")].map(el => [el.dataset.sceneId, el]));
     this.#drawEdges();
+    this.#drawGroups();
     this.#bindEvents();
   }
 
@@ -280,6 +286,45 @@ export class SceneGraph {
       dy ? (NODE_H / 2 + pad) / Math.abs(dy) : Infinity
     );
     return { x: c.x + dx * scale, y: c.y + dy * scale };
+  }
+
+  /**
+   * Folder boxes around their scenes. A folder's padding grows with the
+   * number of nested folder levels inside it, so parent boxes enclose
+   * their children's boxes and labels.
+   */
+  #drawGroups() {
+    const groups = (this.model.groups ?? []).filter(g => g.sceneIds.some(id => this.model.positions.has(id)));
+    if (!groups.length) {
+      this.groupLayer.innerHTML = "";
+      return;
+    }
+    const esc = Handlebars.escapeExpression;
+    const byId = new Map(groups.map(g => [g.id, g]));
+    const depth = g => (g.parentId && byId.has(g.parentId) ? depth(byId.get(g.parentId)) + 1 : 0);
+    const levelsBelow = new Map(groups.map(g => [g.id, 0]));
+    for (const g of [...groups].sort((a, b) => depth(b) - depth(a))) {
+      if (g.parentId && byId.has(g.parentId)) {
+        levelsBelow.set(g.parentId, Math.max(levelsBelow.get(g.parentId), levelsBelow.get(g.id) + 1));
+      }
+    }
+
+    this.groupLayer.innerHTML = [...groups].sort((a, b) => depth(a) - depth(b)).map(g => {
+      const rects = g.sceneIds.map(id => this.model.positions.get(id)).filter(Boolean);
+      const lv = levelsBelow.get(g.id);
+      const padX = 14 + lv * 14;
+      const padTop = 30 + lv * 24;
+      const padBottom = 14 + lv * 14;
+      const left = Math.min(...rects.map(r => r.x)) - padX;
+      const top = Math.min(...rects.map(r => r.y)) - padTop;
+      const right = Math.max(...rects.map(r => r.x)) + NODE_W + padX;
+      const bottom = Math.max(...rects.map(r => r.y)) + NODE_H + padBottom;
+      const color = g.color || "#8a8a92";
+      return `
+        <div class="scenenav-group" style="left:${left}px; top:${top}px; width:${right - left}px; height:${bottom - top}px; --group-color:${esc(color)}">
+          <span class="scenenav-group-label"><i class="fas fa-folder"></i> ${esc(g.name)}</span>
+        </div>`;
+    }).join("");
   }
 
   #drawEdges() {
@@ -391,6 +436,7 @@ export class SceneGraph {
         case "fit": return this.fit();
         case "autoLayout": return this.options.onAutoLayout?.();
         case "snap": return this.#toggleSnap(btn);
+        case "groups": return this.#toggleGroups(btn);
       }
     });
 
@@ -411,6 +457,13 @@ export class SceneGraph {
       const edge = ev.target.closest(".scenenav-edge");
       if (edge) this.options.onEdgeClick?.(edge.dataset.linkId);
     });
+  }
+
+  #toggleGroups(button) {
+    this.showGroups = !this.showGroups;
+    button.classList.toggle("is-active", this.showGroups);
+    this.host.classList.toggle("show-groups", this.showGroups);
+    this.options.onGroupsChange?.(this.showGroups);
   }
 
   #toggleSnap(button) {
@@ -484,6 +537,7 @@ export class SceneGraph {
       el.style.left = `${pos.x}px`;
       el.style.top = `${pos.y}px`;
       this.#drawEdges();
+      this.#drawGroups();
     }, () => {
       el.classList.remove("is-dragging");
       if (moved) this.options.onMoveNode?.(id, pos.x, pos.y);

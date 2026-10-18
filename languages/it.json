@@ -614,7 +614,8 @@
       "NewLink": "Nuovo collegamento",
       "LinkTypeLabel": "La prima scena…",
       "ConfirmRemoveLink": "Rimuovere il collegamento tra \"{from}\" e \"{to}\"?",
-      "Snap": "Aggancia alla griglia"
+      "Snap": "Aggancia alla griglia",
+      "Groups": "Mostra riquadri delle cartelle"
     },
     "PlayersHere": "Giocatori presenti",
     "Note": {
