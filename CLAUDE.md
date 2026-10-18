@@ -42,8 +42,7 @@ scripts/
       ResourceManager.mjs  — UI GM: lista risorse, +/-, toggle visibilità/attivo
   scene-nav/
     index.mjs              — Init navigatore scene (disattivo di default: setting scenesNavEnabled)
-    SceneNavSystem.mjs     — Logica core: cartelle proprie, preferiti, collegamenti padre/figlio e prosegue
-    SceneNavTab.mjs        — Linguetta sul bordo sinistro che apre/chiude il navigatore
+    SceneNavSystem.mjs     — Logica core: cartelle scene di Foundry, preferiti, collegamenti padre/figlio e prosegue
     apps/
       SceneNavigator.mjs   — UI GM a tutto schermo: albero cartelle, miniature, entra/attiva/impostazioni
       SceneLinksEditor.mjs — UI GM: modifica collegamenti di una scena
@@ -54,7 +53,7 @@ styles/
   saving-throw.css         — Stili UI tiro salvezza e messaggi chat
   mindmap.css              — Stili lavagna mind map
   resources.css            — Stili HUD risorse e gestore
-  scene-nav.css            — Stili navigatore scene, linguetta ed editor collegamenti
+  scene-nav.css            — Stili navigatore scene ed editor collegamenti
 templates/
   hub-menu.hbs             — Template hub
   crafting/

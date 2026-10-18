@@ -503,11 +503,10 @@
     "FeatureName": "Navigatore Scene",
     "FeatureDescription": "Pannello a tutto schermo per organizzare le scene in cartelle, vederne le miniature e collegarle tra loro (sotto-mappe, mappe adiacenti).",
     "Toggle": "Apri/chiudi Navigatore Scene",
-    "TabLabel": "Scene",
     "Settings": {
       "Enabled": {
         "Name": "Navigatore Scene: abilita",
-        "Hint": "Attiva il Navigatore Scene (solo GM): una linguetta sul bordo sinistro apre un pannello a tutto schermo con cartelle, miniature e collegamenti tra le scene. Richiede il ricaricamento."
+        "Hint": "Attiva il Navigatore Scene (solo GM): un pannello a tutto schermo con le cartelle delle scene, le miniature e i collegamenti tra le scene. Si apre con Shift+N o dall'Hub. Richiede il ricaricamento."
       }
     },
     "SearchPlaceholder": "Cerca scene...",
@@ -519,7 +518,7 @@
     "Favorites": "Preferite",
     "Unsorted": "Non organizzate",
     "Folders": "Cartelle",
-    "NoFolders": "Nessuna cartella. Creane una o importa quelle di Foundry.",
+    "NoFolders": "Nessuna cartella di scene. Creane una con il pulsante qui sopra.",
     "NewFolder": "Nuova cartella",
     "CreateFolder": "Crea cartella",
     "CreateSubfolder": "Nuova sottocartella",
@@ -528,7 +527,6 @@
     "FolderName": "Nome",
     "FolderColor": "Colore",
     "Save": "Salva",
-    "ImportFolders": "Importa cartelle di Foundry",
     "EmptyFolder": "Nessuna scena qui. Trascina le scene su una cartella per organizzarle.",
     "NoResults": "Nessuna scena trovata.",
     "DoubleClickToView": "Doppio clic per entrare nella scena",
@@ -574,15 +572,21 @@
       "down": "Giù"
     },
     "Confirm": {
-      "DeleteFolder": "Eliminare la cartella \"{name}\"? Sottocartelle e scene verranno spostate nella cartella superiore.",
-      "ImportFolders": "Crea nel navigatore le stesse cartelle delle scene di Foundry e vi inserisce le scene non ancora organizzate. Le cartelle già importate vengono riutilizzate."
+      "DeleteFolder": "Eliminare la cartella \"{name}\"? Sottocartelle e scene verranno spostate nella cartella superiore (anche nella barra Scene di Foundry).",
+      "ResetData": "Cancellare tutti i preferiti e i collegamenti tra le scene? Le cartelle e le scene di Foundry non vengono toccate."
     },
     "Info": {
-      "Imported": "Importate {folders} cartelle, {scenes} scene organizzate."
+      "Reset": "Preferiti e collegamenti cancellati."
     },
     "Warn": {
       "FolderCycle": "Non puoi spostare una cartella dentro se stessa.",
-      "LinkCycle": "Collegamento non valido: creerebbe un ciclo padre/figlio."
+      "LinkCycle": "Collegamento non valido: creerebbe un ciclo padre/figlio.",
+      "FolderDepth": "Foundry permette al massimo {max} livelli di cartelle."
+    },
+    "ResetData": "Reset dati del navigatore",
+    "ResetDataHint": "Reset preferiti e collegamenti",
+    "Error": {
+      "SceneAction": "Impossibile caricare la scena \"{name}\". Dettagli nella console (F12)."
     }
   }
 }

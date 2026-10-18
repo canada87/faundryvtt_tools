@@ -14,8 +14,8 @@ const VIEWS = {
 };
 
 /**
- * GM-only full-screen scene navigator: custom folder tree, thumbnail
- * cards with view / activate / configure actions and scene links.
+ * GM-only full-screen scene navigator: Foundry's scene folders as a tree,
+ * thumbnail cards with view / activate / configure actions and scene links.
  * A single instance is kept so the current folder and search survive
  * opening and closing the panel.
  */
@@ -35,7 +35,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       createFolder: SceneNavigator.#onCreateFolder,
       editFolder: SceneNavigator.#onEditFolder,
       deleteFolder: SceneNavigator.#onDeleteFolder,
-      importFolders: SceneNavigator.#onImportFolders,
+      resetData: SceneNavigator.#onResetData,
       clearSearch: SceneNavigator.#onClearSearch,
       viewScene: SceneNavigator.#onViewScene,
       activateScene: SceneNavigator.#onActivateScene,
@@ -76,7 +76,16 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   #search = "";
   #searchFocused = false;
   #highlightSceneId = null;
-  #preloaded = new Set();
+
+  /** Esc closes the panel, unless the key is meant for a dialog opened above it. */
+  #onKeyDown = (event) => {
+    if (event.key !== "Escape" || !this.rendered) return;
+    const target = event.target;
+    if (target instanceof HTMLElement && target.closest(".application") && !this.element.contains(target)) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.close();
+  };
 
   /* ---------------------------------------- */
   /*  Context                                 */
@@ -87,21 +96,20 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     const data = S.getData();
 
     const isFolderView = !Object.values(VIEWS).includes(this.#view);
-    if (isFolderView && !S.getFolder(this.#view, data)) this.#view = VIEWS.ALL;
+    if (isFolderView && !S.getFolder(this.#view)) this.#view = VIEWS.ALL;
 
     const collapsed = new Set(game.settings.get(MODULE_ID, "scenesNavCollapsed") ?? []);
     const tree = [];
     const walk = (parentId, depth) => {
-      for (const folder of S.getChildFolders(parentId, data)) {
-        const hasChildren = data.folders.some(f => f.parentId === folder.id);
+      for (const folder of S.getChildFolders(parentId)) {
+        const hasChildren = S.getChildFolders(folder.id).length > 0;
         const isCollapsed = collapsed.has(folder.id);
         tree.push({
           id: folder.id,
           name: folder.name,
-          color: folder.color,
-          depth,
+          color: S.folderColor(folder),
           indent: depth * 14,
-          count: S.countScenesDeep(folder.id, data),
+          count: S.countScenesDeep(folder.id),
           hasChildren,
           collapsed: isCollapsed,
           selected: this.#view === folder.id
@@ -112,11 +120,12 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     walk(null, 0);
 
     const sceneCard = scene => this.#buildSceneCard(scene, data);
-    const sectionTitle = folderId => S.getFolderPath(folderId, data).map(f => f.name).join(" › ");
+    const sectionTitle = folderId => S.getFolderPath(folderId).map(f => f.name).join(" › ");
 
-    let sections = [];
+    const sections = [];
     let breadcrumb = null;
     let subfolders = [];
+    let canCreateSubfolder = false;
     const search = this.#search.trim().toLowerCase();
 
     if (search) {
@@ -127,53 +136,60 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
         scenes: scenes.map(sceneCard)
       });
     } else if (this.#view === VIEWS.ALL) {
-      const ordered = [];
       const collect = parentId => {
-        for (const folder of S.getChildFolders(parentId, data)) {
-          ordered.push(folder);
+        for (const folder of S.getChildFolders(parentId)) {
+          const scenes = S.getScenesInFolder(folder.id);
+          if (scenes.length) {
+            sections.push({
+              title: sectionTitle(folder.id),
+              color: S.folderColor(folder),
+              folderId: folder.id,
+              scenes: scenes.map(sceneCard)
+            });
+          }
           collect(folder.id);
         }
       };
       collect(null);
-      for (const folder of ordered) {
-        const scenes = S.getScenesInFolder(folder.id, data);
-        if (!scenes.length) continue;
-        sections.push({ title: sectionTitle(folder.id), color: folder.color, folderId: folder.id, scenes: scenes.map(sceneCard) });
-      }
-      const unsorted = S.getScenesInFolder(null, data);
+      const unsorted = S.getScenesInFolder(null);
       if (unsorted.length) {
-        sections.push({ title: game.i18n.localize("SCENENAV.Unsorted"), scenes: unsorted.map(sceneCard) });
+        sections.push({ title: game.i18n.localize("SCENENAV.Unsorted"), dropUnsorted: true, scenes: unsorted.map(sceneCard) });
       }
     } else if (this.#view === VIEWS.FAVORITES) {
       sections.push({ title: game.i18n.localize("SCENENAV.Favorites"), scenes: S.getFavoriteScenes(data).map(sceneCard) });
     } else if (this.#view === VIEWS.UNSORTED) {
-      sections.push({ title: game.i18n.localize("SCENENAV.Unsorted"), scenes: S.getScenesInFolder(null, data).map(sceneCard) });
+      sections.push({ title: game.i18n.localize("SCENENAV.Unsorted"), dropUnsorted: true, scenes: S.getScenesInFolder(null).map(sceneCard) });
     } else {
-      const folder = S.getFolder(this.#view, data);
-      breadcrumb = S.getFolderPath(folder.id, data).map(f => ({ id: f.id, name: f.name, color: f.color }));
-      subfolders = S.getChildFolders(folder.id, data).map(f => ({
+      const folder = S.getFolder(this.#view);
+      breadcrumb = S.getFolderPath(folder.id).map(f => ({ id: f.id, name: f.name }));
+      subfolders = S.getChildFolders(folder.id).map(f => ({
         id: f.id,
         name: f.name,
-        color: f.color,
-        count: S.countScenesDeep(f.id, data)
+        color: S.folderColor(f),
+        count: S.countScenesDeep(f.id)
       }));
-      sections.push({ title: folder.name, color: folder.color, folderId: folder.id, scenes: S.getScenesInFolder(folder.id, data).map(sceneCard) });
+      canCreateSubfolder = S.canCreateSubfolder(folder.id);
+      sections.push({
+        title: folder.name,
+        color: S.folderColor(folder),
+        folderId: folder.id,
+        scenes: S.getScenesInFolder(folder.id).map(sceneCard)
+      });
     }
-
-    sections = sections.filter(s => s.scenes.length || !search);
 
     return {
       tree,
       sections,
       breadcrumb,
       subfolders,
+      canCreateSubfolder,
       currentFolderId: isFolderView ? this.#view : null,
       viewAll: this.#view === VIEWS.ALL && !search,
       viewFavorites: this.#view === VIEWS.FAVORITES && !search,
       viewUnsorted: this.#view === VIEWS.UNSORTED && !search,
       countAll: game.scenes.size,
       countFavorites: S.getFavoriteScenes(data).length,
-      countUnsorted: S.getScenesInFolder(null, data).length,
+      countUnsorted: S.getScenesInFolder(null).length,
       search: this.#search,
       cardSize: game.settings.get(MODULE_ID, "scenesNavCardSize"),
       isEmpty: sections.every(s => !s.scenes.length) && !subfolders.length
@@ -183,7 +199,6 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   #buildSceneCard(scene, data) {
     const S = SceneNavSystem;
     const nameOf = id => game.scenes.get(id)?.name ?? "?";
-    const folderId = S.getSceneFolderId(scene.id, data);
     const parentId = S.getParentId(scene.id, data);
 
     const children = S.getChildLinks(scene.id, data)
@@ -208,7 +223,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       active: scene.active,
       isView: scene.isView,
       favorite: !!data.sceneMeta[scene.id]?.favorite,
-      folderColor: S.getFolder(folderId, data)?.color ?? "",
+      folderColor: S.folderColor(scene.folder),
       parent: parentId ? { id: parentId, name: nameOf(parentId) } : null,
       children,
       continues,
@@ -221,6 +236,16 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   /* ---------------------------------------- */
   /*  Rendering & DOM listeners               */
   /* ---------------------------------------- */
+
+  async _onFirstRender(context, options) {
+    await super._onFirstRender(context, options);
+    window.addEventListener("keydown", this.#onKeyDown, true);
+  }
+
+  _onClose(options) {
+    window.removeEventListener("keydown", this.#onKeyDown, true);
+    super._onClose(options);
+  }
 
   _onRender(context, options) {
     const root = this.element;
@@ -245,31 +270,23 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       }
     }
 
-    // Card size slider (client setting)
+    // Card size slider (client setting), applied live while dragging
+    const sceneRoot = root.querySelector(".scenenav-root");
     const sizeInput = root.querySelector(".scenenav-size input");
     sizeInput?.addEventListener("input", ev => {
-      root.style.setProperty("--scenenav-card-size", `${ev.currentTarget.value}px`);
+      sceneRoot?.style.setProperty("--scenenav-card-size", `${ev.currentTarget.value}px`);
     });
     sizeInput?.addEventListener("change", ev => {
       game.settings.set(MODULE_ID, "scenesNavCardSize", Number(ev.currentTarget.value));
     });
 
-    // Scene cards: drag, preload on hover, double-click to view
+    // Scene cards: drag, double-click to view
     root.querySelectorAll(".scenenav-card[data-scene-id]").forEach(card => {
       const sceneId = card.dataset.sceneId;
       card.addEventListener("dragstart", ev => {
         ev.dataTransfer.setData("text/plain", JSON.stringify({ type: DRAG_TYPE, kind: "scene", id: sceneId }));
         ev.dataTransfer.effectAllowed = "move";
       });
-      let timer = null;
-      card.addEventListener("mouseenter", () => {
-        if (this.#preloaded.has(sceneId)) return;
-        timer = setTimeout(() => {
-          this.#preloaded.add(sceneId);
-          game.scenes.preload(sceneId);
-        }, 600);
-      });
-      card.addEventListener("mouseleave", () => clearTimeout(timer));
       card.querySelector(".scenenav-thumb")?.addEventListener("dblclick", ev => {
         if (ev.target.closest("button")) return;
         this.#viewScene(sceneId);
@@ -284,13 +301,16 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       });
     });
 
-    // Drop targets: tree folders, subfolder tiles, "unsorted"
+    // Drop targets: tree folders, subfolder tiles, folder sections, "unsorted"
     root.querySelectorAll("[data-drop-folder]").forEach(el => {
       el.addEventListener("dragover", ev => {
         ev.preventDefault();
+        ev.stopPropagation();
         el.classList.add("drag-over");
       });
-      el.addEventListener("dragleave", () => el.classList.remove("drag-over"));
+      el.addEventListener("dragleave", ev => {
+        if (!el.contains(ev.relatedTarget)) el.classList.remove("drag-over");
+      });
       el.addEventListener("drop", ev => this.#onDrop(ev, el));
     });
 
@@ -318,16 +338,27 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     if (payload.kind === "scene") {
       await SceneNavSystem.setSceneFolder(payload.id, folderId);
     } else if (payload.kind === "folder") {
-      const moved = await SceneNavSystem.moveFolder(payload.id, folderId);
-      if (moved === false) ui.notifications.warn(game.i18n.localize("SCENENAV.Warn.FolderCycle"));
+      const result = await SceneNavSystem.moveFolder(payload.id, folderId);
+      if (result === "cycle") ui.notifications.warn(game.i18n.localize("SCENENAV.Warn.FolderCycle"));
+      else if (result === "depth") ui.notifications.warn(game.i18n.format("SCENENAV.Warn.FolderDepth", { max: SceneNavSystem.maxDepth }));
     }
   }
 
-  async #viewScene(sceneId) {
+  /** Run a scene action, closing the panel without waiting for its animation. */
+  async #sceneAction(sceneId, fn) {
     const scene = game.scenes.get(sceneId);
     if (!scene) return;
-    await this.close();
-    await scene.view();
+    this.close({ animate: false });
+    try {
+      await fn(scene);
+    } catch (err) {
+      console.error("Faundryvtt Tools | Scene Navigator", err);
+      ui.notifications.error(game.i18n.format("SCENENAV.Error.SceneAction", { name: scene.name }));
+    }
+  }
+
+  #viewScene(sceneId) {
+    return this.#sceneAction(sceneId, scene => scene.view());
   }
 
   /* ---------------------------------------- */
@@ -375,7 +406,6 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static async #onToggleFolder(event, target) {
-    event.stopPropagation();
     const folderId = target.closest("[data-folder-id]").dataset.folderId;
     const collapsed = new Set(game.settings.get(MODULE_ID, "scenesNavCollapsed") ?? []);
     if (collapsed.has(folderId)) collapsed.delete(folderId);
@@ -386,28 +416,32 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onCreateFolder(event, target) {
     const parentId = target.dataset.parentId || null;
+    if (parentId && !SceneNavSystem.canCreateSubfolder(parentId)) {
+      ui.notifications.warn(game.i18n.format("SCENENAV.Warn.FolderDepth", { max: SceneNavSystem.maxDepth }));
+      return;
+    }
     const result = await SceneNavigator.#promptFolder({ title: game.i18n.localize("SCENENAV.CreateFolder") });
     if (!result) return;
     const folder = await SceneNavSystem.createFolder({ name: result.name, color: result.color, parentId });
+    if (!folder) return;
     this.#view = folder.id;
     this.#search = "";
+    this.render();
   }
 
   static async #onEditFolder(event, target) {
-    event.stopPropagation();
     const folder = SceneNavSystem.getFolder(target.closest("[data-folder-id]").dataset.folderId);
     if (!folder) return;
     const result = await SceneNavigator.#promptFolder({
       title: game.i18n.localize("SCENENAV.EditFolder"),
       name: folder.name,
-      color: folder.color
+      color: SceneNavSystem.folderColor(folder)
     });
     if (!result) return;
     await SceneNavSystem.updateFolder(folder.id, { name: result.name || folder.name, color: result.color });
   }
 
   static async #onDeleteFolder(event, target) {
-    event.stopPropagation();
     const folder = SceneNavSystem.getFolder(target.closest("[data-folder-id]").dataset.folderId);
     if (!folder) return;
     const confirmed = await DialogV2.confirm({
@@ -415,18 +449,18 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       content: `<p>${game.i18n.format("SCENENAV.Confirm.DeleteFolder", { name: Handlebars.escapeExpression(folder.name) })}</p>`
     });
     if (!confirmed) return;
-    if (this.#view === folder.id) this.#view = folder.parentId ?? VIEWS.ALL;
+    if (this.#view === folder.id) this.#view = folder.folder?.id ?? VIEWS.ALL;
     await SceneNavSystem.deleteFolder(folder.id);
   }
 
-  static async #onImportFolders() {
+  static async #onResetData() {
     const confirmed = await DialogV2.confirm({
-      window: { title: game.i18n.localize("SCENENAV.ImportFolders") },
-      content: `<p>${game.i18n.localize("SCENENAV.Confirm.ImportFolders")}</p>`
+      window: { title: game.i18n.localize("SCENENAV.ResetData") },
+      content: `<p>${game.i18n.localize("SCENENAV.Confirm.ResetData")}</p>`
     });
     if (!confirmed) return;
-    const result = await SceneNavSystem.importFoundryFolders();
-    ui.notifications.info(game.i18n.format("SCENENAV.Info.Imported", result));
+    await SceneNavSystem.resetData();
+    ui.notifications.info(game.i18n.localize("SCENENAV.Info.Reset"));
   }
 
   static #onClearSearch() {
@@ -439,10 +473,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static async #onActivateScene(event, target) {
-    const scene = game.scenes.get(target.closest("[data-scene-id]").dataset.sceneId);
-    if (!scene) return;
-    await this.close();
-    await scene.activate();
+    await this.#sceneAction(target.closest("[data-scene-id]").dataset.sceneId, scene => scene.activate());
   }
 
   static #onConfigureScene(event, target) {

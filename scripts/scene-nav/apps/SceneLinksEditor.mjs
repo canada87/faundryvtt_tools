@@ -63,7 +63,7 @@ export class SceneLinksEditor extends HandlebarsApplicationMixin(ApplicationV2) 
       direction: dirLabel(c.direction)
     }));
 
-    const folderLabel = s => S.getFolderPath(S.getSceneFolderId(s.id, data), data).map(f => f.name).join(" › ");
+    const folderLabel = s => S.getFolderPath(S.getSceneFolderId(s.id)).map(f => f.name).join(" › ");
     const targets = S.getScenes()
       .filter(s => s.id !== scene.id)
       .map(s => {

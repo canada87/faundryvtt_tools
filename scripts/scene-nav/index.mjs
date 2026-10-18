@@ -1,7 +1,6 @@
 import { MODULE_ID } from "../shared/constants.mjs";
 import { HubMenu } from "../hub/HubMenu.mjs";
 import { SceneNavSystem } from "./SceneNavSystem.mjs";
-import { SceneNavTab } from "./SceneNavTab.mjs";
 import { SceneNavigator } from "./apps/SceneNavigator.mjs";
 import { SceneLinksEditor } from "./apps/SceneLinksEditor.mjs";
 
@@ -74,10 +73,14 @@ export function initSceneNav() {
 
   /* ---- Lifecycle ---- */
 
-  Hooks.once("ready", () => SceneNavTab.init());
-
   for (const hook of ["createScene", "updateScene", "updateUser", "userConnected", "canvasReady"]) {
     Hooks.on(hook, () => SceneNavigator.refresh());
+  }
+
+  for (const hook of ["createFolder", "updateFolder", "deleteFolder"]) {
+    Hooks.on(hook, (folder) => {
+      if (folder.type === "Scene") SceneNavigator.refresh();
+    });
   }
 
   Hooks.on("deleteScene", (scene) => {

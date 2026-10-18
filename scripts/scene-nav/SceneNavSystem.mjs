@@ -18,13 +18,13 @@ const OPPOSITE = {
 };
 
 /**
- * Core logic for the Scene Navigator: custom folder tree, per-scene
- * metadata (folder, favorite) and typed links between scenes.
+ * Core logic for the Scene Navigator.
  *
- * Everything is stored in a single world setting:
+ * Folders are Foundry's own Scene folders: creating, renaming, moving
+ * and deleting them here changes them in the Scenes sidebar too.
+ * Module-only data (favorites and typed links) lives in a world setting:
  * {
- *   folders:   [{ id, name, parentId, color, sourceId }],
- *   sceneMeta: { [sceneId]: { folderId, favorite } },
+ *   sceneMeta: { [sceneId]: { favorite } },
  *   links:     [{ id, type, from, to, direction }]
  * }
  */
@@ -37,7 +37,6 @@ export class SceneNavSystem {
   static getData() {
     const raw = game.settings.get(MODULE_ID, DATA_SETTING) ?? {};
     return {
-      folders: Array.isArray(raw.folders) ? raw.folders : [],
       sceneMeta: raw.sceneMeta ?? {},
       links: Array.isArray(raw.links) ? raw.links : []
     };
@@ -52,32 +51,31 @@ export class SceneNavSystem {
     return result ?? true;
   }
 
-  /* ---------------------------------------- */
-  /*  Scenes                                  */
-  /* ---------------------------------------- */
+  /** Clear all module data (favorites and links). Foundry folders are untouched. */
+  static async resetData() {
+    await game.settings.set(MODULE_ID, DATA_SETTING, { sceneMeta: {}, links: [] });
+  }
 
   static sortByName(a, b) {
     return (a.name ?? "").localeCompare(b.name ?? "", undefined, { numeric: true, sensitivity: "base" });
   }
 
+  /* ---------------------------------------- */
+  /*  Scenes                                  */
+  /* ---------------------------------------- */
+
   static getScenes() {
     return game.scenes.contents.slice().sort(this.sortByName);
   }
 
-  static getSceneMeta(sceneId) {
-    return { folderId: null, favorite: false, ...(this.getData().sceneMeta[sceneId] ?? {}) };
+  /** Folder id of a scene, or null when it is not in a folder. */
+  static getSceneFolderId(sceneId) {
+    return game.scenes.get(sceneId)?.folder?.id ?? null;
   }
 
-  /** Folder id of a scene, or null when unsorted (or its folder was deleted). */
-  static getSceneFolderId(sceneId, data = this.getData()) {
-    const folderId = data.sceneMeta[sceneId]?.folderId ?? null;
-    if (!folderId) return null;
-    return data.folders.some(f => f.id === folderId) ? folderId : null;
-  }
-
-  /** Scenes directly inside a folder (null = unsorted). */
-  static getScenesInFolder(folderId, data = this.getData()) {
-    return this.getScenes().filter(s => this.getSceneFolderId(s.id, data) === (folderId ?? null));
+  /** Scenes directly inside a folder (null = no folder). */
+  static getScenesInFolder(folderId) {
+    return this.getScenes().filter(s => (s.folder?.id ?? null) === (folderId ?? null));
   }
 
   static getFavoriteScenes(data = this.getData()) {
@@ -85,9 +83,10 @@ export class SceneNavSystem {
   }
 
   static async setSceneFolder(sceneId, folderId) {
-    return this.#mutate(data => {
-      data.sceneMeta[sceneId] = { ...(data.sceneMeta[sceneId] ?? {}), folderId: folderId ?? null };
-    });
+    const scene = game.scenes.get(sceneId);
+    if (!scene || (scene.folder?.id ?? null) === (folderId ?? null)) return false;
+    await scene.update({ folder: folderId ?? null });
+    return true;
   }
 
   static async toggleFavorite(sceneId) {
@@ -109,132 +108,117 @@ export class SceneNavSystem {
   }
 
   /* ---------------------------------------- */
-  /*  Folders                                 */
+  /*  Folders (Foundry Scene folders)         */
   /* ---------------------------------------- */
 
-  static getFolder(folderId, data = this.getData()) {
-    return data.folders.find(f => f.id === folderId) ?? null;
+  static get maxDepth() {
+    return CONST.FOLDER_MAX_DEPTH ?? 4;
   }
 
-  static getChildFolders(parentId, data = this.getData()) {
-    return data.folders.filter(f => (f.parentId ?? null) === (parentId ?? null)).sort(this.sortByName);
+  static getFolder(folderId) {
+    if (!folderId) return null;
+    const folder = game.folders.get(folderId);
+    return folder?.type === "Scene" ? folder : null;
+  }
+
+  static getChildFolders(parentId) {
+    return game.folders
+      .filter(f => f.type === "Scene" && (f.folder?.id ?? null) === (parentId ?? null))
+      .sort(this.sortByName);
+  }
+
+  static folderColor(folder) {
+    return folder?.color ? String(folder.color) : "";
   }
 
   /** Folders from the root down to (and including) the given folder. */
-  static getFolderPath(folderId, data = this.getData()) {
+  static getFolderPath(folderId) {
     const path = [];
     const seen = new Set();
-    let folder = this.getFolder(folderId, data);
+    let folder = this.getFolder(folderId);
     while (folder && !seen.has(folder.id)) {
       seen.add(folder.id);
       path.unshift(folder);
-      folder = this.getFolder(folder.parentId, data);
+      folder = folder.folder ?? null;
     }
     return path;
   }
 
   /** True if `folderId` is `ancestorId` or one of its descendants. */
-  static isFolderWithin(folderId, ancestorId, data = this.getData()) {
-    return this.getFolderPath(folderId, data).some(f => f.id === ancestorId);
+  static isFolderWithin(folderId, ancestorId) {
+    return this.getFolderPath(folderId).some(f => f.id === ancestorId);
+  }
+
+  /** Depth of a folder (1 = top level). */
+  static getFolderDepth(folderId) {
+    return this.getFolderPath(folderId).length;
+  }
+
+  /** Number of nested levels of a folder, itself included. */
+  static #subtreeHeight(folderId) {
+    const children = this.getChildFolders(folderId);
+    if (!children.length) return 1;
+    return 1 + Math.max(...children.map(c => this.#subtreeHeight(c.id)));
+  }
+
+  /** Whether a new subfolder can be created inside this folder. */
+  static canCreateSubfolder(folderId) {
+    return this.getFolderDepth(folderId) < this.maxDepth;
   }
 
   /** Number of scenes in a folder and all its subfolders. */
-  static countScenesDeep(folderId, data = this.getData()) {
-    const scenes = game.scenes.contents;
-    return scenes.filter(s => {
-      const fid = this.getSceneFolderId(s.id, data);
-      return fid && this.isFolderWithin(fid, folderId, data);
-    }).length;
+  static countScenesDeep(folderId) {
+    return game.scenes.filter(s => s.folder && this.isFolderWithin(s.folder.id, folderId)).length;
   }
 
   static async createFolder({ name, parentId = null, color = "" } = {}) {
-    const folder = {
-      id: foundry.utils.randomID(),
+    if (parentId && !this.canCreateSubfolder(parentId)) return null;
+    return Folder.create({
       name: name || game.i18n.localize("SCENENAV.NewFolder"),
-      parentId,
-      color
-    };
-    await this.#mutate(data => { data.folders.push(folder); });
-    return folder;
-  }
-
-  static async updateFolder(folderId, changes) {
-    return this.#mutate(data => {
-      const folder = data.folders.find(f => f.id === folderId);
-      if (!folder) return false;
-      Object.assign(folder, changes);
+      type: "Scene",
+      folder: parentId ?? null,
+      color: color || null
     });
   }
 
-  /** Move a folder under a new parent, refusing cycles. */
+  static async updateFolder(folderId, changes) {
+    const folder = this.getFolder(folderId);
+    if (!folder) return false;
+    await folder.update(changes);
+    return true;
+  }
+
+  /**
+   * Move a folder under a new parent.
+   * @returns {Promise<"ok"|"cycle"|"depth"|false>}
+   */
   static async moveFolder(folderId, newParentId) {
-    if (folderId === newParentId) return false;
-    if (newParentId && this.isFolderWithin(newParentId, folderId)) return false;
-    return this.updateFolder(folderId, { parentId: newParentId ?? null });
+    const folder = this.getFolder(folderId);
+    if (!folder) return false;
+    if ((folder.folder?.id ?? null) === (newParentId ?? null)) return false;
+    if (newParentId && this.isFolderWithin(newParentId, folderId)) return "cycle";
+    const parentDepth = newParentId ? this.getFolderDepth(newParentId) : 0;
+    if (parentDepth + this.#subtreeHeight(folderId) > this.maxDepth) return "depth";
+    await folder.update({ folder: newParentId ?? null });
+    return "ok";
   }
 
   /** Delete a folder: its subfolders and scenes move up to its parent. */
   static async deleteFolder(folderId) {
-    return this.#mutate(data => {
-      const folder = data.folders.find(f => f.id === folderId);
-      if (!folder) return false;
-      const parentId = folder.parentId ?? null;
-      for (const f of data.folders) {
-        if (f.parentId === folderId) f.parentId = parentId;
-      }
-      for (const meta of Object.values(data.sceneMeta)) {
-        if (meta.folderId === folderId) meta.folderId = parentId;
-      }
-      data.folders = data.folders.filter(f => f.id !== folderId);
-    });
-  }
+    const folder = this.getFolder(folderId);
+    if (!folder) return false;
+    const parentId = folder.folder?.id ?? null;
 
-  /**
-   * Mirror Foundry's Scene folders into the navigator's folder tree.
-   * Already imported folders are reused; scenes already placed in a
-   * navigator folder are left where they are.
-   * @returns {{folders: number, scenes: number}}
-   */
-  static async importFoundryFolders() {
-    const sourceFolders = game.folders.filter(f => f.type === "Scene");
-    return this.#mutate(data => {
-      const map = new Map();
-      let createdFolders = 0;
-      let placedScenes = 0;
+    const sceneUpdates = game.scenes
+      .filter(s => s.folder?.id === folderId)
+      .map(s => ({ _id: s.id, folder: parentId }));
+    if (sceneUpdates.length) await Scene.updateDocuments(sceneUpdates);
 
-      for (const src of sourceFolders) {
-        let folder = data.folders.find(f => f.sourceId === src.id);
-        if (!folder) {
-          folder = {
-            id: foundry.utils.randomID(),
-            name: src.name,
-            parentId: null,
-            color: src.color ? String(src.color) : "",
-            sourceId: src.id
-          };
-          data.folders.push(folder);
-          createdFolders++;
-        }
-        map.set(src.id, folder);
-      }
+    const folderUpdates = this.getChildFolders(folderId).map(f => ({ _id: f.id, folder: parentId }));
+    if (folderUpdates.length) await Folder.updateDocuments(folderUpdates);
 
-      for (const src of sourceFolders) {
-        const folder = map.get(src.id);
-        const parentSrcId = src.folder?.id;
-        if (parentSrcId && map.has(parentSrcId)) folder.parentId = map.get(parentSrcId).id;
-      }
-
-      for (const scene of game.scenes) {
-        const srcId = scene.folder?.id;
-        if (!srcId || !map.has(srcId)) continue;
-        const meta = data.sceneMeta[scene.id] ?? {};
-        if (meta.folderId && data.folders.some(f => f.id === meta.folderId)) continue;
-        data.sceneMeta[scene.id] = { ...meta, folderId: map.get(srcId).id };
-        placedScenes++;
-      }
-
-      return { folders: createdFolders, scenes: placedScenes };
-    });
+    await folder.delete();
+    return true;
   }
 
   /* ---------------------------------------- */

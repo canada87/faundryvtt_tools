@@ -1,46 +1,4 @@
 /* ========================================
-   Scene Navigator — Side tab
-   ======================================== */
-
-.faundryvtt-scenenav-tab {
-  position: fixed;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 60;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  width: 26px;
-  min-height: 0;
-  padding: 10px 0;
-  margin: 0;
-  border: 1px solid #d4af37;
-  border-left: none;
-  border-radius: 0 8px 8px 0;
-  background: rgba(20, 20, 20, 0.85);
-  color: #f0e6c8;
-  font-size: 12px;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.5);
-  transition: width 0.15s ease, background 0.15s ease;
-}
-
-.faundryvtt-scenenav-tab:hover {
-  width: 32px;
-  background: rgba(40, 32, 12, 0.95);
-}
-
-.faundryvtt-scenenav-tab span {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* ========================================
    Scene Navigator — Full-screen panel
    ======================================== */
 
@@ -680,4 +638,18 @@
 .scene-links-editor .scenenav-links-form button {
   flex: 0 0 auto;
   width: auto;
+}
+
+/* ---- Drop feedback & header extras ---- */
+
+.scenenav-section.drag-over {
+  outline: 2px dashed var(--scenenav-accent);
+  outline-offset: 6px;
+  border-radius: 6px;
+}
+
+.scene-navigator .scenenav-header .scenenav-reset {
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
 }

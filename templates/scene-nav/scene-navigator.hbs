@@ -18,6 +18,10 @@
       <input type="range" min="140" max="420" step="10" value="{{cardSize}}" />
     </label>
 
+    <button type="button" class="scenenav-icon-btn scenenav-reset" data-action="resetData" data-tooltip="{{localize "SCENENAV.ResetDataHint"}}">
+      <i class="fas fa-eraser"></i>
+    </button>
+
     <button type="button" class="scenenav-close" data-action="close" data-tooltip="{{localize "SCENENAV.Close"}}">
       <i class="fas fa-times"></i>
     </button>
@@ -44,9 +48,6 @@
 
       <div class="scenenav-tree-heading">
         <span>{{localize "SCENENAV.Folders"}}</span>
-        <button type="button" class="scenenav-icon-btn" data-action="importFolders" data-tooltip="{{localize "SCENENAV.ImportFolders"}}">
-          <i class="fas fa-file-import"></i>
-        </button>
         <button type="button" class="scenenav-icon-btn" data-action="createFolder" data-tooltip="{{localize "SCENENAV.CreateFolder"}}">
           <i class="fas fa-folder-plus"></i>
         </button>
@@ -88,9 +89,11 @@
             <span class="scenenav-sep">›</span>
             <a data-action="selectView" data-view="{{id}}" data-drop-folder="{{id}}">{{name}}</a>
           {{/each}}
-          <button type="button" class="scenenav-btn" data-action="createFolder" data-parent-id="{{currentFolderId}}">
-            <i class="fas fa-folder-plus"></i> {{localize "SCENENAV.CreateSubfolder"}}
-          </button>
+          {{#if canCreateSubfolder}}
+            <button type="button" class="scenenav-btn" data-action="createFolder" data-parent-id="{{currentFolderId}}">
+              <i class="fas fa-folder-plus"></i> {{localize "SCENENAV.CreateSubfolder"}}
+            </button>
+          {{/if}}
         </nav>
       {{/if}}
 
@@ -108,7 +111,8 @@
       {{/if}}
 
       {{#each sections}}
-        <section class="scenenav-section">
+        <section class="scenenav-section"
+                 {{#if folderId}}data-drop-folder="{{folderId}}"{{else if dropUnsorted}}data-drop-folder=""{{/if}}>
           <h2 style="--folder-color: {{#if color}}{{color}}{{else}}#6b7a8f{{/if}}">
             {{#if folderId}}
               <a data-action="selectView" data-view="{{folderId}}"><i class="fas fa-folder"></i> {{title}}</a>
