@@ -653,3 +653,99 @@
   height: 32px;
   font-size: 16px;
 }
+
+/* ========================================
+   Scene Navigator — In-scene navigation bar
+   ======================================== */
+
+.faundryvtt-scenenav-bar {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 10px;
+  max-width: 70vw;
+  padding: 5px 8px;
+  border: 1px solid #d4af37;
+  border-radius: 18px;
+  background: rgba(20, 20, 20, 0.85);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  color: #f0f0f0;
+  font-family: var(--font-primary, "Signika", sans-serif);
+  font-size: 13px;
+  line-height: 1;
+  user-select: none;
+}
+
+/* Sit below the Resources HUD when it is shown */
+body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
+  top: 50px;
+}
+
+.faundryvtt-scenenav-bar.is-collapsed {
+  padding: 3px;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-btn {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #d4af37;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-btn:hover {
+  background: rgba(212, 175, 55, 0.2);
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-crumbs,
+.faundryvtt-scenenav-bar .scenenav-bar-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-group {
+  padding-left: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-sep {
+  opacity: 0.5;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-current {
+  font-weight: 700;
+  color: #d4af37;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-link {
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-link:hover {
+  border-color: currentColor;
+  text-shadow: none;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-link.is-ancestor  { color: #d2bfff; }
+.faundryvtt-scenenav-bar .scenenav-bar-link.is-child     { background: rgba(60, 150, 110, 0.28); color: #a8ecc8; }
+.faundryvtt-scenenav-bar .scenenav-bar-link.is-continues { background: rgba(60, 120, 200, 0.28); color: #b5d4ff; }

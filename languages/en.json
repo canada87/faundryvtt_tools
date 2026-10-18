@@ -587,6 +587,12 @@
     "ResetDataHint": "Reset favorites and links",
     "Error": {
       "SceneAction": "Could not load the scene \"{name}\". See the console (F12) for details."
+    },
+    "Bar": {
+      "Hint": "Click: view the scene · Shift+click: activate it for everyone",
+      "Up": "Go to parent map",
+      "Collapse": "Collapse bar",
+      "Expand": "Show navigation bar"
     }
   }
 }

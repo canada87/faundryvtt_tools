@@ -587,6 +587,12 @@
     "ResetDataHint": "Reset preferiti e collegamenti",
     "Error": {
       "SceneAction": "Impossibile caricare la scena \"{name}\". Dettagli nella console (F12)."
+    },
+    "Bar": {
+      "Hint": "Clic: entra nella scena · Shift+clic: attivala per tutti",
+      "Up": "Vai alla mappa padre",
+      "Collapse": "Riduci barra",
+      "Expand": "Mostra barra di navigazione"
     }
   }
 }

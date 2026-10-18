@@ -1,6 +1,7 @@
 import { MODULE_ID } from "../shared/constants.mjs";
 import { HubMenu } from "../hub/HubMenu.mjs";
 import { SceneNavSystem } from "./SceneNavSystem.mjs";
+import { SceneNavBar } from "./SceneNavBar.mjs";
 import { SceneNavigator } from "./apps/SceneNavigator.mjs";
 import { SceneLinksEditor } from "./apps/SceneLinksEditor.mjs";
 
@@ -27,8 +28,12 @@ export function initSceneNav() {
     scope: "world",
     config: false,
     type: Object,
-    default: { folders: [], sceneMeta: {}, links: [] },
-    onChange: () => SceneNavigator.refresh()
+    default: { sceneMeta: {}, links: [] },
+    onChange: () => {
+      if (!SceneNavSystem.isEnabled()) return;
+      SceneNavigator.refresh();
+      SceneNavBar.render();
+    }
   });
 
   game.settings.register(MODULE_ID, "scenesNavCardSize", {
@@ -45,6 +50,14 @@ export function initSceneNav() {
     config: false,
     type: Array,
     default: []
+  });
+
+  game.settings.register(MODULE_ID, "scenesNavBarCollapsed", {
+    name: "Scene Navigator Bar Collapsed",
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: false
   });
 
   if (!SceneNavSystem.isEnabled()) return;
@@ -83,6 +96,12 @@ export function initSceneNav() {
     });
   }
 
+  // In-scene navigation bar (GM only)
+  Hooks.on("canvasReady", () => SceneNavBar.render());
+  Hooks.on("updateScene", (scene, changes) => {
+    if ("name" in changes) SceneNavBar.render();
+  });
+
   Hooks.on("deleteScene", (scene) => {
     SceneNavigator.refresh();
     if (game.user.isActiveGM) SceneNavSystem.pruneScene(scene.id);
@@ -94,6 +113,7 @@ export function initSceneNav() {
     SceneNavSystem,
     SceneNavigator,
     SceneLinksEditor,
+    SceneNavBar,
     toggle() {
       SceneNavigator.toggle();
     }
