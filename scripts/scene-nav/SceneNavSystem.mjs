@@ -123,9 +123,23 @@ export class SceneNavSystem {
     return map;
   }
 
+  /**
+   * Listen for "pull to scene" requests from the GM.
+   * Must be called after game.ready, on every client.
+   */
+  static setupSocket() {
+    game.socket.on(`module.${MODULE_ID}`, (data) => {
+      if (data?.type !== "sceneNavPull") return;
+      if (!data.userIds?.includes(game.user.id)) return;
+      const scene = game.scenes.get(data.sceneId);
+      if (scene) scene.view();
+      else ui.notifications.warn(game.i18n.localize("SCENENAV.Pull.SceneUnavailable"));
+    });
+  }
+
   /** Pull players to a scene (they view it; the active scene does not change). */
   static pullPlayers(sceneId, userIds) {
-    for (const userId of userIds) game.socket.emit("pullToScene", sceneId, userId);
+    game.socket.emit(`module.${MODULE_ID}`, { type: "sceneNavPull", sceneId, userIds });
   }
 
   /* ---------------------------------------- */

@@ -635,7 +635,8 @@
       "NoPlayers": "Nessun giocatore connesso.",
       "Nowhere": "nessuna scena",
       "AlreadyHere": "già qui",
-      "Done": "{count} giocatori portati in \"{name}\"."
+      "Done": "{count} giocatori portati in \"{name}\".",
+      "SceneUnavailable": "Il GM ti ha portato in una scena che non puoi vedere."
     }
   }
 }

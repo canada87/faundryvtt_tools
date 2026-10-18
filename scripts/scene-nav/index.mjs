@@ -92,6 +92,10 @@ export function initSceneNav() {
     open: () => SceneNavigator.toggle()
   });
 
+  /* ---- Socket (every client, so players can be pulled) ---- */
+
+  Hooks.once("ready", () => SceneNavSystem.setupSocket());
+
   /* ---- Lifecycle ---- */
 
   for (const hook of ["createScene", "updateScene", "updateUser", "userConnected", "canvasReady"]) {

@@ -635,7 +635,8 @@
       "NoPlayers": "No players connected.",
       "Nowhere": "no scene",
       "AlreadyHere": "already here",
-      "Done": "Pulled {count} players to \"{name}\"."
+      "Done": "Pulled {count} players to \"{name}\".",
+      "SceneUnavailable": "The GM pulled you to a scene you cannot see."
     }
   }
 }
