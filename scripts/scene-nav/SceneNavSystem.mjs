@@ -26,7 +26,7 @@ const OPPOSITE = {
  * {
  *   sceneMeta: { [sceneId]: { favorite } },
  *   links:     [{ id, type, from, to, direction }],
- *   layout:    { [sceneId]: { x, y } }
+ *   layout:    { [viewKey]: { [sceneId]: { x, y } } }
  * }
  */
 export class SceneNavSystem {
@@ -101,12 +101,15 @@ export class SceneNavSystem {
   /** Remove every reference to a deleted scene. */
   static async pruneScene(sceneId) {
     const data = this.getData();
-    const hasRefs = data.sceneMeta[sceneId] || data.layout[sceneId]
+    const hasRefs = data.sceneMeta[sceneId]
+      || Object.values(data.layout).some(view => view?.[sceneId])
       || data.links.some(l => l.from === sceneId || l.to === sceneId);
     if (!hasRefs) return;
     return this.#mutate(d => {
       delete d.sceneMeta[sceneId];
-      delete d.layout[sceneId];
+      for (const view of Object.values(d.layout)) {
+        if (view && typeof view === "object") delete view[sceneId];
+      }
       d.links = d.links.filter(l => l.from !== sceneId && l.to !== sceneId);
     });
   }
@@ -311,16 +314,33 @@ export class SceneNavSystem {
   /*  Graph layout                            */
   /* ---------------------------------------- */
 
-  static async setNodePosition(sceneId, x, y) {
+  /**
+   * Saved node positions of a graph view ("all", "favorites", "unsorted"
+   * or a folder id). Each view has its own layout, since the same scene
+   * sits among different neighbours in each one.
+   * @returns {Object<string, {x: number, y: number}>}
+   */
+  static getViewLayout(viewKey, data = this.getData()) {
+    const layout = data.layout[viewKey];
+    // Ignore the old flat format { [sceneId]: {x, y} }
+    return layout && typeof layout === "object" && !("x" in layout) ? layout : {};
+  }
+
+  /** Save the positions of every node of a view at once, freezing the layout. */
+  static async setViewLayout(viewKey, positions) {
     return this.#mutate(data => {
-      data.layout[sceneId] = { x: Math.round(x), y: Math.round(y) };
+      const layout = {};
+      for (const [id, pos] of Object.entries(positions)) {
+        layout[id] = { x: Math.round(pos.x), y: Math.round(pos.y) };
+      }
+      data.layout[viewKey] = layout;
     });
   }
 
-  /** Forget saved positions so the automatic layout takes over again. */
-  static async clearLayout(sceneIds) {
+  /** Forget the saved positions of a view so the automatic layout takes over again. */
+  static async clearViewLayout(viewKey) {
     return this.#mutate(data => {
-      for (const id of sceneIds) delete data.layout[id];
+      delete data.layout[viewKey];
     });
   }
 }

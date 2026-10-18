@@ -394,13 +394,14 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       label: l.type === LINK_TYPES.CONTINUES && l.direction ? game.i18n.localize(`SCENENAV.Direction.${l.direction}`) : ""
     }));
 
-    const positions = computeLayout(nodes, edges, data.layout);
     const viewKey = this.#view;
+    const positions = computeLayout(nodes, edges, S.getViewLayout(viewKey, data));
 
     const graph = new SceneGraph(host, { nodes, edges, positions }, {
       transform: this.#graphTransforms.get(viewKey),
       onTransform: t => this.#graphTransforms.set(viewKey, t),
-      onMoveNode: (id, x, y) => S.setNodePosition(id, x, y),
+      // Moving one node freezes the whole view, so the others stay where they are
+      onMoveNode: () => S.setViewLayout(viewKey, Object.fromEntries(positions)),
       onViewScene: id => this.#viewScene(id),
       onOpenGhost: id => {
         this.#view = S.getSceneFolderId(id) ?? VIEWS.UNSORTED;
@@ -409,7 +410,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       },
       onLink: (fromId, toId, direction) => this.#promptNewLink(fromId, toId, direction),
       onEdgeClick: linkId => this.#confirmRemoveLink(linkId),
-      onAutoLayout: () => this.#autoLayout(nodes.map(n => n.id))
+      onAutoLayout: () => this.#autoLayout()
     });
 
     if (this.#highlightSceneId) graph.focus(this.#highlightSceneId);
@@ -476,14 +477,14 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     if (confirmed) await SceneNavSystem.removeLink(linkId);
   }
 
-  async #autoLayout(sceneIds) {
+  async #autoLayout() {
     const confirmed = await DialogV2.confirm({
       window: { title: game.i18n.localize("SCENENAV.Graph.AutoLayout") },
       content: `<p>${game.i18n.localize("SCENENAV.Graph.ConfirmAutoLayout")}</p>`
     });
     if (!confirmed) return;
     this.#graphTransforms.delete(this.#view);
-    await SceneNavSystem.clearLayout(sceneIds);
+    await SceneNavSystem.clearViewLayout(this.#view);
   }
 
   async #onDrop(event, target) {
