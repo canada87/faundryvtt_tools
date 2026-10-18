@@ -498,5 +498,91 @@
     "Confirm": {
       "Delete": "Delete the resource \"{name}\"?"
     }
+  },
+  "SCENENAV": {
+    "FeatureName": "Scene Navigator",
+    "FeatureDescription": "Full-screen panel to organize scenes into folders, browse thumbnails and link them together (sub-maps, adjacent maps).",
+    "Toggle": "Toggle Scene Navigator",
+    "TabLabel": "Scenes",
+    "Settings": {
+      "Enabled": {
+        "Name": "Scene Navigator: enable",
+        "Hint": "Enable the Scene Navigator (GM only): a tab on the left edge opens a full-screen panel with folders, thumbnails and links between scenes. Requires reload."
+      }
+    },
+    "SearchPlaceholder": "Search scenes...",
+    "SearchResults": "Search results ({count})",
+    "ClearSearch": "Clear search",
+    "CardSize": "Thumbnail size",
+    "Close": "Close",
+    "AllScenes": "All scenes",
+    "Favorites": "Favorites",
+    "Unsorted": "Unsorted",
+    "Folders": "Folders",
+    "NoFolders": "No folders yet. Create one or import Foundry's folders.",
+    "NewFolder": "New folder",
+    "CreateFolder": "Create folder",
+    "CreateSubfolder": "New subfolder",
+    "EditFolder": "Edit folder",
+    "DeleteFolder": "Delete folder",
+    "FolderName": "Name",
+    "FolderColor": "Color",
+    "Save": "Save",
+    "ImportFolders": "Import Foundry folders",
+    "EmptyFolder": "No scenes here. Drag scenes onto a folder to organize them.",
+    "NoResults": "No scenes found.",
+    "DoubleClickToView": "Double-click to view the scene",
+    "Active": "Active",
+    "Viewing": "You are here",
+    "ToggleFavorite": "Favorite",
+    "View": "View",
+    "ViewHint": "View the scene yourself (players stay where they are)",
+    "Activate": "Activate",
+    "ActivateHint": "Activate the scene and bring all players here",
+    "Configure": "Scene configuration",
+    "EditLinks": "Links",
+    "Parent": "Parent map",
+    "Child": "Sub-map",
+    "Children": "Sub-maps",
+    "Continues": "Continues into",
+    "Continuations": "Continues into / from",
+    "LinksTitle": "Links: {name}",
+    "SceneMissing": "The scene no longer exists.",
+    "NoParent": "No parent map.",
+    "NoChildren": "No sub-maps.",
+    "NoContinuations": "No adjacent maps.",
+    "AddLink": "Add link",
+    "Add": "Add",
+    "RemoveLink": "Remove link",
+    "DirectionHint": "Direction (only for 'continues into')",
+    "LinkType": {
+      "childOf": "is a sub-map of",
+      "parentOf": "contains the sub-map",
+      "continues": "continues into"
+    },
+    "Direction": {
+      "none": "— no direction —",
+      "n": "North",
+      "ne": "North-East",
+      "e": "East",
+      "se": "South-East",
+      "s": "South",
+      "sw": "South-West",
+      "w": "West",
+      "nw": "North-West",
+      "up": "Up",
+      "down": "Down"
+    },
+    "Confirm": {
+      "DeleteFolder": "Delete the folder \"{name}\"? Its subfolders and scenes will move to the parent folder.",
+      "ImportFolders": "Creates the same folders as Foundry's scene folders and places the not-yet-organized scenes in them. Previously imported folders are reused."
+    },
+    "Info": {
+      "Imported": "Imported {folders} folders, organized {scenes} scenes."
+    },
+    "Warn": {
+      "FolderCycle": "You can't move a folder inside itself.",
+      "LinkCycle": "Invalid link: it would create a parent/child cycle."
+    }
   }
 }

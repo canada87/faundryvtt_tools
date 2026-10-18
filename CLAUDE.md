@@ -40,6 +40,13 @@ scripts/
     ResourcesHUD.mjs       — HUD on-screen in alto al centro, sync via setting
     apps/
       ResourceManager.mjs  — UI GM: lista risorse, +/-, toggle visibilità/attivo
+  scene-nav/
+    index.mjs              — Init navigatore scene (disattivo di default: setting scenesNavEnabled)
+    SceneNavSystem.mjs     — Logica core: cartelle proprie, preferiti, collegamenti padre/figlio e prosegue
+    SceneNavTab.mjs        — Linguetta sul bordo sinistro che apre/chiude il navigatore
+    apps/
+      SceneNavigator.mjs   — UI GM a tutto schermo: albero cartelle, miniature, entra/attiva/impostazioni
+      SceneLinksEditor.mjs — UI GM: modifica collegamenti di una scena
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
@@ -47,6 +54,7 @@ styles/
   saving-throw.css         — Stili UI tiro salvezza e messaggi chat
   mindmap.css              — Stili lavagna mind map
   resources.css            — Stili HUD risorse e gestore
+  scene-nav.css            — Stili navigatore scene, linguetta ed editor collegamenti
 templates/
   hub-menu.hbs             — Template hub
   crafting/
@@ -62,6 +70,9 @@ templates/
     mindmap.hbs              — Template lavagna mind map
   resources/
     resource-manager.hbs     — Template gestore risorse
+  scene-nav/
+    scene-navigator.hbs      — Template navigatore scene
+    scene-links-editor.hbs   — Template editor collegamenti
 languages/
   en.json                  — Traduzioni inglese
   it.json                  — Traduzioni italiano

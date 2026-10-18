@@ -498,5 +498,91 @@
     "Confirm": {
       "Delete": "Eliminare la risorsa \"{name}\"?"
     }
+  },
+  "SCENENAV": {
+    "FeatureName": "Navigatore Scene",
+    "FeatureDescription": "Pannello a tutto schermo per organizzare le scene in cartelle, vederne le miniature e collegarle tra loro (sotto-mappe, mappe adiacenti).",
+    "Toggle": "Apri/chiudi Navigatore Scene",
+    "TabLabel": "Scene",
+    "Settings": {
+      "Enabled": {
+        "Name": "Navigatore Scene: abilita",
+        "Hint": "Attiva il Navigatore Scene (solo GM): una linguetta sul bordo sinistro apre un pannello a tutto schermo con cartelle, miniature e collegamenti tra le scene. Richiede il ricaricamento."
+      }
+    },
+    "SearchPlaceholder": "Cerca scene...",
+    "SearchResults": "Risultati della ricerca ({count})",
+    "ClearSearch": "Cancella ricerca",
+    "CardSize": "Dimensione miniature",
+    "Close": "Chiudi",
+    "AllScenes": "Tutte le scene",
+    "Favorites": "Preferite",
+    "Unsorted": "Non organizzate",
+    "Folders": "Cartelle",
+    "NoFolders": "Nessuna cartella. Creane una o importa quelle di Foundry.",
+    "NewFolder": "Nuova cartella",
+    "CreateFolder": "Crea cartella",
+    "CreateSubfolder": "Nuova sottocartella",
+    "EditFolder": "Modifica cartella",
+    "DeleteFolder": "Elimina cartella",
+    "FolderName": "Nome",
+    "FolderColor": "Colore",
+    "Save": "Salva",
+    "ImportFolders": "Importa cartelle di Foundry",
+    "EmptyFolder": "Nessuna scena qui. Trascina le scene su una cartella per organizzarle.",
+    "NoResults": "Nessuna scena trovata.",
+    "DoubleClickToView": "Doppio clic per entrare nella scena",
+    "Active": "Attiva",
+    "Viewing": "Sei qui",
+    "ToggleFavorite": "Preferita",
+    "View": "Entra",
+    "ViewHint": "Entra nella scena solo tu (i giocatori restano dove sono)",
+    "Activate": "Attiva",
+    "ActivateHint": "Attiva la scena e porta tutti i giocatori qui",
+    "Configure": "Impostazioni scena",
+    "EditLinks": "Collegamenti",
+    "Parent": "Mappa padre",
+    "Child": "Sotto-mappa",
+    "Children": "Sotto-mappe",
+    "Continues": "Prosegue in",
+    "Continuations": "Prosegue in / da",
+    "LinksTitle": "Collegamenti: {name}",
+    "SceneMissing": "La scena non esiste più.",
+    "NoParent": "Nessuna mappa padre.",
+    "NoChildren": "Nessuna sotto-mappa.",
+    "NoContinuations": "Nessuna mappa adiacente.",
+    "AddLink": "Aggiungi collegamento",
+    "Add": "Aggiungi",
+    "RemoveLink": "Rimuovi collegamento",
+    "DirectionHint": "Direzione (solo per 'prosegue in')",
+    "LinkType": {
+      "childOf": "è sotto-mappa di",
+      "parentOf": "contiene la sotto-mappa",
+      "continues": "prosegue in"
+    },
+    "Direction": {
+      "none": "— nessuna direzione —",
+      "n": "Nord",
+      "ne": "Nord-Est",
+      "e": "Est",
+      "se": "Sud-Est",
+      "s": "Sud",
+      "sw": "Sud-Ovest",
+      "w": "Ovest",
+      "nw": "Nord-Ovest",
+      "up": "Su",
+      "down": "Giù"
+    },
+    "Confirm": {
+      "DeleteFolder": "Eliminare la cartella \"{name}\"? Sottocartelle e scene verranno spostate nella cartella superiore.",
+      "ImportFolders": "Crea nel navigatore le stesse cartelle delle scene di Foundry e vi inserisce le scene non ancora organizzate. Le cartelle già importate vengono riutilizzate."
+    },
+    "Info": {
+      "Imported": "Importate {folders} cartelle, {scenes} scene organizzate."
+    },
+    "Warn": {
+      "FolderCycle": "Non puoi spostare una cartella dentro se stessa.",
+      "LinkCycle": "Collegamento non valido: creerebbe un ciclo padre/figlio."
+    }
   }
 }

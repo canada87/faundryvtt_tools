@@ -1,0 +1,66 @@
+<div class="scenenav-links-editor">
+  {{#if missing}}
+    <p>{{localize "SCENENAV.SceneMissing"}}</p>
+  {{else}}
+
+    <section class="scenenav-links-group">
+      <h3><i class="fas fa-level-up-alt"></i> {{localize "SCENENAV.Parent"}}</h3>
+      {{#if parent}}
+        <div class="scenenav-links-row">
+          <span>{{parent.name}}</span>
+          <button type="button" class="scenenav-icon-btn" data-action="removeLink" data-link-id="{{parent.linkId}}" data-tooltip="{{localize "SCENENAV.RemoveLink"}}"><i class="fas fa-unlink"></i></button>
+        </div>
+      {{else}}
+        <p class="scenenav-hint">{{localize "SCENENAV.NoParent"}}</p>
+      {{/if}}
+    </section>
+
+    <section class="scenenav-links-group">
+      <h3><i class="fas fa-level-down-alt"></i> {{localize "SCENENAV.Children"}}</h3>
+      {{#each children}}
+        <div class="scenenav-links-row">
+          <span>{{name}}</span>
+          <button type="button" class="scenenav-icon-btn" data-action="removeLink" data-link-id="{{linkId}}" data-tooltip="{{localize "SCENENAV.RemoveLink"}}"><i class="fas fa-unlink"></i></button>
+        </div>
+      {{else}}
+        <p class="scenenav-hint">{{localize "SCENENAV.NoChildren"}}</p>
+      {{/each}}
+    </section>
+
+    <section class="scenenav-links-group">
+      <h3><i class="fas fa-arrow-right"></i> {{localize "SCENENAV.Continuations"}}</h3>
+      {{#each continues}}
+        <div class="scenenav-links-row">
+          <span>{{#if direction}}<b>{{direction}}</b> → {{/if}}{{name}}</span>
+          <button type="button" class="scenenav-icon-btn" data-action="removeLink" data-link-id="{{linkId}}" data-tooltip="{{localize "SCENENAV.RemoveLink"}}"><i class="fas fa-unlink"></i></button>
+        </div>
+      {{else}}
+        <p class="scenenav-hint">{{localize "SCENENAV.NoContinuations"}}</p>
+      {{/each}}
+    </section>
+
+    <section class="scenenav-links-group scenenav-links-add">
+      <h3><i class="fas fa-plus"></i> {{localize "SCENENAV.AddLink"}}</h3>
+      <div class="scenenav-links-form">
+        <span class="scenenav-links-this">{{scene.name}}</span>
+        <select name="type">
+          <option value="childOf">{{localize "SCENENAV.LinkType.childOf"}}</option>
+          <option value="parentOf">{{localize "SCENENAV.LinkType.parentOf"}}</option>
+          <option value="continues">{{localize "SCENENAV.LinkType.continues"}}</option>
+        </select>
+        <select name="target">
+          {{#each targets}}
+            <option value="{{id}}">{{label}}</option>
+          {{/each}}
+        </select>
+        <select name="direction" data-tooltip="{{localize "SCENENAV.DirectionHint"}}">
+          {{#each directions}}
+            <option value="{{value}}">{{label}}</option>
+          {{/each}}
+        </select>
+        <button type="button" data-action="addLink"><i class="fas fa-link"></i> {{localize "SCENENAV.Add"}}</button>
+      </div>
+    </section>
+
+  {{/if}}
+</div>

@@ -1,0 +1,205 @@
+<div class="scenenav-root" style="--scenenav-card-size: {{cardSize}}px">
+
+  <header class="scenenav-header">
+    <h1><i class="fas fa-map"></i> {{localize "SCENENAV.FeatureName"}}</h1>
+
+    <div class="scenenav-search">
+      <i class="fas fa-search"></i>
+      <input type="search" value="{{search}}" placeholder="{{localize "SCENENAV.SearchPlaceholder"}}" />
+      {{#if search}}
+        <button type="button" class="scenenav-icon-btn" data-action="clearSearch" data-tooltip="{{localize "SCENENAV.ClearSearch"}}">
+          <i class="fas fa-times"></i>
+        </button>
+      {{/if}}
+    </div>
+
+    <label class="scenenav-size" data-tooltip="{{localize "SCENENAV.CardSize"}}">
+      <i class="fas fa-image"></i>
+      <input type="range" min="140" max="420" step="10" value="{{cardSize}}" />
+    </label>
+
+    <button type="button" class="scenenav-close" data-action="close" data-tooltip="{{localize "SCENENAV.Close"}}">
+      <i class="fas fa-times"></i>
+    </button>
+  </header>
+
+  <div class="scenenav-body">
+
+    {{!-- ---------- Folder tree ---------- --}}
+    <aside class="scenenav-tree">
+      <div class="scenenav-tree-special">
+        <a class="scenenav-tree-item {{#if viewAll}}selected{{/if}}" data-action="selectView" data-view="all">
+          <i class="fas fa-layer-group"></i> <span class="scenenav-tree-name">{{localize "SCENENAV.AllScenes"}}</span>
+          <span class="scenenav-count">{{countAll}}</span>
+        </a>
+        <a class="scenenav-tree-item {{#if viewFavorites}}selected{{/if}}" data-action="selectView" data-view="favorites">
+          <i class="fas fa-star"></i> <span class="scenenav-tree-name">{{localize "SCENENAV.Favorites"}}</span>
+          <span class="scenenav-count">{{countFavorites}}</span>
+        </a>
+        <a class="scenenav-tree-item {{#if viewUnsorted}}selected{{/if}}" data-action="selectView" data-view="unsorted" data-drop-folder="">
+          <i class="fas fa-inbox"></i> <span class="scenenav-tree-name">{{localize "SCENENAV.Unsorted"}}</span>
+          <span class="scenenav-count">{{countUnsorted}}</span>
+        </a>
+      </div>
+
+      <div class="scenenav-tree-heading">
+        <span>{{localize "SCENENAV.Folders"}}</span>
+        <button type="button" class="scenenav-icon-btn" data-action="importFolders" data-tooltip="{{localize "SCENENAV.ImportFolders"}}">
+          <i class="fas fa-file-import"></i>
+        </button>
+        <button type="button" class="scenenav-icon-btn" data-action="createFolder" data-tooltip="{{localize "SCENENAV.CreateFolder"}}">
+          <i class="fas fa-folder-plus"></i>
+        </button>
+      </div>
+
+      <div class="scenenav-tree-folders">
+        {{#each tree}}
+          <a class="scenenav-tree-item scenenav-tree-folder {{#if selected}}selected{{/if}}"
+             data-action="selectView" data-view="{{id}}" data-folder-id="{{id}}" data-drop-folder="{{id}}"
+             draggable="true" style="padding-left: {{indent}}px; --folder-color: {{#if color}}{{color}}{{else}}transparent{{/if}}">
+            {{#if hasChildren}}
+              <button type="button" class="scenenav-caret" data-action="toggleFolder">
+                <i class="fas {{#if collapsed}}fa-caret-right{{else}}fa-caret-down{{/if}}"></i>
+              </button>
+            {{else}}
+              <span class="scenenav-caret"></span>
+            {{/if}}
+            <i class="fas {{#if selected}}fa-folder-open{{else}}fa-folder{{/if}} scenenav-folder-icon"></i>
+            <span class="scenenav-tree-name">{{name}}</span>
+            <span class="scenenav-count">{{count}}</span>
+            <span class="scenenav-tree-actions">
+              <button type="button" class="scenenav-icon-btn" data-action="editFolder" data-tooltip="{{localize "SCENENAV.EditFolder"}}"><i class="fas fa-pen"></i></button>
+              <button type="button" class="scenenav-icon-btn" data-action="deleteFolder" data-tooltip="{{localize "SCENENAV.DeleteFolder"}}"><i class="fas fa-trash"></i></button>
+            </span>
+          </a>
+        {{else}}
+          <p class="scenenav-hint">{{localize "SCENENAV.NoFolders"}}</p>
+        {{/each}}
+      </div>
+    </aside>
+
+    {{!-- ---------- Main area ---------- --}}
+    <main class="scenenav-main">
+
+      {{#if breadcrumb}}
+        <nav class="scenenav-breadcrumb">
+          <a data-action="selectView" data-view="all"><i class="fas fa-layer-group"></i></a>
+          {{#each breadcrumb}}
+            <span class="scenenav-sep">›</span>
+            <a data-action="selectView" data-view="{{id}}" data-drop-folder="{{id}}">{{name}}</a>
+          {{/each}}
+          <button type="button" class="scenenav-btn" data-action="createFolder" data-parent-id="{{currentFolderId}}">
+            <i class="fas fa-folder-plus"></i> {{localize "SCENENAV.CreateSubfolder"}}
+          </button>
+        </nav>
+      {{/if}}
+
+      {{#if subfolders.length}}
+        <div class="scenenav-subfolders">
+          {{#each subfolders}}
+            <a class="scenenav-subfolder" data-action="selectView" data-view="{{id}}" data-drop-folder="{{id}}"
+               style="--folder-color: {{#if color}}{{color}}{{else}}#6b7a8f{{/if}}">
+              <i class="fas fa-folder"></i>
+              <span class="scenenav-subfolder-name">{{name}}</span>
+              <span class="scenenav-count">{{count}}</span>
+            </a>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      {{#each sections}}
+        <section class="scenenav-section">
+          <h2 style="--folder-color: {{#if color}}{{color}}{{else}}#6b7a8f{{/if}}">
+            {{#if folderId}}
+              <a data-action="selectView" data-view="{{folderId}}"><i class="fas fa-folder"></i> {{title}}</a>
+            {{else}}
+              {{title}}
+            {{/if}}
+          </h2>
+
+          <div class="scenenav-grid">
+            {{#each scenes}}
+              <article class="scenenav-card {{#if active}}is-active{{/if}} {{#if isView}}is-view{{/if}} {{#if highlight}}is-highlight{{/if}}"
+                       data-scene-id="{{id}}" draggable="true"
+                       style="--folder-color: {{#if folderColor}}{{folderColor}}{{else}}transparent{{/if}}">
+
+                <div class="scenenav-thumb" data-tooltip="{{localize "SCENENAV.DoubleClickToView"}}">
+                  {{#if thumb}}
+                    <img src="{{thumb}}" alt="" loading="lazy" draggable="false" />
+                  {{else}}
+                    <div class="scenenav-thumb-empty"><i class="fas fa-image"></i></div>
+                  {{/if}}
+
+                  <div class="scenenav-badges">
+                    {{#if active}}<span class="scenenav-badge badge-active"><i class="fas fa-bullseye"></i> {{localize "SCENENAV.Active"}}</span>{{/if}}
+                    {{#if isView}}<span class="scenenav-badge badge-view"><i class="fas fa-eye"></i> {{localize "SCENENAV.Viewing"}}</span>{{/if}}
+                  </div>
+
+                  <button type="button" class="scenenav-fav {{#if favorite}}is-fav{{/if}}" data-action="toggleFavorite"
+                          data-tooltip="{{localize "SCENENAV.ToggleFavorite"}}">
+                    <i class="{{#if favorite}}fas{{else}}far{{/if}} fa-star"></i>
+                  </button>
+
+                  {{#if viewers.length}}
+                    <div class="scenenav-viewers">
+                      {{#each viewers}}
+                        <span class="scenenav-viewer" style="background: {{color}}" data-tooltip="{{name}}">{{name}}</span>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                </div>
+
+                <div class="scenenav-card-body">
+                  <div class="scenenav-card-title" title="{{name}}">{{name}}</div>
+                  {{#if navName}}<div class="scenenav-card-sub">{{navName}}</div>{{/if}}
+
+                  {{#if hasLinks}}
+                    <div class="scenenav-links">
+                      {{#if parent}}
+                        <a class="scenenav-chip chip-parent" data-action="focusScene" data-target-scene="{{parent.id}}"
+                           data-tooltip="{{localize "SCENENAV.Parent"}}">
+                          <i class="fas fa-level-up-alt"></i> {{parent.name}}
+                        </a>
+                      {{/if}}
+                      {{#each children}}
+                        <a class="scenenav-chip chip-child" data-action="focusScene" data-target-scene="{{id}}"
+                           data-tooltip="{{localize "SCENENAV.Child"}}">
+                          <i class="fas fa-level-down-alt"></i> {{name}}
+                        </a>
+                      {{/each}}
+                      {{#each continues}}
+                        <a class="scenenav-chip chip-continues" data-action="focusScene" data-target-scene="{{id}}"
+                           data-tooltip="{{localize "SCENENAV.Continues"}}">
+                          <i class="fas fa-arrow-right"></i> {{#if direction}}<b>{{direction}}</b> {{/if}}{{name}}
+                        </a>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                </div>
+
+                <footer class="scenenav-card-actions">
+                  <button type="button" data-action="viewScene" data-tooltip="{{localize "SCENENAV.ViewHint"}}">
+                    <i class="fas fa-eye"></i> {{localize "SCENENAV.View"}}
+                  </button>
+                  <button type="button" data-action="activateScene" data-tooltip="{{localize "SCENENAV.ActivateHint"}}">
+                    <i class="fas fa-bullseye"></i> {{localize "SCENENAV.Activate"}}
+                  </button>
+                  <button type="button" class="scenenav-icon-btn" data-action="editLinks" data-tooltip="{{localize "SCENENAV.EditLinks"}}">
+                    <i class="fas fa-link"></i>
+                  </button>
+                  <button type="button" class="scenenav-icon-btn" data-action="configureScene" data-tooltip="{{localize "SCENENAV.Configure"}}">
+                    <i class="fas fa-cogs"></i>
+                  </button>
+                </footer>
+              </article>
+            {{/each}}
+          </div>
+        </section>
+      {{/each}}
+
+      {{#if isEmpty}}
+        <p class="scenenav-empty">{{#if search}}{{localize "SCENENAV.NoResults"}}{{else}}{{localize "SCENENAV.EmptyFolder"}}{{/if}}</p>
+      {{/if}}
+    </main>
+  </div>
+</div>
