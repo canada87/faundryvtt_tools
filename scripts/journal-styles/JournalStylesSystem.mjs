@@ -122,6 +122,9 @@ export class JournalStylesSystem {
       action: `${MODULE_ID}-journal-box-${variant.id}`,
       title: `<i class="${variant.icon} fa-fw" aria-hidden="true"></i> ${game.i18n.localize(variant.labelKey)}`,
       cmd: (state, dispatch, view) => {
+        console.log(`${MODULE_ID} | Journal Styles | box entry clicked`, {
+          variant: variant.id, hasState: !!state, hasDispatch: !!dispatch, hasView: !!view
+        });
         const editorView = view ?? menu.view ?? menu.editorView ?? menu.options?.view;
         return JournalStylesSystem.#insertBox(variant, state ?? editorView?.state, dispatch, editorView);
       }
@@ -137,6 +140,10 @@ export class JournalStylesSystem {
   }
 
   static #insertBox(variant, state, dispatch, view) {
+    console.log(`${MODULE_ID} | Journal Styles | insertBox`, {
+      variant: variant.id, hasState: !!state, schemaHasNode: !!state?.schema?.nodes?.[NODE_NAME],
+      hasDispatch: !!dispatch, hasView: !!view
+    });
     if (!state?.schema.nodes[NODE_NAME]) return false;
     const { schema, selection } = state;
     const paragraph = schema.nodes.paragraph?.createAndFill();
