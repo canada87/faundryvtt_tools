@@ -656,7 +656,8 @@
       "Intro": "Ready-made boxes for journal pages, built to survive Edit + Save. Insert them from the editor's \"Boxes\" menu, or copy the HTML below — including for an external tool authoring pages directly.",
       "ExampleText": "Example text.",
       "CopyHtml": "Copy HTML",
-      "Copied": "HTML copied to clipboard."
+      "Copied": "HTML copied to clipboard.",
+      "CopyFailed": "Couldn't copy automatically: the text is selected, press Ctrl+C."
     },
     "Variant": {
       "Read": {

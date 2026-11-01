@@ -656,7 +656,8 @@
       "Intro": "Riquadri pronti da usare nei journal, pensati per reggere quando li apri con Modifica e salvi. Inseriscili dal menu \"Riquadri\" dell'editor, oppure copia l'HTML qui sotto — anche per uno strumento esterno che scrive le pagine direttamente.",
       "ExampleText": "Testo di esempio.",
       "CopyHtml": "Copia HTML",
-      "Copied": "HTML copiato negli appunti."
+      "Copied": "HTML copiato negli appunti.",
+      "CopyFailed": "Copia automatica non riuscita: il testo è selezionato, premi Ctrl+C."
     },
     "Variant": {
       "Read": {

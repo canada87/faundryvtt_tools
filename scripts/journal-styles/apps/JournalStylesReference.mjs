@@ -50,13 +50,29 @@ export class JournalStylesReference extends HandlebarsApplicationMixin(Applicati
     const card = target.closest(".journal-styles-reference-card");
     const textarea = card?.querySelector("textarea.journal-styles-reference-code");
     if (!textarea) return;
-    try {
-      await navigator.clipboard.writeText(textarea.value);
-      ui.notifications.info(game.i18n.localize("JOURNALSTYLES.Reference.Copied"));
-    } catch (error) {
-      textarea.focus();
-      textarea.select();
-      console.warn(`${MODULE_ID} | Journal Styles | clipboard copy failed, text selected instead`, error);
+
+    // navigator.clipboard requires a secure context (HTTPS or localhost) and
+    // is simply undefined on a plain-http world (e.g. a LAN/Tailscale IP) —
+    // fall back to the legacy selection-based copy in that case.
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(textarea.value);
+        ui.notifications.info(game.i18n.localize("JOURNALSTYLES.Reference.Copied"));
+        return;
+      } catch (error) {
+        console.warn(`${MODULE_ID} | Journal Styles | navigator.clipboard failed, falling back to execCommand`, error);
+      }
     }
+
+    textarea.focus();
+    textarea.select();
+    let copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch (error) {
+      console.warn(`${MODULE_ID} | Journal Styles | execCommand copy failed`, error);
+    }
+    if (copied) ui.notifications.info(game.i18n.localize("JOURNALSTYLES.Reference.Copied"));
+    else ui.notifications.warn(game.i18n.localize("JOURNALSTYLES.Reference.CopyFailed"));
   }
 }
