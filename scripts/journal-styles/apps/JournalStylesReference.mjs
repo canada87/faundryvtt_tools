@@ -29,7 +29,8 @@ export class JournalStylesReference extends HandlebarsApplicationMixin(Applicati
 
   static PARTS = {
     reference: {
-      template: `modules/${MODULE_ID}/templates/journal-styles/journal-styles-reference.hbs`
+      template: `modules/${MODULE_ID}/templates/journal-styles/journal-styles-reference.hbs`,
+      scrollable: [""]
     }
   };
 
@@ -46,13 +47,14 @@ export class JournalStylesReference extends HandlebarsApplicationMixin(Applicati
   }
 
   static async #onCopyHtml(event, target) {
-    const id = target.dataset.variantId;
-    const textarea = this.element.querySelector(`textarea[data-variant-id="${id}"]`);
+    const card = target.closest(".journal-styles-reference-card");
+    const textarea = card?.querySelector("textarea.journal-styles-reference-code");
     if (!textarea) return;
     try {
       await navigator.clipboard.writeText(textarea.value);
       ui.notifications.info(game.i18n.localize("JOURNALSTYLES.Reference.Copied"));
     } catch (error) {
+      textarea.focus();
       textarea.select();
       console.warn(`${MODULE_ID} | Journal Styles | clipboard copy failed, text selected instead`, error);
     }
