@@ -1,0 +1,231 @@
+/* ========================================
+   Journal Styles — colored boxes, handouts,
+   pills, tables and banners for journal pages.
+
+   Everything below is scoped under
+   body.faundryvtt-journal-styles-active so the
+   feature is fully inert while its setting is off.
+   ======================================== */
+
+/* ---- Boxes (aside[data-fvtt-box]) ---- */
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0.75em 0;
+  padding: 10px 14px;
+  border-left: 6px solid var(--fvtt-box-border, #999);
+  border-radius: 4px;
+  background: var(--fvtt-box-bg, #f4f4f4);
+  color: var(--fvtt-box-text, #222);
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box-label {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.03em;
+  color: var(--fvtt-box-label, var(--fvtt-box-border, #999));
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box-label i {
+  margin-right: 4px;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box-body > :first-child { margin-top: 0; }
+body.faundryvtt-journal-styles-active .fvtt-journal-box-body > :last-child { margin-bottom: 0; }
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--read {
+  --fvtt-box-bg: #fff3e0;
+  --fvtt-box-border: #e07b16;
+  --fvtt-box-text: #2b1a08;
+  --fvtt-box-label: #c0640a;
+  font-style: italic;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--gm {
+  --fvtt-box-bg: #e6f2ea;
+  --fvtt-box-border: #2e7d4f;
+  --fvtt-box-text: #13281b;
+  --fvtt-box-label: #2e7d4f;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--danger {
+  --fvtt-box-bg: #fdeaea;
+  --fvtt-box-border: #b3261e;
+  --fvtt-box-text: #3a0b08;
+  --fvtt-box-label: #b3261e;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--lesson {
+  --fvtt-box-bg: #eaf0fb;
+  --fvtt-box-border: #3456b0;
+  --fvtt-box-text: #0f1d3d;
+  --fvtt-box-label: #3456b0;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--stop {
+  --fvtt-box-bg: #f3e8fb;
+  --fvtt-box-border: #7b3fb0;
+  --fvtt-box-text: #24103a;
+  --fvtt-box-label: #7b3fb0;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--actor {
+  --fvtt-box-bg: #f4f4f4;
+  --fvtt-box-text: #333;
+  --fvtt-box-label: #555;
+  border-left-style: dashed;
+  border-left-color: #999;
+  border-left-width: 2px;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--prompt {
+  --fvtt-box-bg: #26231f;
+  --fvtt-box-border: #9a9a9a;
+  --fvtt-box-text: #efe8dc;
+  --fvtt-box-label: #c9c2b6;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--doc {
+  --fvtt-box-bg: #f7f3e8;
+  --fvtt-box-border: #c9bfa0;
+  --fvtt-box-text: #3a3222;
+  --fvtt-box-label: #8a7b4f;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--terminal {
+  --fvtt-box-bg: #0b120b;
+  --fvtt-box-border: #1f3a1f;
+  --fvtt-box-text: #7dff7a;
+  --fvtt-box-label: #7dff7a;
+  font-family: "Courier New", Consolas, monospace;
+  box-shadow: 0 0 12px rgba(125, 255, 122, 0.25) inset;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-box--note {
+  --fvtt-box-bg: #fff6c8;
+  --fvtt-box-border: #e0d27a;
+  --fvtt-box-text: #4a4120;
+  --fvtt-box-label: #8a7b32;
+  border-left-style: dashed;
+  font-family: "Segoe Script", "Comic Sans MS", cursive;
+  transform: rotate(-1deg);
+  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* ---- Pills (inline labels) ---- */
+
+body.faundryvtt-journal-styles-active .fvtt-journal-pill {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.85em;
+  font-weight: bold;
+  color: #fff;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-pill--danger { background: #b3261e; }
+body.faundryvtt-journal-styles-active .fvtt-journal-pill--info { background: #3456b0; }
+body.faundryvtt-journal-styles-active .fvtt-journal-pill--special { background: #7b3fb0; }
+
+/* ---- Tables ---- */
+
+body.faundryvtt-journal-styles-active table.fvtt-journal-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #f2e9dc;
+}
+
+body.faundryvtt-journal-styles-active table.fvtt-journal-table thead tr,
+body.faundryvtt-journal-styles-active table.fvtt-journal-table th {
+  background: #2a2520;
+}
+
+body.faundryvtt-journal-styles-active table.fvtt-journal-table tbody tr:nth-child(odd) { background: #1f1c19; }
+body.faundryvtt-journal-styles-active table.fvtt-journal-table tbody tr:nth-child(even) { background: #2e2923; }
+
+body.faundryvtt-journal-styles-active table.fvtt-journal-table td,
+body.faundryvtt-journal-styles-active table.fvtt-journal-table th {
+  padding: 4px 8px;
+  border: 1px solid #44403a;
+}
+
+/* ---- Banner (page title) ---- */
+
+body.faundryvtt-journal-styles-active h2.fvtt-journal-banner {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 0.75em;
+  padding: 8px 14px;
+  background: #1d1a16;
+  color: #e07b16;
+  text-transform: uppercase;
+  font-size: 1.4em;
+  border: none;
+}
+
+body.faundryvtt-journal-styles-active .fvtt-journal-banner-subtitle {
+  color: #9a9a9a;
+  text-transform: none;
+  font-size: 0.6em;
+  font-weight: normal;
+}
+
+/* ========================================
+   Reference sheet (GM cheatsheet) — own chrome,
+   not scoped to the body class above.
+   ======================================== */
+
+.journal-styles-reference-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px;
+}
+
+.journal-styles-reference-intro {
+  margin: 0;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.journal-styles-reference-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.journal-styles-reference-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--color-border-light-tertiary, #ccc);
+  border-radius: 6px;
+}
+
+.journal-styles-reference-meta h3 {
+  margin: 0;
+  font-size: 1em;
+}
+
+.journal-styles-reference-meta p {
+  margin: 2px 0 0;
+  font-size: 0.85em;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.journal-styles-reference-code {
+  width: 100%;
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 0.8em;
+  resize: vertical;
+}
+
+.journal-styles-reference-card button {
+  align-self: flex-start;
+}

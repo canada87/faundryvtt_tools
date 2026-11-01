@@ -640,5 +640,65 @@
       "Done": "Pulled {count} players to \"{name}\".",
       "SceneUnavailable": "The GM pulled you to a scene you cannot see."
     }
+  },
+  "JOURNALSTYLES": {
+    "FeatureName": "Journal Styles",
+    "FeatureDescription": "Colored boxes and handouts for journal pages, built to survive Foundry's editor.",
+    "MenuGroup": "Boxes",
+    "Settings": {
+      "Enabled": {
+        "Name": "Journal Styles: enable",
+        "Hint": "Enables colored boxes for journal pages (editor menu + CSS classes for pills, tables and banners). Requires reload."
+      }
+    },
+    "Reference": {
+      "Title": "Journal Styles",
+      "Intro": "Ready-made boxes for journal pages, built to survive Edit + Save. Insert them from the editor's \"Boxes\" menu, or copy the HTML below — including for an external tool authoring pages directly.",
+      "ExampleText": "Example text.",
+      "CopyHtml": "Copy HTML",
+      "Copied": "HTML copied to clipboard."
+    },
+    "Variant": {
+      "Read": {
+        "Label": "Read aloud",
+        "Description": "Narrative text to read aloud to the players, word for word."
+      },
+      "Gm": {
+        "Label": "GM note",
+        "Description": "Reserved information, meant only for you while prepping."
+      },
+      "Danger": {
+        "Label": "Danger",
+        "Description": "Saving throws, damage, traps or other threats."
+      },
+      "Lesson": {
+        "Label": "Teaching note",
+        "Description": "Rules explanations for players new to the game."
+      },
+      "Stop": {
+        "Label": "Stopping point",
+        "Description": "Marks a good point to end the session."
+      },
+      "Actor": {
+        "Label": "Character or creature",
+        "Description": "Quick reference card for an NPC or creature."
+      },
+      "Prompt": {
+        "Label": "Image prompt",
+        "Description": "Full prompt to copy for generating an image."
+      },
+      "Doc": {
+        "Label": "Document",
+        "Description": "Handout styled as an official document."
+      },
+      "Terminal": {
+        "Label": "Terminal",
+        "Description": "Handout styled as a terminal screen."
+      },
+      "Note": {
+        "Label": "Note",
+        "Description": "Handout styled as a handwritten note."
+      }
+    }
   }
 }

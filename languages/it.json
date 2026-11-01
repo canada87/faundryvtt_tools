@@ -640,5 +640,65 @@
       "Done": "{count} giocatori portati in \"{name}\".",
       "SceneUnavailable": "Il GM ti ha portato in una scena che non puoi vedere."
     }
+  },
+  "JOURNALSTYLES": {
+    "FeatureName": "Stili Journal",
+    "FeatureDescription": "Riquadri colorati e handout per i journal, pensati per reggere all'editor di Foundry.",
+    "MenuGroup": "Riquadri",
+    "Settings": {
+      "Enabled": {
+        "Name": "Stili Journal: abilita",
+        "Hint": "Attiva i riquadri colorati per i journal (menu dell'editor + classi CSS per etichette, tabelle e banner). Richiede il ricaricamento."
+      }
+    },
+    "Reference": {
+      "Title": "Stili Journal",
+      "Intro": "Riquadri pronti da usare nei journal, pensati per reggere quando li apri con Modifica e salvi. Inseriscili dal menu \"Riquadri\" dell'editor, oppure copia l'HTML qui sotto — anche per uno strumento esterno che scrive le pagine direttamente.",
+      "ExampleText": "Testo di esempio.",
+      "CopyHtml": "Copia HTML",
+      "Copied": "HTML copiato negli appunti."
+    },
+    "Variant": {
+      "Read": {
+        "Label": "Leggi ai giocatori",
+        "Description": "Testo narrativo da leggere parola per parola ai giocatori."
+      },
+      "Gm": {
+        "Label": "Nota per il GM",
+        "Description": "Informazioni riservate, visibili solo a te durante la preparazione."
+      },
+      "Danger": {
+        "Label": "Pericolo",
+        "Description": "Tiri salvezza, danni, trappole o altre minacce."
+      },
+      "Lesson": {
+        "Label": "Nota didattica",
+        "Description": "Spiegazioni di regole per giocatori nuovi al gioco."
+      },
+      "Stop": {
+        "Label": "Punto di stop",
+        "Description": "Segna un buon momento per interrompere la sessione."
+      },
+      "Actor": {
+        "Label": "Personaggio o creatura",
+        "Description": "Scheda rapida di un PNG o di una creatura."
+      },
+      "Prompt": {
+        "Label": "Prompt immagine",
+        "Description": "Prompt completo da copiare per generare un'immagine."
+      },
+      "Doc": {
+        "Label": "Documento",
+        "Description": "Handout in stile documento ufficiale."
+      },
+      "Terminal": {
+        "Label": "Terminale",
+        "Description": "Handout in stile schermo di un terminale."
+      },
+      "Note": {
+        "Label": "Biglietto",
+        "Description": "Handout in stile biglietto scritto a mano."
+      }
+    }
   }
 }

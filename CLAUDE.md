@@ -49,6 +49,11 @@ scripts/
       SceneGraph.mjs       — Grafo scene: layout automatico, pan/zoom, trascina nodi, crea/rimuovi collegamenti
       SceneLinksEditor.mjs — UI GM: modifica collegamenti di una scena
       SceneNavDialogs.mjs  — Dialoghi condivisi: nota GM (journal della scena), porta qui i giocatori
+  journal-styles/
+    index.mjs              — Init stili journal (disattivo di default: setting journalStylesEnabled)
+    JournalStylesSystem.mjs — Logica core: nodo ProseMirror "fvttJournalBox", estensione schema, menu editor
+    apps/
+      JournalStylesReference.mjs — UI GM: cheatsheet con anteprima e HTML copiabile per ogni riquadro
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
@@ -57,6 +62,7 @@ styles/
   mindmap.css              — Stili lavagna mind map
   resources.css            — Stili HUD risorse e gestore
   scene-nav.css            — Stili navigatore scene ed editor collegamenti
+  journal-styles.css       — Riquadri, pill, tabelle e banner per i journal (scoped su classe body)
 templates/
   hub-menu.hbs             — Template hub
   crafting/
@@ -75,6 +81,8 @@ templates/
   scene-nav/
     scene-navigator.hbs      — Template navigatore scene
     scene-links-editor.hbs   — Template editor collegamenti
+  journal-styles/
+    journal-styles-reference.hbs — Template cheatsheet riquadri journal
 languages/
   en.json                  — Traduzioni inglese
   it.json                  — Traduzioni italiano

@@ -1,0 +1,21 @@
+<div class="journal-styles-reference-content">
+  <p class="journal-styles-reference-intro">{{localize "JOURNALSTYLES.Reference.Intro"}}</p>
+
+  <div class="journal-styles-reference-list">
+    {{#each variants}}
+      <div class="journal-styles-reference-card">
+        <div class="journal-styles-reference-preview">
+          {{{this.html}}}
+        </div>
+        <div class="journal-styles-reference-meta">
+          <h3><i class="{{this.icon}}"></i> {{this.label}}</h3>
+          <p>{{this.description}}</p>
+        </div>
+        <textarea class="journal-styles-reference-code" data-variant-id="{{this.id}}" readonly rows="6">{{this.html}}</textarea>
+        <button type="button" data-action="copyHtml" data-variant-id="{{this.id}}">
+          <i class="fas fa-copy"></i> {{localize "JOURNALSTYLES.Reference.CopyHtml"}}
+        </button>
+      </div>
+    {{/each}}
+  </div>
+</div>
