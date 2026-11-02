@@ -7,6 +7,12 @@
   "CRAFTING": {
     "FeatureName": "Crafting",
     "FeatureDescription": "Create recipes, manage ingredients, and craft items.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Crafting: enable",
+        "Hint": "Enables the Crafting feature (recipe book, recipe manager, actor sheet button). Requires reload."
+      }
+    },
     "RecipeBook": "Recipe Book",
     "RecipeManager": "Recipe Manager",
     "OpenRecipeManager": "Open Recipe Manager",
@@ -100,6 +106,12 @@
   "ENCOUNTERS": {
     "FeatureName": "Random Encounters",
     "FeatureDescription": "Generate random encounters from a compendium and spawn them on the map.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Random Encounters: enable",
+        "Hint": "Enables the Random Encounters feature (generator, hub entry, settings menu). Requires reload."
+      }
+    },
     "GeneratorTitle": "Encounter Generator",
     "SettingsTitle": "Encounter Settings",
     "OpenSettings": "Configure Encounters",
@@ -171,6 +183,12 @@
   "LOOT": {
     "FeatureName": "Loot Generator",
     "FeatureDescription": "Generate random loot from compendium folders and assign it to a token.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Loot Generator: enable",
+        "Hint": "Enables the Loot Generator feature (generator, hub entry, settings menu). Requires reload."
+      }
+    },
     "GeneratorTitle": "Loot Generator",
     "SettingsTitle": "Loot Settings",
     "OpenSettings": "Configure Loot",
@@ -224,6 +242,12 @@
   "PARTY": {
     "FeatureName": "Place Party",
     "FeatureDescription": "Select player characters and place them on the map with a click.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Place Party: enable",
+        "Hint": "Enables the Place Party feature (hub entry to place player characters on the map). Requires reload."
+      }
+    },
     "PlacerTitle": "Place Party",
     "SelectAll": "All",
     "SelectNone": "None",
@@ -240,6 +264,12 @@
   "LIGHTING": {
     "FeatureName": "Lighting Control",
     "FeatureDescription": "Manage token lighting and scene darkness.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Lighting Control: enable",
+        "Hint": "Enables the Lighting Control feature (control panel, token HUD button, settings menu). Requires reload."
+      }
+    },
     "ControlTitle": "Lighting Control",
     "SettingsTitle": "Lighting Settings",
     "OpenSettings": "Configure Lighting",
@@ -286,6 +316,12 @@
   "IMAGE_SHARE": {
     "FeatureName": "Fullscreen Image Share",
     "FeatureDescription": "Share images as fullscreen overlays visible to all connected players.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Fullscreen Image Share: enable",
+        "Hint": "Enables the Fullscreen Image Share feature (hub entry, share button on image popouts). Requires reload."
+      }
+    },
     "ShareFullscreen": "Share Fullscreen",
     "StopSharing": "Stop Sharing",
     "Collapse": "Collapse",
@@ -297,6 +333,12 @@
   "MINDMAP": {
     "FeatureName": "Mind Map",
     "FeatureDescription": "Visual board to map relationships between journals, NPCs, locations and events.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Mind Map: enable",
+        "Hint": "Enables the Mind Map feature (hub entry, boards browser). Requires reload."
+      }
+    },
     "BrowserTitle": "My Mind Maps",
     "NoBoardsHint": "No boards created yet. Click 'New Board' to get started.",
     "Nodes": "nodes",
@@ -338,6 +380,12 @@
   "SAVING_THROW": {
     "FeatureName": "Saving Throw",
     "FeatureDescription": "Request saving throws from players with customizable DC and group modes.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Saving Throw: enable",
+        "Hint": "Enables the Saving Throw feature (hub entry, roll interception). Requires reload."
+      }
+    },
     "RequestTitle": "Saving Throw Request",
     "ResultsTitle": "Saving Throw Results",
     "DC": "DC",
@@ -382,6 +430,12 @@
   "BACKUP": {
     "FeatureName": "Backup & Restore",
     "FeatureDescription": "Export and import a backup of all module data (recipes, mind maps, settings).",
+    "Settings": {
+      "Enabled": {
+        "Name": "Backup & Restore: enable",
+        "Hint": "Enables the Backup & Restore feature (hub entry to export/import module data). Requires reload."
+      }
+    },
     "AppTitle": "Backup & Restore",
     "SelectFeatures": "Select Features",
     "SelectFeaturesHint": "Choose which features to include in the export / restore.",
@@ -413,6 +467,12 @@
   "HEXMAP": {
     "FeatureName": "Hex Map Generator",
     "FeatureDescription": "Generate procedural hexagon maps by placing terrain tiles on an existing hex grid scene.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Hex Map Generator: enable",
+        "Hint": "Enables the Hex Map Generator feature (generator, hub entry, settings menu). Requires reload."
+      }
+    },
     "GeneratorTitle": "Hex Map Generator",
     "SettingsTitle": "Hex Map Settings",
     "OpenSettings": "Configure Terrain",
@@ -467,6 +527,12 @@
   "RESOURCES": {
     "FeatureName": "Resources",
     "FeatureDescription": "Track on-screen counters (survivors, supplies, etc.) visible to GM and/or players.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Resources: enable",
+        "Hint": "Enables the Resources feature (on-screen HUD, resource manager). Requires reload."
+      }
+    },
     "ManagerTitle": "Resource Manager",
     "AddResource": "Add Resource",
     "DeleteResource": "Delete Resource",

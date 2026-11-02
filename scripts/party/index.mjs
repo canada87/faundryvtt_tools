@@ -1,3 +1,4 @@
+import { MODULE_ID } from "../shared/constants.mjs";
 import { HubMenu } from "../hub/HubMenu.mjs";
 import { PartySystem } from "./PartySystem.mjs";
 import { PartyPlacer } from "./apps/PartyPlacer.mjs";
@@ -7,6 +8,20 @@ import { PartyPlacer } from "./apps/PartyPlacer.mjs";
  * Called once during module init.
  */
 export function initParty() {
+
+  /* ---- Settings ---- */
+
+  game.settings.register(MODULE_ID, "partyEnabled", {
+    name: "PARTY.Settings.Enabled.Name",
+    hint: "PARTY.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
+  if (!game.settings.get(MODULE_ID, "partyEnabled")) return;
 
   /* ---- Hub registration ---- */
 

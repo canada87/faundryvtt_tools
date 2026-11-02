@@ -12,6 +12,16 @@ export function initResources() {
 
   /* ---- Settings ---- */
 
+  game.settings.register(MODULE_ID, "resourcesEnabled", {
+    name: "RESOURCES.Settings.Enabled.Name",
+    hint: "RESOURCES.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
   game.settings.register(MODULE_ID, "resources", {
     name: "Resources",
     scope: "world",
@@ -30,6 +40,8 @@ export function initResources() {
       }
     }
   });
+
+  if (!game.settings.get(MODULE_ID, "resourcesEnabled")) return;
 
   /* ---- Hub registration (GM only sees the manager) ---- */
 

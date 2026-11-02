@@ -8,6 +8,20 @@ import { ImageShareSystem } from "./ImageShareSystem.mjs";
  */
 export function initImageShare() {
 
+  /* ---- Settings ---- */
+
+  game.settings.register(MODULE_ID, "imageShareEnabled", {
+    name: "IMAGE_SHARE.Settings.Enabled.Name",
+    hint: "IMAGE_SHARE.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
+  if (!game.settings.get(MODULE_ID, "imageShareEnabled")) return;
+
   /* ---- ImagePopout header control (Foundry v13 ApplicationV2) ---- */
   /* Override _getHeaderControls on the prototype to inject a
      "Share Fullscreen" button next to the native "Show Players".

@@ -22,6 +22,16 @@ export function initLoot() {
 
   /* ---- Settings ---- */
 
+  game.settings.register(MODULE_ID, "lootEnabled", {
+    name: "LOOT.Settings.Enabled.Name",
+    hint: "LOOT.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
   game.settings.register(MODULE_ID, "lootCompendium", {
     name: "LOOT.CompendiumName",
     hint: "LOOT.CompendiumHint",
@@ -64,6 +74,8 @@ export function initLoot() {
     type: Array,
     default: LootSystem.DEFAULT_GOLD_RANGES
   });
+
+  if (!game.settings.get(MODULE_ID, "lootEnabled")) return;
 
   game.settings.registerMenu(MODULE_ID, "lootSettingsMenu", {
     name: "LOOT.SettingsTitle",

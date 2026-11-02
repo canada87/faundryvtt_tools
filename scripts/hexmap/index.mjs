@@ -16,6 +16,18 @@ class HexMapSettingsLauncher extends FormApplication {
 
 export function initHexMap() {
 
+  /* ---- Settings ---- */
+
+  game.settings.register(MODULE_ID, "hexmapEnabled", {
+    name: "HEXMAP.Settings.Enabled.Name",
+    hint: "HEXMAP.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
   game.settings.register(MODULE_ID, "hexmapSettings", {
     name: "HexMap Settings",
     scope: "world",
@@ -23,6 +35,8 @@ export function initHexMap() {
     type: Object,
     default: HexMapSystem.getDefaultSettings()
   });
+
+  if (!game.settings.get(MODULE_ID, "hexmapEnabled")) return;
 
   game.settings.registerMenu(MODULE_ID, "hexmapTerrainSettings", {
     name: "HEXMAP.SettingsMenuName",

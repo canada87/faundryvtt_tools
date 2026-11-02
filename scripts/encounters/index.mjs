@@ -23,6 +23,16 @@ export function initEncounters() {
 
   /* ---- Settings ---- */
 
+  game.settings.register(MODULE_ID, "encountersEnabled", {
+    name: "ENCOUNTERS.Settings.Enabled.Name",
+    hint: "ENCOUNTERS.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
   game.settings.register(MODULE_ID, "encounterCompendium", {
     name: "ENCOUNTERS.CompendiumName",
     hint: "ENCOUNTERS.CompendiumHint",
@@ -90,6 +100,8 @@ export function initEncounters() {
     type: Number,
     default: 0
   });
+
+  if (!game.settings.get(MODULE_ID, "encountersEnabled")) return;
 
   game.settings.registerMenu(MODULE_ID, "encounterSettingsMenu", {
     name: "ENCOUNTERS.SettingsTitle",

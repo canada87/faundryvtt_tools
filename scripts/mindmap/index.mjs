@@ -8,6 +8,16 @@ export function initMindMap() {
 
   /* ---- Settings ---- */
 
+  game.settings.register(MODULE_ID, "mindmapEnabled", {
+    name: "MINDMAP.Settings.Enabled.Name",
+    hint: "MINDMAP.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
   game.settings.register(MODULE_ID, "mindmapBoards", {
     name: "Mind Map Boards",
     scope: "world",
@@ -15,6 +25,8 @@ export function initMindMap() {
     type: Array,
     default: []
   });
+
+  if (!game.settings.get(MODULE_ID, "mindmapEnabled")) return;
 
   /* ---- Hub registration ---- */
 

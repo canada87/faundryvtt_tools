@@ -36,6 +36,16 @@ export function initCrafting() {
 
   /* ---- Settings ---- */
 
+  game.settings.register(MODULE_ID, "craftingEnabled", {
+    name: "CRAFTING.Settings.Enabled.Name",
+    hint: "CRAFTING.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
   game.settings.register(MODULE_ID, "craftingRecipes", {
     name: "Recipes",
     scope: "world",
@@ -59,6 +69,8 @@ export function initCrafting() {
     type: Object,
     default: ComponentGenerator.DEFAULT_CONFIG
   });
+
+  if (!game.settings.get(MODULE_ID, "craftingEnabled")) return;
 
   game.settings.registerMenu(MODULE_ID, "raritySettingsMenu", {
     name: "CRAFTING.RaritySettings",

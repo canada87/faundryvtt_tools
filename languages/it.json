@@ -7,6 +7,12 @@
   "CRAFTING": {
     "FeatureName": "Crafting",
     "FeatureDescription": "Crea ricette, gestisci ingredienti e crea oggetti.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Crafting: abilita",
+        "Hint": "Attiva la funzionalità Crafting (ricettario, gestore ricette, pulsante sulla scheda personaggio). Richiede il ricaricamento."
+      }
+    },
     "RecipeBook": "Ricettario",
     "RecipeManager": "Gestione Ricette",
     "OpenRecipeManager": "Apri Gestione Ricette",
@@ -100,6 +106,12 @@
   "ENCOUNTERS": {
     "FeatureName": "Incontri Casuali",
     "FeatureDescription": "Genera incontri casuali da un compendio e posizionali sulla mappa.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Incontri Casuali: abilita",
+        "Hint": "Attiva la funzionalità Incontri Casuali (generatore, voce nell'Hub, menu impostazioni). Richiede il ricaricamento."
+      }
+    },
     "GeneratorTitle": "Generatore Incontri",
     "SettingsTitle": "Impostazioni Incontri",
     "OpenSettings": "Configura Incontri",
@@ -171,6 +183,12 @@
   "LOOT": {
     "FeatureName": "Generatore Loot",
     "FeatureDescription": "Genera loot casuale da cartelle di un compendio e assegnalo a un token.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Generatore Loot: abilita",
+        "Hint": "Attiva la funzionalità Generatore Loot (generatore, voce nell'Hub, menu impostazioni). Richiede il ricaricamento."
+      }
+    },
     "GeneratorTitle": "Generatore Loot",
     "SettingsTitle": "Impostazioni Loot",
     "OpenSettings": "Configura Loot",
@@ -224,6 +242,12 @@
   "PARTY": {
     "FeatureName": "Posiziona Party",
     "FeatureDescription": "Seleziona i personaggi dei giocatori e posizionali sulla mappa con un click.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Posiziona Party: abilita",
+        "Hint": "Attiva la funzionalità Posiziona Party (voce nell'Hub per posizionare i personaggi dei giocatori sulla mappa). Richiede il ricaricamento."
+      }
+    },
     "PlacerTitle": "Posiziona Party",
     "SelectAll": "Tutti",
     "SelectNone": "Nessuno",
@@ -240,6 +264,12 @@
   "LIGHTING": {
     "FeatureName": "Controllo Luci",
     "FeatureDescription": "Gestisci l'illuminazione dei token e l'oscurità della scena.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Controllo Luci: abilita",
+        "Hint": "Attiva la funzionalità Controllo Luci (pannello di controllo, pulsante nell'HUD del token, menu impostazioni). Richiede il ricaricamento."
+      }
+    },
     "ControlTitle": "Controllo Illuminazione",
     "SettingsTitle": "Impostazioni Luci",
     "OpenSettings": "Configura Luci",
@@ -286,6 +316,12 @@
   "IMAGE_SHARE": {
     "FeatureName": "Condivisione Immagine",
     "FeatureDescription": "Condividi immagini a schermo intero visibili a tutti i giocatori connessi.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Condivisione Immagine: abilita",
+        "Hint": "Attiva la funzionalità Condivisione Immagine (voce nell'Hub, pulsante di condivisione sulle immagini a tutto schermo). Richiede il ricaricamento."
+      }
+    },
     "ShareFullscreen": "Condividi a Schermo Intero",
     "StopSharing": "Interrompi Condivisione",
     "Collapse": "Riduci",
@@ -297,6 +333,12 @@
   "MINDMAP": {
     "FeatureName": "Mappa Mentale",
     "FeatureDescription": "Lavagna visiva per mappare relazioni tra journal, PNG, luoghi ed eventi.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Mappa Mentale: abilita",
+        "Hint": "Attiva la funzionalità Mappa Mentale (voce nell'Hub, elenco lavagne). Richiede il ricaricamento."
+      }
+    },
     "BrowserTitle": "Le mie Mappe Mentali",
     "NoBoardsHint": "Nessuna lavagna creata. Clicca 'Nuova Lavagna' per iniziare.",
     "Nodes": "nodi",
@@ -338,6 +380,12 @@
   "SAVING_THROW": {
     "FeatureName": "Tiro Salvezza",
     "FeatureDescription": "Richiedi tiri salvezza ai giocatori con CD personalizzabile e modalità di gruppo.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Tiro Salvezza: abilita",
+        "Hint": "Attiva la funzionalità Tiro Salvezza (voce nell'Hub, intercettazione dei tiri). Richiede il ricaricamento."
+      }
+    },
     "RequestTitle": "Richiesta Tiro Salvezza",
     "ResultsTitle": "Risultati Tiro Salvezza",
     "DC": "CD",
@@ -382,6 +430,12 @@
   "BACKUP": {
     "FeatureName": "Backup & Ripristino",
     "FeatureDescription": "Esporta e importa un backup di tutti i dati del modulo (ricette, mappe mentali, impostazioni).",
+    "Settings": {
+      "Enabled": {
+        "Name": "Backup & Ripristino: abilita",
+        "Hint": "Attiva la funzionalità Backup & Ripristino (voce nell'Hub per esportare/importare i dati del modulo). Richiede il ricaricamento."
+      }
+    },
     "AppTitle": "Backup & Ripristino",
     "SelectFeatures": "Seleziona Funzionalità",
     "SelectFeaturesHint": "Scegli quali funzionalità includere nell'esportazione / ripristino.",
@@ -413,6 +467,12 @@
   "HEXMAP": {
     "FeatureName": "Generatore Hex Map",
     "FeatureDescription": "Genera mappe esagonali procedurali posizionando tile di terreno su una scena con griglia hex.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Generatore Hex Map: abilita",
+        "Hint": "Attiva la funzionalità Generatore Hex Map (generatore, voce nell'Hub, menu impostazioni). Richiede il ricaricamento."
+      }
+    },
     "GeneratorTitle": "Generatore Hex Map",
     "SettingsTitle": "Impostazioni Hex Map",
     "OpenSettings": "Configura Terreni",
@@ -467,6 +527,12 @@
   "RESOURCES": {
     "FeatureName": "Risorse",
     "FeatureDescription": "Traccia contatori a schermo (sopravvissuti, scorte, ecc.) visibili al GM e/o ai giocatori.",
+    "Settings": {
+      "Enabled": {
+        "Name": "Risorse: abilita",
+        "Hint": "Attiva la funzionalità Risorse (HUD a schermo, gestore risorse). Richiede il ricaricamento."
+      }
+    },
     "ManagerTitle": "Gestore Risorse",
     "AddResource": "Aggiungi Risorsa",
     "DeleteResource": "Elimina Risorsa",

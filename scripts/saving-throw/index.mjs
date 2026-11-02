@@ -9,6 +9,20 @@ import { SavingThrowRequest } from "./apps/SavingThrowRequest.mjs";
  */
 export function initSavingThrow() {
 
+  /* ---- Settings ---- */
+
+  game.settings.register(MODULE_ID, "savingThrowEnabled", {
+    name: "SAVING_THROW.Settings.Enabled.Name",
+    hint: "SAVING_THROW.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
+  if (!game.settings.get(MODULE_ID, "savingThrowEnabled")) return;
+
   /* ---- Hub registration ---- */
 
   HubMenu.registerFeature({

@@ -23,6 +23,16 @@ export function initLighting() {
 
   /* ---- Settings ---- */
 
+  game.settings.register(MODULE_ID, "lightingEnabled", {
+    name: "LIGHTING.Settings.Enabled.Name",
+    hint: "LIGHTING.Settings.Enabled.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    requiresReload: true
+  });
+
   game.settings.register(MODULE_ID, "lightingPresets", {
     name: "LIGHTING.Presets",
     scope: "world",
@@ -46,6 +56,8 @@ export function initLighting() {
     type: Array,
     default: []
   });
+
+  if (!game.settings.get(MODULE_ID, "lightingEnabled")) return;
 
   game.settings.registerMenu(MODULE_ID, "lightingSettingsMenu", {
     name: "LIGHTING.SettingsTitle",
