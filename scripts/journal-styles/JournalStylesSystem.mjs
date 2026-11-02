@@ -91,10 +91,25 @@ export class JournalStylesSystem {
   }
 
   /**
+   * Extends Foundry's *global* default ProseMirror schema in place, once.
+   * This has to happen here rather than per-editor: collaborative editors
+   * (journal pages use collaborative editing) rebuild their final
+   * EditorState straight from `ProseMirror.defaultSchema` and ignore
+   * whatever `options.state` a `createProseMirrorEditor` hook swaps in —
+   * only `foundry.prosemirror.defaultSchema` itself reaches them.
+   * Call once, early (module init), before any editor can be created.
+   */
+  static installDefaultSchema() {
+    const pm = JournalStylesSystem.#getProseMirror();
+    if (!pm?.defaultSchema || pm.defaultSchema.nodes[NODE_NAME]) return;
+    pm.defaultSchema = JournalStylesSystem.#extendSchema(pm.defaultSchema);
+  }
+
+  /**
    * Hook: createProseMirrorEditor(uuid, plugins, options)
-   * Extends the editor's schema with the box node the first time it's needed,
-   * rebuilding the current document/menu against the extended schema so
-   * existing content survives.
+   * Defensive fallback for the (non-collaborative) local editor path, in
+   * case some caller builds its state from a schema that isn't derived from
+   * the (now-extended) default schema above.
    */
   static initializeEditor(uuid, plugins, options) {
     const state = options?.state;
@@ -122,9 +137,6 @@ export class JournalStylesSystem {
       action: `${MODULE_ID}-journal-box-${variant.id}`,
       title: `<i class="${variant.icon} fa-fw" aria-hidden="true"></i> ${game.i18n.localize(variant.labelKey)}`,
       cmd: (state, dispatch, view) => {
-        console.log(`${MODULE_ID} | Journal Styles | box entry clicked`, {
-          variant: variant.id, hasState: !!state, hasDispatch: !!dispatch, hasView: !!view
-        });
         const editorView = view ?? menu.view ?? menu.editorView ?? menu.options?.view;
         return JournalStylesSystem.#insertBox(variant, state ?? editorView?.state, dispatch, editorView);
       }
@@ -140,10 +152,6 @@ export class JournalStylesSystem {
   }
 
   static #insertBox(variant, state, dispatch, view) {
-    console.log(`${MODULE_ID} | Journal Styles | insertBox`, {
-      variant: variant.id, hasState: !!state, schemaHasNode: !!state?.schema?.nodes?.[NODE_NAME],
-      hasDispatch: !!dispatch, hasView: !!view
-    });
     if (!state?.schema.nodes[NODE_NAME]) return false;
     const { schema, selection } = state;
     const paragraph = schema.nodes.paragraph?.createAndFill();

@@ -25,6 +25,11 @@ export function initJournalStyles() {
 
   if (!JournalStylesSystem.isEnabled()) return;
 
+  /* ---- Schema ----
+   * Must happen once, early, before any editor (journal pages included) is
+   * ever created — see JournalStylesSystem.installDefaultSchema() for why. */
+  JournalStylesSystem.installDefaultSchema();
+
   /* ---- CSS activation ----
    * styles/journal-styles.css is always loaded by Foundry, but every rule in
    * it is scoped under this body class so a disabled setting leaves journals
