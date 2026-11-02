@@ -308,6 +308,8 @@
     "RemovePreset": "Remove",
     "PresetLabel": "Name",
     "PresetIcon": "Icon",
+    "PresetIconClass": "FontAwesome icon class",
+    "PresetValues": "Light radius (bright / dim) and angle",
     "PresetsSettingsHint": "Each preset has a name, FontAwesome icon, bright, dim, and angle values.",
     "DarknessLevels": "Darkness Levels",
     "DarknessLevelsHint": "Darkness levels available in the control panel.",

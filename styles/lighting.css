@@ -4,7 +4,8 @@
 
 /* Neutral tokens derive from the themed text color, so the panel
    reads the same in Foundry's light and dark application themes. */
-.lighting.lighting-control {
+.lighting.lighting-control,
+.lighting.lighting-dialog-window {
   --lc-space-1: 4px;
   --lc-space-2: 8px;
   --lc-space-3: 12px;
@@ -512,61 +513,147 @@
 .lighting.lighting-dialog-window .lighting-dialog {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--lc-space-3);
 }
 
-.lighting.lighting-dialog-window .icon-preview {
-  flex: 0 0 24px;
-  text-align: center;
-  font-size: 1.1rem;
-}
-
-.lighting.lighting-dialog-window .icon-choices {
+.lighting.lighting-dialog-window .ld-section {
   display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
+  flex-direction: column;
+  gap: var(--lc-space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.lighting.lighting-dialog-window .ld-label {
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lc-muted);
+}
+
+.lighting.lighting-dialog-window .ld-sublabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--lc-muted);
+}
+
+.lighting.lighting-dialog-window .ld-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lc-space-1);
+  min-width: 0;
+}
+
+.lighting.lighting-dialog-window .ld-field input,
+.lighting.lighting-dialog-window .ld-icon-input {
+  width: 100%;
+  height: var(--lc-control-h);
+}
+
+.lighting.lighting-dialog-window button:focus-visible {
+  outline: 2px solid var(--lc-accent);
+  outline-offset: 1px;
+}
+
+/* --- Name + live icon preview --- */
+
+.lighting.lighting-dialog-window .ld-identity {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: end;
+  gap: var(--lc-space-3);
+}
+
+.lighting.lighting-dialog-window .ld-icon-preview {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  color: var(--lc-accent);
+  background: color-mix(in srgb, var(--lc-accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--lc-accent) 40%, transparent);
+  border-radius: 50%;
+}
+
+/* --- Icon picker --- */
+
+/* One row of 12 equal tiles (matches ICON_SUGGESTIONS). */
+.lighting.lighting-dialog-window .icon-choices {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--lc-space-1);
 }
 
 .lighting.lighting-dialog-window .icon-choice {
-  flex: 0 0 30px;
-  height: 28px;
+  height: 32px;
+  min-height: 32px;
+  margin: 0;
   padding: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
   line-height: 1;
+  color: var(--lc-muted);
+  background: var(--lc-surface);
+  border: 1px solid var(--lc-border);
+  border-radius: var(--lc-radius);
+  box-shadow: none;
+  cursor: pointer;
+  transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
 }
+
+.lighting.lighting-dialog-window .icon-choice:hover {
+  color: inherit;
+  background: var(--lc-surface-hover);
+}
+
+.lighting.lighting-dialog-window .icon-choice[aria-pressed="true"] {
+  color: var(--lc-accent);
+  background: color-mix(in srgb, var(--lc-accent) 16%, transparent);
+  border-color: var(--lc-accent);
+}
+
+.lighting.lighting-dialog-window .ld-icon-input {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+}
+
+/* --- Light values --- */
 
 .lighting.lighting-dialog-window .light-values {
-  display: flex;
-  gap: 8px;
-}
-
-.lighting.lighting-dialog-window .light-values .form-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 2px;
-}
-
-.lighting.lighting-dialog-window .light-values label {
-  font-size: 0.8rem;
-  font-weight: bold;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--lc-space-2);
 }
 
 .lighting.lighting-dialog-window .light-values input {
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
-.lighting.lighting-dialog-window .access-fields {
+/* --- Player access --- */
+
+.lighting.lighting-dialog-window .access-fields > legend {
+  margin-bottom: var(--lc-space-2);
+}
+
+.lighting.lighting-dialog-window .player-box {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin: 4px 0 0;
+  background: var(--lc-surface);
+  border: 1px solid var(--lc-border);
+  border-radius: var(--lc-radius);
+  overflow: hidden;
 }
 
 .lighting.lighting-dialog-window .player-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
   max-height: 220px;
   overflow-y: auto;
 }
@@ -579,39 +666,67 @@
 .lighting.lighting-dialog-window .player-choice {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 2px 4px;
-  border-radius: 3px;
+  gap: var(--lc-space-2);
+  min-height: 36px;
+  margin: 0;
+  padding: 0 var(--lc-space-3);
   cursor: pointer;
 }
 
+.lighting.lighting-dialog-window .player-choice + .player-choice {
+  border-top: 1px solid var(--lc-border);
+}
+
 .lighting.lighting-dialog-window .player-choice:hover {
-  background: rgba(127, 127, 127, 0.15);
+  background: var(--lc-surface-hover);
+}
+
+.lighting.lighting-dialog-window .player-choice input {
+  flex: 0 0 auto;
+  margin: 0;
 }
 
 .lighting.lighting-dialog-window .all-choice {
-  font-weight: bold;
-  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
-  padding-bottom: 4px;
-  margin-bottom: 2px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--lc-border);
+}
+
+.lighting.lighting-dialog-window .all-choice i {
+  width: 16px;
+  text-align: center;
+  color: var(--lc-success);
 }
 
 .lighting.lighting-dialog-window .player-color {
   flex: 0 0 10px;
   height: 10px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 1px var(--lc-border-strong);
 }
 
 .lighting.lighting-dialog-window .player-name {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .lighting.lighting-dialog-window .player-choice small {
-  opacity: 0.7;
+  font-size: 0.75rem;
+  color: var(--lc-muted);
+  white-space: nowrap;
 }
 
-.lighting.lighting-dialog-window .hint {
+.lighting.lighting-dialog-window .ld-hint {
+  margin: 0;
+  padding: var(--lc-space-2) var(--lc-space-3);
   font-size: 0.8rem;
-  opacity: 0.7;
+  color: var(--lc-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lighting.lighting-dialog-window .icon-choice {
+    transition: none;
+  }
 }

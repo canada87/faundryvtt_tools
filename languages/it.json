@@ -308,6 +308,8 @@
     "RemovePreset": "Rimuovi",
     "PresetLabel": "Nome",
     "PresetIcon": "Icona",
+    "PresetIconClass": "Classe icona FontAwesome",
+    "PresetValues": "Raggio luce (bright / dim) e angolo",
     "PresetsSettingsHint": "Ogni preset ha nome, icona FontAwesome, bright, dim e angolo.",
     "DarknessLevels": "Livelli Oscurità",
     "DarknessLevelsHint": "Livelli di oscurità disponibili nel pannello di controllo.",

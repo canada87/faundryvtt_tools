@@ -4,9 +4,9 @@ const { DialogV2 } = foundry.applications.api;
 
 /** Icons offered as one-click choices in the preset editor. */
 const ICON_SUGGESTIONS = [
-  "fas fa-fire", "fas fa-fire-flame-curved", "fas fa-candle-holder", "fas fa-lantern",
-  "fas fa-flashlight", "fas fa-lightbulb", "fas fa-sun", "fas fa-moon",
-  "fas fa-star", "fas fa-wand-sparkles", "fas fa-gem", "fas fa-eye"
+  "fas fa-fire", "fas fa-fire-flame-curved", "fas fa-candle-holder", "fas fa-flashlight",
+  "fas fa-lightbulb", "fas fa-sun", "fas fa-moon", "fas fa-star",
+  "fas fa-wand-sparkles", "fas fa-gem", "fas fa-bolt", "fas fa-eye"
 ];
 
 /**
@@ -27,38 +27,46 @@ export class LightingDialogs {
     const data = preset ?? { label: "", icon: "fas fa-lightbulb", bright: 3, dim: 6, angle: 360, ...defaults };
     const access = isNew ? { all: false, users: [] } : LightingSystem.getPresetAccess(preset.id);
 
-    const icons = ICON_SUGGESTIONS
-      .map(icon => `<button type="button" class="icon-choice" data-icon="${icon}"><i class="${icon}"></i></button>`)
+    const icons = ICON_SUGGESTIONS.map(icon => `
+      <button type="button" class="icon-choice" data-icon="${icon}" aria-label="${icon}"
+              aria-pressed="${icon === data.icon}"><i class="${icon}" aria-hidden="true"></i></button>`)
       .join("");
 
     const content = `
       <div class="lighting-dialog">
-        <div class="form-group">
-          <label>${loc("LIGHTING.PresetLabel")}</label>
-          <input type="text" name="label" value="${esc(data.label)}" placeholder="${loc("LIGHTING.PresetLabelPlaceholder")}" autofocus />
+        <div class="ld-identity">
+          <span class="ld-icon-preview"><i class="${esc(data.icon)}" aria-hidden="true"></i></span>
+          <label class="ld-field">
+            <span class="ld-label">${loc("LIGHTING.PresetLabel")}</span>
+            <input type="text" name="label" value="${esc(data.label)}" placeholder="${loc("LIGHTING.PresetLabelPlaceholder")}" autofocus />
+          </label>
         </div>
-        <div class="form-group">
-          <label>${loc("LIGHTING.PresetIcon")}</label>
-          <div class="form-fields">
-            <i class="icon-preview ${esc(data.icon)}"></i>
-            <input type="text" name="icon" value="${esc(data.icon)}" placeholder="fas fa-fire" />
+
+        <section class="ld-section">
+          <span class="ld-label">${loc("LIGHTING.PresetIcon")}</span>
+          <div class="icon-choices">${icons}</div>
+          <input type="text" name="icon" class="ld-icon-input" value="${esc(data.icon)}"
+                 placeholder="fas fa-fire" aria-label="${loc("LIGHTING.PresetIconClass")}" />
+        </section>
+
+        <section class="ld-section">
+          <span class="ld-label">${loc("LIGHTING.PresetValues")}</span>
+          <div class="light-values">
+            <label class="ld-field">
+              <span class="ld-sublabel">Bright</span>
+              <input type="number" name="bright" value="${Number(data.bright)}" min="0" step="0.5" />
+            </label>
+            <label class="ld-field">
+              <span class="ld-sublabel">Dim</span>
+              <input type="number" name="dim" value="${Number(data.dim)}" min="0" step="0.5" />
+            </label>
+            <label class="ld-field">
+              <span class="ld-sublabel">Angle</span>
+              <input type="number" name="angle" value="${Number(data.angle)}" min="1" max="360" step="1" />
+            </label>
           </div>
-        </div>
-        <div class="icon-choices">${icons}</div>
-        <div class="light-values">
-          <div class="form-group stacked">
-            <label>Bright</label>
-            <input type="number" name="bright" value="${Number(data.bright)}" min="0" step="0.5" />
-          </div>
-          <div class="form-group stacked">
-            <label>Dim</label>
-            <input type="number" name="dim" value="${Number(data.dim)}" min="0" step="0.5" />
-          </div>
-          <div class="form-group stacked">
-            <label>Angle</label>
-            <input type="number" name="angle" value="${Number(data.angle)}" min="1" max="360" step="1" />
-          </div>
-        </div>
+        </section>
+
         ${this.#accessFields(access)}
       </div>`;
 
@@ -98,7 +106,7 @@ export class LightingDialogs {
         icon: "fas fa-lightbulb"
       },
       classes: ["lighting", "lighting-dialog-window"],
-      position: { width: 420 },
+      position: { width: 440 },
       content,
       buttons,
       rejectClose: false,
@@ -189,17 +197,19 @@ export class LightingDialogs {
             <span class="player-name">${esc(u.name)}</span>
             ${u.character ? `<small>${esc(u.character.name)}</small>` : ""}
           </label>`).join("")
-      : `<p class="hint">${loc("LIGHTING.NoPlayers")}</p>`;
+      : `<p class="ld-hint">${loc("LIGHTING.NoPlayers")}</p>`;
 
     return `
-      <fieldset class="access-fields">
-        <legend>${loc("LIGHTING.AccessLegend")}</legend>
-        <label class="player-choice all-choice">
-          <input type="checkbox" name="all" ${access.all ? "checked" : ""} />
-          <i class="fas fa-users"></i>
-          <span class="player-name">${loc("LIGHTING.AccessAllPlayers")}</span>
-        </label>
-        <div class="player-list ${access.all ? "disabled" : ""}">${rows}</div>
+      <fieldset class="ld-section access-fields">
+        <legend class="ld-label">${loc("LIGHTING.AccessLegend")}</legend>
+        <div class="player-box">
+          <label class="player-choice all-choice">
+            <input type="checkbox" name="all" ${access.all ? "checked" : ""} />
+            <i class="fas fa-users" aria-hidden="true"></i>
+            <span class="player-name">${loc("LIGHTING.AccessAllPlayers")}</span>
+          </label>
+          <div class="player-list ${access.all ? "disabled" : ""}">${rows}</div>
+        </div>
       </fieldset>`;
   }
 
@@ -220,11 +230,16 @@ export class LightingDialogs {
 
   static #activateIconPicker(root) {
     const input = root?.querySelector('input[name="icon"]');
-    const preview = root?.querySelector(".icon-preview");
+    const preview = root?.querySelector(".ld-icon-preview i");
     if (!input || !preview) return;
-    const update = () => { preview.className = `icon-preview ${input.value.trim() || "fas fa-lightbulb"}`; };
+    const choices = root.querySelectorAll(".icon-choice");
+    const update = () => {
+      const icon = input.value.trim() || "fas fa-lightbulb";
+      preview.className = icon;
+      choices.forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.icon === icon)));
+    };
     input.addEventListener("input", update);
-    root.querySelectorAll(".icon-choice").forEach(btn => btn.addEventListener("click", () => {
+    choices.forEach(btn => btn.addEventListener("click", () => {
       input.value = btn.dataset.icon;
       update();
     }));
