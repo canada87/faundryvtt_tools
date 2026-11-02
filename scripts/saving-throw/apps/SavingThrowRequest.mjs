@@ -26,7 +26,10 @@ export class SavingThrowRequest extends HandlebarsApplicationMixin(ApplicationV2
       cancelSession: SavingThrowRequest.#onCancelSession,
       newRequest: SavingThrowRequest.#onNewRequest,
       selectAll: SavingThrowRequest.#onSelectAll,
-      selectNone: SavingThrowRequest.#onSelectNone
+      selectNone: SavingThrowRequest.#onSelectNone,
+      setResult: SavingThrowRequest.#onSetResult,
+      toggleExclude: SavingThrowRequest.#onToggleExclude,
+      resolveNow: SavingThrowRequest.#onResolveNow
     }
   };
 
@@ -35,6 +38,14 @@ export class SavingThrowRequest extends HandlebarsApplicationMixin(ApplicationV2
       template: `modules/${MODULE_ID}/templates/saving-throw/saving-throw-request.hbs`
     }
   };
+
+  static MODES = [
+    { value: "individual", icon: "fa-user" },
+    { value: "groupAny", icon: "fa-user-check" },
+    { value: "groupMajority", icon: "fa-users" },
+    { value: "groupAll", icon: "fa-people-group" },
+    { value: "groupCustom", icon: "fa-sliders" }
+  ];
 
   #hookId = null;
 
@@ -49,16 +60,40 @@ export class SavingThrowRequest extends HandlebarsApplicationMixin(ApplicationV2
     // Build enriched session data for the template
     let sessionData = null;
     if (session) {
-      const rolledCount = session.players.filter(p => p.result !== null).length;
-      const successCount = session.players.filter(p => p.success).length;
+      const participants = session.players.filter(p => !p.excluded);
+      const total = participants.length;
+      const rolledCount = participants.filter(p => p.result !== null).length;
+      const successCount = participants.filter(p => p.success).length;
+      const required = SavingThrowSystem.requiredSuccessesFor(session.mode, total, session.requiredSuccesses);
+
+      // Group outcome already decided before everyone has rolled?
+      let outlook = null;
+      if (required !== null && !session.resolved && total > 0) {
+        if (successCount >= required) outlook = "reached";
+        else if (successCount + (total - rolledCount) < required) outlook = "unreachable";
+      }
+
+      const percent = n => (total ? Math.min(100, Math.round((n / total) * 100)) : 0);
+
       sessionData = {
         ...session,
+        players: session.players.map(p => ({
+          ...p,
+          // hasResult instead of {{#if result}}: a total of 0 is a valid roll
+          hasResult: p.result !== null,
+          state: p.excluded ? "excluded" : p.result === null ? "pending" : p.success ? "success" : "failure"
+        })),
         modeLabel: game.i18n.localize(`SAVING_THROW.Mode.${session.mode}`),
         rolledCount,
         successCount,
-        totalCount: session.players.length,
-        allRolled: rolledCount === session.players.length,
-        isGroupMode: session.mode !== "individual"
+        totalCount: total,
+        allRolled: rolledCount === total,
+        canResolve: rolledCount > 0,
+        isGroupMode: required !== null,
+        required,
+        successPercent: percent(successCount),
+        thresholdPercent: percent(required ?? 0),
+        outlook
       };
     }
 
@@ -66,13 +101,12 @@ export class SavingThrowRequest extends HandlebarsApplicationMixin(ApplicationV2
       session: sessionData,
       players,
       hasPlayers: players.length > 0,
-      modes: [
-        { value: "individual", label: game.i18n.localize("SAVING_THROW.Mode.individual") },
-        { value: "groupAny", label: game.i18n.localize("SAVING_THROW.Mode.groupAny") },
-        { value: "groupMajority", label: game.i18n.localize("SAVING_THROW.Mode.groupMajority") },
-        { value: "groupAll", label: game.i18n.localize("SAVING_THROW.Mode.groupAll") },
-        { value: "groupCustom", label: game.i18n.localize("SAVING_THROW.Mode.groupCustom") }
-      ]
+      modes: SavingThrowRequest.MODES.map(({ value, icon }) => ({
+        value,
+        icon,
+        label: game.i18n.localize(`SAVING_THROW.ModeShort.${value}`),
+        tooltip: game.i18n.localize(`SAVING_THROW.Mode.${value}`)
+      }))
     };
   }
 
@@ -91,13 +125,14 @@ export class SavingThrowRequest extends HandlebarsApplicationMixin(ApplicationV2
     }
 
     // Toggle custom threshold input visibility based on mode selection
-    const modeSelect = this.element.querySelector('[name="mode"]');
+    const modeRadios = this.element.querySelectorAll('[name="mode"]');
     const thresholdGroup = this.element.querySelector('.st-custom-threshold');
-    if (modeSelect && thresholdGroup) {
+    if (modeRadios.length && thresholdGroup) {
       const updateVisibility = () => {
-        thresholdGroup.style.display = modeSelect.value === "groupCustom" ? "" : "none";
+        const mode = this.element.querySelector('[name="mode"]:checked')?.value;
+        thresholdGroup.hidden = mode !== "groupCustom";
       };
-      modeSelect.addEventListener("change", updateVisibility);
+      modeRadios.forEach(radio => radio.addEventListener("change", updateVisibility));
       updateVisibility();
     }
   }
@@ -118,7 +153,7 @@ export class SavingThrowRequest extends HandlebarsApplicationMixin(ApplicationV2
     const form = this.element;
     const dc = parseInt(form.querySelector('[name="dc"]').value) || 10;
     const dcVisible = form.querySelector('[name="dcVisible"]').checked;
-    const mode = form.querySelector('[name="mode"]').value;
+    const mode = form.querySelector('[name="mode"]:checked')?.value ?? "individual";
     const requiredSuccesses = parseInt(form.querySelector('[name="requiredSuccesses"]')?.value) || 1;
 
     const allPlayers = SavingThrowSystem.getPlayerCharacters();
@@ -150,5 +185,34 @@ export class SavingThrowRequest extends HandlebarsApplicationMixin(ApplicationV2
 
   static #onSelectNone(event, target) {
     this.element.querySelectorAll('[name="player"]').forEach(cb => cb.checked = false);
+  }
+
+  static async #onSetResult(event, target) {
+    const userId = target.dataset.userId;
+    const player = SavingThrowSystem.session?.players.find(p => p.userId === userId);
+    if (!player) return;
+
+    const label = game.i18n.format("SAVING_THROW.ManualLabel", {
+      name: Handlebars.escapeExpression(player.characterName)
+    });
+    const value = await foundry.applications.api.DialogV2.prompt({
+      window: { title: "SAVING_THROW.ManualTitle", icon: "fas fa-pen" },
+      content: `<div class="form-group">
+        <label for="st-manual-result">${label}</label>
+        <input id="st-manual-result" type="number" name="result" value="${player.result ?? ""}" autofocus />
+      </div>`,
+      ok: { callback: (event, button) => button.form.elements.result.valueAsNumber },
+      rejectClose: false
+    });
+
+    if (Number.isFinite(value)) SavingThrowSystem.setManualResult(userId, value);
+  }
+
+  static #onToggleExclude(event, target) {
+    SavingThrowSystem.toggleExcluded(target.dataset.userId);
+  }
+
+  static #onResolveNow(event, target) {
+    SavingThrowSystem.resolveNow();
   }
 }

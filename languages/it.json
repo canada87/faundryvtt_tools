@@ -390,8 +390,13 @@
     "ResultsTitle": "Risultati Tiro Salvezza",
     "DC": "CD",
     "ShowDC": "Mostra CD ai giocatori",
-    "Visible": "visibile",
-    "Hidden": "nascosta",
+    "DCVisible": "CD visibile",
+    "DCHidden": "CD nascosta",
+    "RolledCount": "{rolled} di {total} hanno tirato",
+    "GroupSuccesses": "Successi del gruppo",
+    "SuccessesOfRequired": "{count} / {required} necessari",
+    "OutlookReached": "Soglia già raggiunta",
+    "OutlookUnreachable": "Soglia non più raggiungibile",
     "ModeLabel": "Modalità",
     "Players": "Giocatori",
     "SelectAll": "Tutti",
@@ -406,8 +411,16 @@
     "Understood": "Capito",
     "Waiting": "In attesa dei tiri...",
     "RequiredSuccesses": "Successi Richiesti",
-    "RequiredSuccessesShort": "richiesti",
     "RequiredCount": "{count} richiesti",
+    "Excluded": "escluso",
+    "Exclude": "Escludi da questo tiro",
+    "Include": "Includi di nuovo",
+    "SetResult": "Inserisci risultato a mano",
+    "ManualTag": "Inserito dal GM",
+    "ManualTitle": "Risultato Manuale",
+    "ManualLabel": "Risultato di {name}",
+    "ResolveNow": "Chiudi Ora",
+    "ResolveNowHint": "Chiudi con i risultati raccolti: chi non ha tirato viene escluso",
     "Mode": {
       "individual": "Individuale",
       "groupAny": "Gruppo (Almeno Uno)",
@@ -415,13 +428,21 @@
       "groupAll": "Gruppo (Tutti)",
       "groupCustom": "Gruppo (Soglia Personalizzata)"
     },
+    "ModeShort": {
+      "individual": "Individuale",
+      "groupAny": "Almeno uno",
+      "groupMajority": "Maggioranza",
+      "groupAll": "Tutti",
+      "groupCustom": "Soglia"
+    },
     "Chat": {
       "RollNow": "Effettua il tuo tiro salvezza!"
     },
     "Warn": {
       "NoPlayersSelected": "Seleziona almeno un giocatore.",
       "NoPlayers": "Nessun giocatore attivo con personaggio assegnato trovato.",
-      "SessionActive": "Una sessione di tiro salvezza è già attiva."
+      "SessionActive": "Una sessione di tiro salvezza è già attiva.",
+      "NothingToResolve": "Nessun risultato ancora: annulla la richiesta."
     },
     "Info": {
       "RollRecorded": "Tiro registrato: {result}"

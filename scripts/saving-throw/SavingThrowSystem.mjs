@@ -52,7 +52,9 @@ export class SavingThrowSystem {
         characterName: p.characterName,
         characterImg: p.characterImg,
         result: null,
-        success: null
+        success: null,
+        manual: false,
+        excluded: false
       })),
       resolved: false,
       groupSuccess: null
@@ -111,7 +113,7 @@ export class SavingThrowSystem {
 
     // Find the player in our session who hasn't rolled yet
     const player = SavingThrowSystem.#session.players.find(
-      p => p.userId === authorId && p.result === null
+      p => p.userId === authorId && p.result === null && !p.excluded
     );
     if (!player) return;
 
@@ -128,12 +130,74 @@ export class SavingThrowSystem {
       dcVisible: SavingThrowSystem.#session.dcVisible
     });
 
-    Hooks.call("savingThrowUpdate");
+    if (!SavingThrowSystem.#checkCompletion()) Hooks.call("savingThrowUpdate");
+  }
 
-    // Check if all players have rolled
-    if (SavingThrowSystem.#session.players.every(p => p.result !== null)) {
-      SavingThrowSystem.#resolveSession();
+  /* ---------------------------------------- */
+  /*  GM: Manual controls                      */
+  /* ---------------------------------------- */
+
+  /**
+   * Set (or override) a player's result by hand, e.g. for a roll made at the table.
+   */
+  static setManualResult(userId, value) {
+    const session = SavingThrowSystem.#session;
+    if (!game.user.isGM || !session || session.resolved) return;
+    const player = session.players.find(p => p.userId === userId);
+    if (!player || !Number.isFinite(value)) return;
+
+    player.result = value;
+    player.success = value >= session.dc;
+    player.manual = true;
+    player.excluded = false;
+
+    if (!SavingThrowSystem.#checkCompletion()) Hooks.call("savingThrowUpdate");
+  }
+
+  /**
+   * Exclude a player from the session (or include them again).
+   * Excluded players are ignored by roll capture and by the group count.
+   */
+  static toggleExcluded(userId) {
+    const session = SavingThrowSystem.#session;
+    if (!game.user.isGM || !session || session.resolved) return;
+    const player = session.players.find(p => p.userId === userId);
+    if (!player) return;
+
+    player.excluded = !player.excluded;
+
+    if (!SavingThrowSystem.#checkCompletion()) Hooks.call("savingThrowUpdate");
+  }
+
+  /**
+   * Close the session with the results collected so far.
+   * Players who haven't rolled yet are excluded.
+   */
+  static resolveNow() {
+    const session = SavingThrowSystem.#session;
+    if (!game.user.isGM || !session || session.resolved) return;
+
+    const participants = session.players.filter(p => !p.excluded);
+    if (!participants.some(p => p.result !== null)) {
+      ui.notifications.warn(game.i18n.localize("SAVING_THROW.Warn.NothingToResolve"));
+      return;
     }
+
+    for (const p of participants) {
+      if (p.result === null) p.excluded = true;
+    }
+    SavingThrowSystem.#resolveSession();
+  }
+
+  /**
+   * Resolve the session if every non-excluded player has a result.
+   * @returns {boolean} true if the session was resolved
+   */
+  static #checkCompletion() {
+    const participants = SavingThrowSystem.#session.players.filter(p => !p.excluded);
+    if (!participants.length || participants.some(p => p.result === null)) return false;
+    SavingThrowSystem.#resolveSession();
+    return true;
   }
 
   /* ---------------------------------------- */
@@ -145,26 +209,12 @@ export class SavingThrowSystem {
     if (!session) return;
 
     session.resolved = true;
-    const successes = session.players.filter(p => p.success).length;
-    const total = session.players.length;
-
-    switch (session.mode) {
-      case "individual":
-        session.groupSuccess = null;
-        break;
-      case "groupAny":
-        session.groupSuccess = successes >= 1;
-        break;
-      case "groupMajority":
-        session.groupSuccess = successes >= Math.ceil(total / 2);
-        break;
-      case "groupAll":
-        session.groupSuccess = successes === total;
-        break;
-      case "groupCustom":
-        session.groupSuccess = successes >= (session.requiredSuccesses || 1);
-        break;
-    }
+    const participants = session.players.filter(p => !p.excluded);
+    const successes = participants.filter(p => p.success).length;
+    const required = SavingThrowSystem.requiredSuccessesFor(
+      session.mode, participants.length, session.requiredSuccesses
+    );
+    session.groupSuccess = required === null ? null : successes >= required;
 
     // Remove the hook
     if (SavingThrowSystem.#hookId !== null) {
@@ -191,6 +241,13 @@ export class SavingThrowSystem {
       <ul class="st-results-list">`;
 
     for (const p of session.players) {
+      if (p.excluded) {
+        html += `<li class="st-result-entry excluded">
+          <i class="fas fa-user-slash"></i>
+          <strong>${p.characterName}</strong>: ${game.i18n.localize("SAVING_THROW.Excluded")}
+        </li>`;
+        continue;
+      }
       const icon = p.success ? "fa-check" : "fa-times";
       const cls = p.success ? "success" : "failure";
       const label = p.success
@@ -206,8 +263,9 @@ export class SavingThrowSystem {
 
     // Group result (if not individual mode)
     if (session.mode !== "individual" && session.groupSuccess !== null) {
-      const successes = session.players.filter(p => p.success).length;
-      const total = session.players.length;
+      const participants = session.players.filter(p => !p.excluded);
+      const successes = participants.filter(p => p.success).length;
+      const total = participants.length;
       const modeLabel = game.i18n.localize(`SAVING_THROW.Mode.${session.mode}`);
       const groupLabel = session.groupSuccess
         ? game.i18n.localize("SAVING_THROW.GroupSuccess")
@@ -243,7 +301,8 @@ export class SavingThrowSystem {
       players: session.players.map(p => ({
         characterName: p.characterName,
         result: p.result,
-        success: p.success
+        success: p.success,
+        excluded: p.excluded
       })),
       targetUserIds: session.players.map(p => p.userId)
     });
@@ -314,6 +373,13 @@ export class SavingThrowSystem {
   static #showResultsPopup(data) {
     let playersHtml = "";
     for (const p of data.players) {
+      if (p.excluded) {
+        playersHtml += `<div class="st-player-row excluded">
+          <span class="st-player-name">${p.characterName}</span>
+          <span class="st-tag excluded">${game.i18n.localize("SAVING_THROW.Excluded")}</span>
+        </div>`;
+        continue;
+      }
       const icon = p.success ? "fa-check" : "fa-times";
       const cls = p.success ? "success" : "failure";
       playersHtml += `<div class="st-player-row rolled ${cls}">
@@ -325,8 +391,9 @@ export class SavingThrowSystem {
 
     let groupHtml = "";
     if (data.mode !== "individual" && data.groupSuccess !== null) {
-      const successes = data.players.filter(p => p.success).length;
-      const total = data.players.length;
+      const participants = data.players.filter(p => !p.excluded);
+      const successes = participants.filter(p => p.success).length;
+      const total = participants.length;
       const modeLabel = game.i18n.localize(`SAVING_THROW.Mode.${data.mode}`);
       const groupLabel = data.groupSuccess
         ? game.i18n.localize("SAVING_THROW.GroupSuccess")
@@ -366,6 +433,23 @@ export class SavingThrowSystem {
 
   static get session() {
     return SavingThrowSystem.#session;
+  }
+
+  /**
+   * Number of successes the group needs for a given mode.
+   * @param {string} mode
+   * @param {number} total - participants (excluded players don't count)
+   * @param {number|null} custom - threshold for groupCustom
+   * @returns {number|null} null for individual mode
+   */
+  static requiredSuccessesFor(mode, total, custom) {
+    switch (mode) {
+      case "groupAny": return 1;
+      case "groupMajority": return Math.ceil(total / 2);
+      case "groupAll": return total;
+      case "groupCustom": return custom || 1;
+      default: return null;
+    }
   }
 
   static get hasActiveSession() {

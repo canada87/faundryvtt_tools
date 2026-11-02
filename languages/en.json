@@ -390,8 +390,13 @@
     "ResultsTitle": "Saving Throw Results",
     "DC": "DC",
     "ShowDC": "Show DC to players",
-    "Visible": "visible",
-    "Hidden": "hidden",
+    "DCVisible": "DC visible",
+    "DCHidden": "DC hidden",
+    "RolledCount": "{rolled} of {total} rolled",
+    "GroupSuccesses": "Group successes",
+    "SuccessesOfRequired": "{count} / {required} needed",
+    "OutlookReached": "Threshold already reached",
+    "OutlookUnreachable": "Threshold can no longer be reached",
     "ModeLabel": "Mode",
     "Players": "Players",
     "SelectAll": "All",
@@ -406,8 +411,16 @@
     "Understood": "Understood",
     "Waiting": "Waiting for rolls...",
     "RequiredSuccesses": "Required Successes",
-    "RequiredSuccessesShort": "required",
     "RequiredCount": "{count} required",
+    "Excluded": "excluded",
+    "Exclude": "Exclude from this roll",
+    "Include": "Include again",
+    "SetResult": "Enter result manually",
+    "ManualTag": "Entered by the GM",
+    "ManualTitle": "Manual Result",
+    "ManualLabel": "Result for {name}",
+    "ResolveNow": "Close Now",
+    "ResolveNowHint": "Close with the results so far: players who haven't rolled are excluded",
     "Mode": {
       "individual": "Individual",
       "groupAny": "Group (Any Success)",
@@ -415,13 +428,21 @@
       "groupAll": "Group (All Must Succeed)",
       "groupCustom": "Group (Custom Threshold)"
     },
+    "ModeShort": {
+      "individual": "Individual",
+      "groupAny": "Any one",
+      "groupMajority": "Majority",
+      "groupAll": "All",
+      "groupCustom": "Threshold"
+    },
     "Chat": {
       "RollNow": "Make your saving throw roll!"
     },
     "Warn": {
       "NoPlayersSelected": "Select at least one player.",
       "NoPlayers": "No active players with assigned characters found.",
-      "SessionActive": "A saving throw session is already active."
+      "SessionActive": "A saving throw session is already active.",
+      "NothingToResolve": "No results yet: cancel the request instead."
     },
     "Info": {
       "RollRecorded": "Roll recorded: {result}"
