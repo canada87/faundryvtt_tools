@@ -3,7 +3,7 @@ import { LightingSystem } from "./LightingSystem.mjs";
 /**
  * Adds a "light presets" button to the Token HUD (the context menu shown
  * around a token on right-click). Players only see the presets the GM
- * selected in the Lighting Control; the GM sees all of them.
+ * assigned to them (or to all players); the GM sees all of them.
  */
 export class TokenHudLighting {
 

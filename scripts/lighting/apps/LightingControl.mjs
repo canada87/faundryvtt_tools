@@ -1,5 +1,6 @@
 import { MODULE_ID } from "../../shared/constants.mjs";
 import { LightingSystem } from "../LightingSystem.mjs";
+import { LightingDialogs } from "./LightingDialogs.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -26,10 +27,15 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
       turnOff: LightingControl.#onTurnOff,
       applyCustom: LightingControl.#onApplyCustom,
       applyDarkness: LightingControl.#onApplyDarkness,
-      togglePlayerPreset: LightingControl.#onTogglePlayerPreset,
+      newPreset: LightingControl.#onNewPreset,
+      editPreset: LightingControl.#onEditPreset,
+      editPresetAccess: LightingControl.#onEditPresetAccess,
       setDarknessQuick: LightingControl.#onSetDarknessQuick
     }
   };
+
+  /** Values typed in the custom inputs, kept across re-renders. */
+  #customValues = null;
 
   static PARTS = {
     control: {
@@ -44,14 +50,35 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext(options) {
     const presets = LightingSystem.getPresets();
     const darknessLevels = game.settings.get(MODULE_ID, "lightingDarknessLevels");
-    const playerIds = new Set(LightingSystem.getPlayerPresetIds());
 
     return {
-      presets: presets.map((p, i) => ({ ...p, index: i, forPlayers: playerIds.has(p.id) })),
+      presets: presets.map((p, i) => {
+        const access = LightingDialogs.describeAccess(p.id);
+        return { ...p, index: i, accessState: access.state, accessText: access.text };
+      }),
       hasPresets: presets.length > 0,
       darknessLevels,
       hasDarknessLevels: darknessLevels.length > 0
     };
+  }
+
+  /** Presets change while the panel is open (it re-renders on setting change): keep typed values. */
+  async _preRender(context, options) {
+    await super._preRender(context, options);
+    if (!this.element) return;
+    this.#customValues = Object.fromEntries(
+      ["custom-bright", "custom-dim", "custom-angle", "darkness-select"]
+        .map(id => [id, this.element.querySelector(`#${id}`)?.value])
+    );
+  }
+
+  _onRender(context, options) {
+    super._onRender(context, options);
+    if (!this.#customValues) return;
+    for (const [id, value] of Object.entries(this.#customValues)) {
+      const input = this.element.querySelector(`#${id}`);
+      if (input && value !== undefined) input.value = value;
+    }
   }
 
   /* ---------------------------------------- */
@@ -89,25 +116,31 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
     await LightingSystem.updateTokenLight(bright, dim, angle);
   }
 
-  /**
-   * Toggle whether a preset is offered to players in their token HUD.
-   * Updates the button in place so typed custom values are not lost to a re-render.
-   */
-  static async #onTogglePlayerPreset(event, target) {
+  /** Create a preset, pre-filled with the custom values when typed. */
+  static async #onNewPreset() {
+    const el = this.element;
+    const defaults = {};
+    for (const key of ["bright", "dim", "angle"]) {
+      const value = el.querySelector(`#custom-${key}`)?.value;
+      if (value !== "" && value !== undefined) defaults[key] = Number(value);
+    }
+    await LightingDialogs.editPreset(null, defaults);
+  }
+
+  static async #onEditPreset(event, target) {
+    const preset = LightingControl.#presetFromTarget(target);
+    if (preset) await LightingDialogs.editPreset(preset);
+  }
+
+  /** Choose which players get the preset in their token HUD. */
+  static async #onEditPresetAccess(event, target) {
+    const preset = LightingControl.#presetFromTarget(target);
+    if (preset?.id) await LightingDialogs.editAccess(preset);
+  }
+
+  static #presetFromTarget(target) {
     const index = Number(target.closest("[data-preset-index]").dataset.presetIndex);
-    const preset = LightingSystem.getPresets()[index];
-    if (!preset?.id) return;
-
-    const ids = new Set(LightingSystem.getPlayerPresetIds());
-    if (ids.has(preset.id)) ids.delete(preset.id);
-    else ids.add(preset.id);
-
-    await game.settings.set(MODULE_ID, "lightingPlayerPresets", [...ids]);
-
-    const enabled = ids.has(preset.id);
-    target.classList.toggle("active", enabled);
-    target.setAttribute("aria-pressed", String(enabled));
-    target.querySelector("i").className = enabled ? "fas fa-eye" : "fas fa-eye-slash";
+    return LightingSystem.getPresets()[index];
   }
 
   /** Day (0) / night (1) shortcut buttons. */

@@ -1,4 +1,5 @@
 import { MODULE_ID } from "../../shared/constants.mjs";
+import { LightingSystem } from "../LightingSystem.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -124,23 +125,11 @@ export class LightingSettings extends HandlebarsApplicationMixin(ApplicationV2) 
 
     const presets = Object.values(data.presets || {})
       .filter(p => p.label?.trim())
-      .map(p => ({
-        id: p.id || foundry.utils.randomID(),
-        label: p.label.trim(),
-        icon: p.icon?.trim() || "fas fa-lightbulb",
-        bright: Number(p.bright) || 0,
-        dim: Number(p.dim) || 0,
-        angle: Number(p.angle) || 360
-      }));
+      .map(p => LightingSystem.normalizePreset(p));
     await game.settings.set(MODULE_ID, "lightingPresets", presets);
 
-    // Drop player-visibility entries for presets that no longer exist
-    const validIds = new Set(presets.map(p => p.id));
-    const playerIds = game.settings.get(MODULE_ID, "lightingPlayerPresets");
-    const kept = playerIds.filter(id => validIds.has(id));
-    if (kept.length !== playerIds.length) {
-      await game.settings.set(MODULE_ID, "lightingPlayerPresets", kept);
-    }
+    // Drop player access entries for presets that no longer exist
+    await LightingSystem.pruneAccess(presets.map(p => p.id));
 
     const darknessLevels = Object.values(data.darknessLevels || {})
       .filter(d => d.label?.trim())

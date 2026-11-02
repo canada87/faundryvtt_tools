@@ -5,6 +5,16 @@ import { TokenHudLighting } from "./TokenHudLighting.mjs";
 import { LightingControl } from "./apps/LightingControl.mjs";
 import { LightingSettings } from "./apps/LightingSettings.mjs";
 
+/**
+ * Re-render the open lighting UIs after presets or player access change,
+ * so a player's token HUD picks up a newly assigned preset right away.
+ */
+function refreshLightingUI() {
+  foundry.applications.instances.get("lighting-control")?.render();
+  const hud = canvas?.tokens?.hud;
+  if (hud?.rendered && hud.object) hud.render();
+}
+
 class LightingSettingsLauncher extends FormApplication {
   constructor(...args) {
     super(...args);
@@ -38,7 +48,8 @@ export function initLighting() {
     scope: "world",
     config: false,
     type: Array,
-    default: LightingSystem.DEFAULT_PRESETS
+    default: LightingSystem.DEFAULT_PRESETS,
+    onChange: refreshLightingUI
   });
 
   game.settings.register(MODULE_ID, "lightingDarknessLevels", {
@@ -49,12 +60,23 @@ export function initLighting() {
     default: LightingSystem.DEFAULT_DARKNESS_LEVELS
   });
 
+  // Legacy: ids of presets visible to every player. Migrated into lightingPresetAccess at ready.
   game.settings.register(MODULE_ID, "lightingPlayerPresets", {
     name: "LIGHTING.PlayerPresets",
     scope: "world",
     config: false,
     type: Array,
     default: []
+  });
+
+  // { [presetId]: { all: boolean, users: string[] } }
+  game.settings.register(MODULE_ID, "lightingPresetAccess", {
+    name: "LIGHTING.PlayerPresets",
+    scope: "world",
+    config: false,
+    type: Object,
+    default: {},
+    onChange: refreshLightingUI
   });
 
   if (!game.settings.get(MODULE_ID, "lightingEnabled")) return;
@@ -80,7 +102,7 @@ export function initLighting() {
 
   /* ---- Hooks ---- */
 
-  Hooks.once("ready", () => LightingSystem.migratePresetIds());
+  Hooks.once("ready", () => LightingSystem.migratePresets());
   Hooks.on("renderTokenHUD", TokenHudLighting.onRender);
 
   /* ---- Public API ---- */

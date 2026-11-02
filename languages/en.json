@@ -285,8 +285,22 @@
     "PresetsHint": "Click a preset to apply it to selected tokens. Custom values above take priority.",
     "HudTooltip": "Light presets",
     "PlayerPresets": "Presets available to players",
-    "PlayerPresetsHint": "Use the eye button to choose which presets players see when they right-click their own token.",
-    "PlayerToggleTooltip": "Show this preset to players in their token menu",
+    "PlayerPresetsHint": "Use the people button to choose which players get each preset in their token menu (e.g. the torch to one, the candle to another). The pencil edits or deletes the preset.",
+    "NewPreset": "New",
+    "NewPresetTooltip": "Create a light preset. Values typed in Custom Light are used as a starting point.",
+    "NewPresetTitle": "New Light Preset",
+    "EditPresetTitle": "Edit Light Preset",
+    "NoPresets": "No presets yet: create one with the New button.",
+    "PresetLabelPlaceholder": "Torch",
+    "ConfirmDelete": "Delete the preset <strong>{name}</strong>?",
+    "AccessTitle": "Show Preset to Players",
+    "AccessDialogHint": "Who can use <strong>{name}</strong> from their token menu?",
+    "AccessLegend": "Show this preset to players",
+    "AccessAllPlayers": "All players",
+    "AccessAll": "Visible to all players",
+    "AccessNone": "Not visible to players (click to choose)",
+    "AccessSome": "Visible to: {names}",
+    "NoPlayers": "There are no players in this world.",
     "TurnOff": "Turn Off Light",
     "StaysOpen": "This window stays open after each action.",
     "Save": "Save",
@@ -302,7 +316,8 @@
     "AddDarkness": "Add Level",
     "RemoveDarkness": "Remove",
     "Warn": {
-      "NoToken": "Select at least one token."
+      "NoToken": "Select at least one token.",
+      "NoLabel": "Give the preset a name."
     },
     "Error": {
       "NoScene": "No current scene found."

@@ -285,8 +285,22 @@
     "PresetsHint": "Clicca un preset per applicarlo ai token selezionati. I valori personalizzati sopra hanno priorità.",
     "HudTooltip": "Preset luce",
     "PlayerPresets": "Preset disponibili ai giocatori",
-    "PlayerPresetsHint": "Usa il pulsante occhio per scegliere quali preset i giocatori vedono cliccando col tasto destro sul proprio token.",
-    "PlayerToggleTooltip": "Mostra questo preset ai giocatori nel menu del token",
+    "PlayerPresetsHint": "Usa il pulsante giocatori per scegliere chi ha ogni preset nel menu del proprio token (es. la torcia a uno, la candela a un altro). La matita modifica o elimina il preset.",
+    "NewPreset": "Nuovo",
+    "NewPresetTooltip": "Crea un preset luce. I valori scritti in Luce Personalizzata vengono usati come base.",
+    "NewPresetTitle": "Nuovo Preset Luce",
+    "EditPresetTitle": "Modifica Preset Luce",
+    "NoPresets": "Nessun preset: creane uno con il pulsante Nuovo.",
+    "PresetLabelPlaceholder": "Torcia",
+    "ConfirmDelete": "Eliminare il preset <strong>{name}</strong>?",
+    "AccessTitle": "Mostra Preset ai Giocatori",
+    "AccessDialogHint": "Chi può usare <strong>{name}</strong> dal menu del proprio token?",
+    "AccessLegend": "Mostra questo preset ai giocatori",
+    "AccessAllPlayers": "Tutti i giocatori",
+    "AccessAll": "Visibile a tutti i giocatori",
+    "AccessNone": "Non visibile ai giocatori (clicca per scegliere)",
+    "AccessSome": "Visibile a: {names}",
+    "NoPlayers": "Non ci sono giocatori in questo mondo.",
     "TurnOff": "Spegni Luce",
     "StaysOpen": "La finestra rimane aperta dopo ogni azione.",
     "Save": "Salva",
@@ -302,7 +316,8 @@
     "AddDarkness": "Aggiungi Livello",
     "RemoveDarkness": "Rimuovi",
     "Warn": {
-      "NoToken": "Seleziona almeno un token."
+      "NoToken": "Seleziona almeno un token.",
+      "NoLabel": "Dai un nome al preset."
     },
     "Error": {
       "NoScene": "Nessuna scena corrente trovata."

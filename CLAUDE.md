@@ -54,6 +54,14 @@ scripts/
     JournalStylesSystem.mjs — Logica core: nodo ProseMirror "fvttJournalBox", estensione schema, menu editor
     apps/
       JournalStylesReference.mjs — UI GM: cheatsheet con anteprima e HTML copiabile per ogni riquadro
+  lighting/
+    index.mjs              — Init controllo luci (settings, hook HUD token, API)
+    LightingSystem.mjs     — Logica core: preset (CRUD), accesso per giocatore (setting lightingPresetAccess), luce token, oscurità
+    TokenHudLighting.mjs   — Pulsante preset nell'HUD del token (i giocatori vedono solo i preset assegnati a loro)
+    apps/
+      LightingControl.mjs  — UI GM: oscurità, valori custom, preset (applica, crea, modifica, a chi mostrarli)
+      LightingDialogs.mjs  — Dialoghi: editor preset e scelta giocatori
+      LightingSettings.mjs — UI GM (menu impostazioni): tabella preset e livelli oscurità
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
@@ -62,6 +70,7 @@ styles/
   mindmap.css              — Stili lavagna mind map
   resources.css            — Stili HUD risorse e gestore
   scene-nav.css            — Stili navigatore scene ed editor collegamenti
+  lighting.css             — Stili controllo luci, dialoghi preset e palette HUD token
   journal-styles.css       — Riquadri, pill, tabelle e banner per i journal (scoped su classe body)
 templates/
   hub-menu.hbs             — Template hub

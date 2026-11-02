@@ -88,15 +88,35 @@
   gap: 2px;
 }
 
-.lighting.lighting-control .player-toggle-btn {
+.lighting.lighting-control .presets-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.lighting.lighting-control .new-preset-btn {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  padding: 2px 8px;
+}
+
+.lighting.lighting-control .player-toggle-btn,
+.lighting.lighting-control .preset-edit-btn {
   flex: 0 0 32px;
   padding: 0;
+}
+
+.lighting.lighting-control .player-toggle-btn.none {
   opacity: 0.6;
 }
 
-.lighting.lighting-control .player-toggle-btn.active {
-  opacity: 1;
+.lighting.lighting-control .player-toggle-btn.all {
   background: rgba(60, 140, 60, 0.25);
+}
+
+.lighting.lighting-control .player-toggle-btn.some {
+  background: rgba(60, 110, 180, 0.25);
 }
 
 .lighting.lighting-control .preset-btn {
@@ -326,4 +346,115 @@
 .lighting.lighting-settings .submit-btn {
   margin-top: 8px;
   align-self: flex-end;
+}
+
+/* ============================================ */
+/*  Preset editor / player access dialogs       */
+/* ============================================ */
+
+.lighting.lighting-dialog-window .lighting-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lighting.lighting-dialog-window .icon-preview {
+  flex: 0 0 24px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.lighting.lighting-dialog-window .icon-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.lighting.lighting-dialog-window .icon-choice {
+  flex: 0 0 30px;
+  height: 28px;
+  padding: 0;
+  line-height: 1;
+}
+
+.lighting.lighting-dialog-window .light-values {
+  display: flex;
+  gap: 8px;
+}
+
+.lighting.lighting-dialog-window .light-values .form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+}
+
+.lighting.lighting-dialog-window .light-values label {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.lighting.lighting-dialog-window .light-values input {
+  text-align: center;
+}
+
+.lighting.lighting-dialog-window .access-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 4px 0 0;
+}
+
+.lighting.lighting-dialog-window .player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.lighting.lighting-dialog-window .player-list.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.lighting.lighting-dialog-window .player-choice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.lighting.lighting-dialog-window .player-choice:hover {
+  background: rgba(127, 127, 127, 0.15);
+}
+
+.lighting.lighting-dialog-window .all-choice {
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border-light-tertiary, #ccc);
+  padding-bottom: 4px;
+  margin-bottom: 2px;
+}
+
+.lighting.lighting-dialog-window .player-color {
+  flex: 0 0 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.lighting.lighting-dialog-window .player-name {
+  flex: 1;
+}
+
+.lighting.lighting-dialog-window .player-choice small {
+  opacity: 0.7;
+}
+
+.lighting.lighting-dialog-window .hint {
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
