@@ -1,100 +1,98 @@
 <div class="lighting-control-content">
 
   <!-- ========== Darkness ========== -->
-  <div class="darkness-section">
-    <label><strong>{{localize "LIGHTING.Darkness"}}</strong></label>
+  <section class="lc-section">
+    <h3 class="lc-heading"><i class="fas fa-circle-half-stroke" aria-hidden="true"></i> {{localize "LIGHTING.Darkness"}}</h3>
     <div class="darkness-quick">
-      <button type="button" data-action="setDarknessQuick" data-darkness="0" class="day-btn">
-        <i class="fas fa-sun"></i> {{localize "LIGHTING.Day"}}
+      <button type="button" data-action="setDarknessQuick" data-darkness="0" class="lc-btn day-btn">
+        <i class="fas fa-sun" aria-hidden="true"></i> {{localize "LIGHTING.Day"}}
       </button>
-      <button type="button" data-action="setDarknessQuick" data-darkness="1" class="night-btn">
-        <i class="fas fa-moon"></i> {{localize "LIGHTING.Night"}}
+      <button type="button" data-action="setDarknessQuick" data-darkness="1" class="lc-btn night-btn">
+        <i class="fas fa-moon" aria-hidden="true"></i> {{localize "LIGHTING.Night"}}
       </button>
     </div>
     {{#if hasDarknessLevels}}
       <div class="darkness-row">
-        <select id="darkness-select">
+        <select id="darkness-select" aria-label="{{localize "LIGHTING.Darkness"}}">
           {{#each darknessLevels}}
             <option value="{{this.value}}">{{this.label}}</option>
           {{/each}}
         </select>
-        <button type="button" data-action="applyDarkness" class="apply-darkness-btn">
-          <i class="fas fa-moon"></i> {{localize "LIGHTING.ApplyDarkness"}}
+        <button type="button" data-action="applyDarkness" class="lc-btn">
+          {{localize "LIGHTING.ApplyDarkness"}}
         </button>
       </div>
     {{/if}}
-  </div>
-
-  <hr>
+  </section>
 
   <!-- ========== Custom overrides ========== -->
-  <div class="custom-section">
-    <label><strong>{{localize "LIGHTING.CustomValues"}}</strong></label>
-    <small class="lighting-hint">{{localize "LIGHTING.CustomHint"}}</small>
+  <section class="lc-section">
+    <h3 class="lc-heading"><i class="fas fa-sliders-h" aria-hidden="true"></i> {{localize "LIGHTING.CustomValues"}}</h3>
+    <p class="lighting-hint">{{localize "LIGHTING.CustomHint"}}</p>
     <div class="custom-inputs">
-      <div class="form-group">
-        <label>Bright</label>
-        <input type="number" id="custom-bright" placeholder="--" min="0" step="1" />
-      </div>
-      <div class="form-group">
-        <label>Dim</label>
-        <input type="number" id="custom-dim" placeholder="--" min="0" step="1" />
-      </div>
-      <div class="form-group">
-        <label>Angle</label>
-        <input type="number" id="custom-angle" placeholder="--" min="0" max="360" step="1" />
-      </div>
+      <label class="custom-field">
+        <span>Bright</span>
+        <input type="number" id="custom-bright" placeholder="–" min="0" step="1" />
+      </label>
+      <label class="custom-field">
+        <span>Dim</span>
+        <input type="number" id="custom-dim" placeholder="–" min="0" step="1" />
+      </label>
+      <label class="custom-field">
+        <span>Angle</span>
+        <input type="number" id="custom-angle" placeholder="–" min="0" max="360" step="1" />
+      </label>
     </div>
-    <button type="button" data-action="applyCustom" class="apply-custom-btn">
-      <i class="fas fa-sliders-h"></i> {{localize "LIGHTING.ApplyCustom"}}
+    <button type="button" data-action="applyCustom" class="lc-btn lc-btn-block">
+      <i class="fas fa-check" aria-hidden="true"></i> {{localize "LIGHTING.ApplyCustom"}}
     </button>
-  </div>
-
-  <hr>
+  </section>
 
   <!-- ========== Presets ========== -->
-  <div class="presets-section">
-    <div class="presets-header">
-      <label><strong>{{localize "LIGHTING.Presets"}}</strong></label>
-      <button type="button" data-action="newPreset" class="new-preset-btn"
-              data-tooltip="LIGHTING.NewPresetTooltip">
-        <i class="fas fa-plus"></i> {{localize "LIGHTING.NewPreset"}}
-      </button>
-    </div>
-    {{#if hasPresets}}
-      <small class="lighting-hint">{{localize "LIGHTING.PresetsHint"}}</small>
-      <small class="lighting-hint">{{localize "LIGHTING.PlayerPresetsHint"}}</small>
-    {{else}}
-      <small class="lighting-hint">{{localize "LIGHTING.NoPresets"}}</small>
-    {{/if}}
-    <div class="preset-buttons">
+  <section class="lc-section">
+    <h3 class="lc-heading"><i class="fas fa-lightbulb" aria-hidden="true"></i> {{localize "LIGHTING.Presets"}}</h3>
+    <p class="lighting-hint">
+      {{#if hasPresets}}{{localize "LIGHTING.PresetsHint"}} {{localize "LIGHTING.PlayerPresetsHint"}}
+      {{else}}{{localize "LIGHTING.NoPresets"}}{{/if}}
+    </p>
+
+    <div class="preset-grid">
       {{#each presets}}
-        <div class="preset-row" data-preset-index="{{this.index}}">
-          <button type="button" data-action="applyPreset" class="preset-btn">
-            <i class="{{this.icon}}"></i> {{this.label}}
-            <small>({{this.bright}}/{{this.dim}}/{{this.angle}}°)</small>
+        <div class="preset-card" data-preset-index="{{this.index}}">
+          <button type="button" data-action="applyPreset" class="preset-apply"
+                  data-tooltip="{{this.label}}">
+            <i class="preset-icon {{this.icon}}" aria-hidden="true"></i>
+            <span class="preset-text">
+              <span class="preset-name">{{this.label}}</span>
+              <span class="preset-values">{{this.bright}} / {{this.dim}} / {{this.angle}}°</span>
+            </span>
           </button>
-          <button type="button" data-action="editPresetAccess"
-                  class="player-toggle-btn {{this.accessState}}"
-                  data-tooltip="{{this.accessText}}">
-            {{#if (eq this.accessState "all")}}<i class="fas fa-users"></i>
-            {{else if (eq this.accessState "some")}}<i class="fas fa-user-check"></i>
-            {{else}}<i class="fas fa-eye-slash"></i>{{/if}}
-          </button>
-          <button type="button" data-action="editPreset" class="preset-edit-btn"
-                  data-tooltip="LIGHTING.EditPresetTitle">
-            <i class="fas fa-pen"></i>
-          </button>
+          <div class="preset-actions">
+            <button type="button" data-action="editPresetAccess"
+                    class="lc-icon-btn access-btn {{this.accessState}}"
+                    data-tooltip="{{this.accessText}}" aria-label="{{this.accessText}}">
+              {{#if (eq this.accessState "all")}}<i class="fas fa-users" aria-hidden="true"></i>
+              {{else if (eq this.accessState "some")}}<i class="fas fa-user-check" aria-hidden="true"></i>
+              {{else}}<i class="fas fa-eye-slash" aria-hidden="true"></i>{{/if}}
+            </button>
+            <button type="button" data-action="editPreset" class="lc-icon-btn"
+                    data-tooltip="LIGHTING.EditPresetTitle" aria-label="{{localize "LIGHTING.EditPresetTitle"}}">
+              <i class="fas fa-pen" aria-hidden="true"></i>
+            </button>
+          </div>
         </div>
       {{/each}}
-      <button type="button" data-action="turnOff" class="preset-btn off-btn">
-        <i class="fas fa-power-off"></i> {{localize "LIGHTING.TurnOff"}}
+      <button type="button" data-action="newPreset" class="preset-add"
+              data-tooltip="LIGHTING.NewPresetTooltip">
+        <i class="fas fa-plus" aria-hidden="true"></i> {{localize "LIGHTING.NewPreset"}}
       </button>
     </div>
-  </div>
 
-  <div class="lighting-note">
-    <small><i class="fas fa-info-circle"></i> {{localize "LIGHTING.StaysOpen"}}</small>
-  </div>
+    <button type="button" data-action="turnOff" class="lc-btn lc-btn-block lc-btn-danger">
+      <i class="fas fa-power-off" aria-hidden="true"></i> {{localize "LIGHTING.TurnOff"}}
+    </button>
+  </section>
+
+  <p class="lighting-note"><i class="fas fa-info-circle" aria-hidden="true"></i> {{localize "LIGHTING.StaysOpen"}}</p>
 
 </div>

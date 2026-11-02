@@ -19,7 +19,7 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
       resizable: true
     },
     position: {
-      width: 400,
+      width: 460,
       height: "auto"
     },
     actions: {
