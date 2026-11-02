@@ -91,18 +91,33 @@ export class JournalStylesSystem {
   }
 
   /**
-   * Extends Foundry's *global* default ProseMirror schema in place, once.
-   * This has to happen here rather than per-editor: collaborative editors
-   * (journal pages use collaborative editing) rebuild their final
-   * EditorState straight from `ProseMirror.defaultSchema` and ignore
-   * whatever `options.state` a `createProseMirrorEditor` hook swaps in —
-   * only `foundry.prosemirror.defaultSchema` itself reaches them.
+   * Extends Foundry's *global* default ProseMirror schema truly in place,
+   * once. Merely reassigning `foundry.prosemirror.defaultSchema` to a new
+   * Schema instance is not enough: Foundry's own save path
+   * (HTMLProseMirrorElement#_getValue -> ProseMirror.dom.serializeString)
+   * closes over the *original* schema object directly (a module-private
+   * variable), not the exported property, so a reassignment is invisible to
+   * it — the box would display fine but silently fail to persist on save.
+   *
+   * Instead we build a full replacement schema and copy *every* one of its
+   * own properties (nodes, marks, topNodeType, cached, spec, …) onto the
+   * live schema object, so every piece of Foundry code already holding a
+   * reference to it sees the change. ProseMirror's NodeType/MarkType
+   * instances also carry their own back-reference to "their" schema (used
+   * for identity checks like `Schema#node()`'s "Node type from different
+   * schema used" guard), compiled against the throwaway replacement — so
+   * those get re-pointed at the real, shared schema object afterward.
    * Call once, early (module init), before any editor can be created.
    */
   static installDefaultSchema() {
     const pm = JournalStylesSystem.#getProseMirror();
-    if (!pm?.defaultSchema || pm.defaultSchema.nodes[NODE_NAME]) return;
-    pm.defaultSchema = JournalStylesSystem.#extendSchema(pm.defaultSchema);
+    const schema = pm?.defaultSchema;
+    if (!schema || schema.nodes[NODE_NAME]) return;
+
+    const extended = JournalStylesSystem.#extendSchema(schema);
+    Object.assign(schema, extended);
+    for (const nodeType of Object.values(schema.nodes)) nodeType.schema = schema;
+    for (const markType of Object.values(schema.marks)) markType.schema = schema;
   }
 
   /**
