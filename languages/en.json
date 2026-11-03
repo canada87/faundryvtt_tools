@@ -882,6 +882,10 @@
       "MakePrivate": "Make private",
       "Private": "Private: only you and the GM see it",
       "HudAdd": "Add to bestiary",
+      "SheetColumn": "Sheet",
+      "EstimatesColumn": "Your estimates",
+      "EstimatePlaceholder": "Your estimate…",
+      "EstimateLabel": "Your estimate for {field}",
       "HudOpen": "Open in bestiary"
     },
     "Handouts": {

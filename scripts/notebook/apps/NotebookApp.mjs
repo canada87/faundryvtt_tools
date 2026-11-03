@@ -94,7 +94,10 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   /** Text being typed in the creature note box, kept across re-renders. */
   #noteDraft = { creatureId: null, text: "", shared: true };
 
-  /** Class of the text input focused when a re-render started. */
+  /** Estimates being typed, by "creatureId:fieldId", kept across re-renders. */
+  #estimateDrafts = new Map();
+
+  /** Selector of the text input focused when a re-render started. */
   #focused = null;
 
   /* ---------------------------------------- */
@@ -246,8 +249,12 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const editing = this.#editing;
     const nameKnown = NotebookSystem.canSee(c.nameVisibility, viewer);
     const imgKnown = NotebookSystem.canSee(c.imgVisibility, viewer);
+    const canEstimate = !game.user.isGM;
+    const estimates = NotebookSystem.getEstimates(c.id, viewer);
 
     const fields = c.fields.map(f => {
+      const fieldEstimates = estimates.get(f.id) ?? [];
+      const mine = fieldEstimates.find(e => e.mine);
       const visible = NotebookSystem.canSee(f.visibility, viewer);
       const showHint = f.level === "hint" && f.hint?.trim();
       let state = "hidden";
@@ -266,7 +273,10 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
         text,
         hint: editing ? f.hint : "",
         empty: !text?.trim(),
-        vis: editing ? this.#visButton(f.visibility, showHint ? "hint" : null) : null
+        vis: editing ? this.#visButton(f.visibility, showHint ? "hint" : null) : null,
+        // A player's own estimate sits in the input, not in the list
+        estimates: canEstimate ? fieldEstimates.filter(e => !e.mine) : fieldEstimates,
+        myEstimate: mine?.text ?? ""
       };
     });
 
@@ -289,7 +299,8 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
       } : null,
       fields,
       notes,
-      canWriteNotes: !game.user.isGM
+      canWriteNotes: !game.user.isGM,
+      canEstimate
     };
   }
 
@@ -363,6 +374,9 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
     this.#focused = null;
     if (active && this.element?.contains(active)) {
       this.#focused = [".nb-note-input", ".nb-search"].find(sel => active.matches(sel)) ?? null;
+      if (active.matches(".nb-estimate-input")) {
+        this.#focused = `.nb-estimate-input[data-field-id="${active.dataset.fieldId}"]`;
+      }
     }
   }
 
@@ -382,6 +396,20 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
       noteInput.addEventListener("input", () => { this.#noteDraft.text = noteInput.value; });
       noteShared?.addEventListener("change", () => { this.#noteDraft.shared = noteShared.checked; });
     }
+
+    // Players' estimates: saved when the input is left (or on Enter)
+    root.querySelectorAll(".nb-estimate-input").forEach(input => {
+      const key = `${this.creatureId}:${input.dataset.fieldId}`;
+      if (this.#estimateDrafts.has(key)) input.value = this.#estimateDrafts.get(key);
+      input.addEventListener("input", () => this.#estimateDrafts.set(key, input.value));
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") input.blur();
+      });
+      input.addEventListener("change", () => {
+        this.#estimateDrafts.delete(key);
+        NotebookSystem.setEstimate(this.creatureId, input.dataset.fieldId, input.value);
+      });
+    });
 
     if (this.#focused) {
       const input = root.querySelector(this.#focused);

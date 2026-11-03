@@ -197,6 +197,40 @@ export class NotebookSystem {
   }
 
   /* ---------------------------------------- */
+  /*  Field estimates (User flags)             */
+  /* ---------------------------------------- */
+
+  /**
+   * Players' guesses for each field of a creature, kept apart from the GM's
+   * values. Stored per player as `notebook.estimates.<creatureId>.<fieldId>`
+   * and visible to the whole party.
+   * @returns {Map<string, object[]>} fieldId → [{ userId, author, color, text, mine }]
+   */
+  static getEstimates(creatureId, viewer = game.user) {
+    const byField = new Map();
+    for (const user of this.getPlayers()) {
+      const estimates = user.getFlag(MODULE_ID, `notebook.estimates.${creatureId}`) ?? {};
+      for (const [fieldId, text] of Object.entries(estimates)) {
+        if (!text?.trim()) continue;
+        if (!byField.has(fieldId)) byField.set(fieldId, []);
+        byField.get(fieldId).push({
+          userId: user.id,
+          author: user.name,
+          color: user.color?.css ?? user.color,
+          text,
+          mine: user.id === viewer.id
+        });
+      }
+    }
+    return byField;
+  }
+
+  /** An empty text clears the current player's estimate. */
+  static async setEstimate(creatureId, fieldId, text) {
+    await game.user.setFlag(MODULE_ID, `notebook.estimates.${creatureId}.${fieldId}`, text?.trim() ?? "");
+  }
+
+  /* ---------------------------------------- */
   /*  Handouts (world setting, GM)             */
   /* ---------------------------------------- */
 

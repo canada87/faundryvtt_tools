@@ -180,6 +180,12 @@
               </div>
 
               <dl class="nb-fields">
+                <div class="nb-field nb-fields-head" aria-hidden="true">
+                  <span></span>
+                  <span>{{localize "NOTEBOOK.Bestiary.SheetColumn"}}</span>
+                  <span>{{localize "NOTEBOOK.Bestiary.EstimatesColumn"}}</span>
+                  <span></span>
+                </div>
                 {{#each creature.fields}}
                   <div class="nb-field nb-field-{{state}}">
                     <dt>{{label}}</dt>
@@ -193,6 +199,18 @@
                         <span class="nb-hint-value">≈ {{text}}</span>
                       {{else}}
                         <span class="nb-value">{{text}}</span>
+                      {{/if}}
+                    </dd>
+                    <dd class="nb-estimates">
+                      {{#each estimates}}
+                        <span class="nb-estimate" style="--author:{{color}}"><b>{{author}}</b> {{text}}</span>
+                      {{/each}}
+                      {{#if ../creature.canEstimate}}
+                        <input type="text" class="nb-estimate-input" data-field-id="{{id}}" value="{{myEstimate}}"
+                               placeholder="{{localize 'NOTEBOOK.Bestiary.EstimatePlaceholder'}}"
+                               aria-label="{{localize 'NOTEBOOK.Bestiary.EstimateLabel' field=label}}" />
+                      {{else}}
+                        {{#unless estimates.length}}<span class="nb-muted">—</span>{{/unless}}
                       {{/if}}
                     </dd>
                     {{#if vis}}

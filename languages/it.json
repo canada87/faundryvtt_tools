@@ -882,6 +882,10 @@
       "MakePrivate": "Rendi privato",
       "Private": "Privato: lo vedete solo tu e il GM",
       "HudAdd": "Aggiungi al bestiario",
+      "SheetColumn": "Scheda",
+      "EstimatesColumn": "Le vostre stime",
+      "EstimatePlaceholder": "La tua stima…",
+      "EstimateLabel": "La tua stima per {field}",
       "HudOpen": "Apri nel bestiario"
     },
     "Handouts": {
