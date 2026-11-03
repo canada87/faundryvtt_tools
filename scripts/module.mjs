@@ -13,6 +13,7 @@ import { initResources } from "./resources/index.mjs";
 import { initHexMap } from "./hexmap/index.mjs";
 import { initSceneNav } from "./scene-nav/index.mjs";
 import { initJournalStyles } from "./journal-styles/index.mjs";
+import { initNotebook } from "./notebook/index.mjs";
 
 /* ---------------------------------------- */
 /*  Settings menu launcher (FormApplication */
@@ -66,6 +67,7 @@ Hooks.once("init", () => {
   initHexMap();
   initSceneNav();
   initJournalStyles();
+  initNotebook();
 
   console.log("Faundryvtt Tools | Module initialized");
 });

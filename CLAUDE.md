@@ -62,6 +62,13 @@ scripts/
       LightingControl.mjs  — UI GM: oscurità, valori custom, preset (applica, crea, modifica, a chi mostrarli)
       LightingDialogs.mjs  — Dialoghi: editor preset e scelta giocatori
       LightingSettings.mjs — UI GM (menu impostazioni): tabella preset e livelli oscurità
+  notebook/
+    index.mjs              — Init taccuino giocatori (settings, keybinding Shift+B, pulsante controlli token, hook HUD, API)
+    NotebookSystem.mjs     — Logica core: appunti/post-it e note sulle creature nei flag User, handout e bestiario in setting world, visibilità {all, users}
+    TokenHudNotebook.mjs   — Pulsante GM nell'HUD del token: aggiunge la creatura (nome e immagine dall'attore) al bestiario
+    apps/
+      NotebookApp.mjs      — UI a forma di taccuino con linguette: Appunti, Bestiario (campi oscurati), Handout; il GM "visualizza come" un giocatore
+      NotebookDialogs.mjs  — Dialoghi: post-it, handout, editor creatura, visibilità per giocatore, modello campi
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
@@ -72,6 +79,7 @@ styles/
   scene-nav.css            — Stili navigatore scene ed editor collegamenti
   lighting.css             — Stili controllo luci, dialoghi preset e palette HUD token
   journal-styles.css       — Riquadri, pill, tabelle e banner per i journal (scoped su classe body)
+  notebook.css             — Stili taccuino (copertina, linguette, post-it, scheda creatura, handout) e dialoghi
 templates/
   hub-menu.hbs             — Template hub
   crafting/
@@ -92,6 +100,8 @@ templates/
     scene-links-editor.hbs   — Template editor collegamenti
   journal-styles/
     journal-styles-reference.hbs — Template cheatsheet riquadri journal
+  notebook/
+    notebook.hbs             — Template taccuino (pagina + linguette sul bordo)
 languages/
   en.json                  — Traduzioni inglese
   it.json                  — Traduzioni italiano

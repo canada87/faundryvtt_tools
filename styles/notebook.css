@@ -1,0 +1,1159 @@
+/* ============================================ */
+/*  Notebook                                    */
+/* ============================================ */
+
+/* The notebook is a physical object: leather cover, paper page and
+   bookmark tabs keep the same colors in Foundry's light and dark themes. */
+.fvtt-notebook,
+.fvtt-notebook-dialog {
+  --nb-leather: #4a3021;
+  --nb-leather-dark: #2e1d13;
+  --nb-paper: #f4ecd6;
+  --nb-paper-edge: #e3d6b4;
+  --nb-ink: #33281d;
+  --nb-ink-muted: #7a6a55;
+  --nb-rule: rgba(90, 120, 160, 0.16);
+  --nb-margin: rgba(190, 70, 60, 0.35);
+  --nb-line: rgba(51, 40, 29, 0.18);
+  --nb-accent: #8e2f2a;
+  --nb-tab-board: #c98a2b;
+  --nb-tab-bestiary: #8e2f2a;
+  --nb-tab-handouts: #2f6b6f;
+  --nb-vis-hidden: #8a7f72;
+  --nb-vis-all: #3f8a50;
+  --nb-vis-some: #3d6fb0;
+  --nb-vis-hint: #c08a1e;
+  --nb-hand: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  --nb-title: var(--font-title, "Modesto Condensed"), "Palatino Linotype", Georgia, serif;
+}
+
+.fvtt-notebook .window-content {
+  padding: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 255, 255, 0.07), transparent 60%),
+    linear-gradient(135deg, var(--nb-leather), var(--nb-leather-dark));
+}
+
+.fvtt-notebook .nb-book {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  padding: 14px 0 14px 14px;
+  color: var(--nb-ink);
+}
+
+/* ---------- Page ---------- */
+
+.fvtt-notebook .nb-page {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--nb-paper);
+  background-image:
+    linear-gradient(90deg, transparent 34px, var(--nb-margin) 34px, var(--nb-margin) 36px, transparent 36px),
+    repeating-linear-gradient(180deg, transparent 0 27px, var(--nb-rule) 27px 28px);
+  border-radius: 3px 2px 2px 3px;
+  box-shadow:
+    inset 10px 0 14px -10px rgba(0, 0, 0, 0.45),
+    3px 0 0 var(--nb-paper-edge),
+    5px 0 0 #d8c99f,
+    0 6px 18px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.fvtt-notebook .nb-page.drag-over {
+  outline: 3px dashed var(--nb-accent);
+  outline-offset: -8px;
+}
+
+.fvtt-notebook .nb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px 6px 50px;
+  border-bottom: 2px solid var(--nb-line);
+}
+
+.fvtt-notebook .nb-heading {
+  margin: 0;
+  border: none;
+  font-family: var(--nb-title);
+  font-size: 1.7rem;
+  font-weight: normal;
+  color: var(--nb-ink);
+}
+
+.fvtt-notebook .nb-heading i {
+  font-size: 1.1rem;
+  color: var(--nb-accent);
+}
+
+.fvtt-notebook .nb-view {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--nb-ink-muted);
+  white-space: nowrap;
+}
+
+.fvtt-notebook .nb-view select {
+  min-width: 150px;
+}
+
+.fvtt-notebook .nb-preview-banner {
+  margin: 0;
+  padding: 4px 18px 4px 50px;
+  background: rgba(61, 111, 176, 0.14);
+  font-size: 0.8rem;
+  color: var(--nb-vis-some);
+}
+
+.fvtt-notebook .nb-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 18px 18px 50px;
+}
+
+.fvtt-notebook .nb-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--nb-ink-muted);
+}
+
+.fvtt-notebook .nb-empty {
+  margin: 40px auto;
+  max-width: 420px;
+  text-align: center;
+  font-family: var(--nb-hand);
+  font-size: 1rem;
+  color: var(--nb-ink-muted);
+}
+
+.fvtt-notebook .nb-empty.small {
+  margin: 12px 0;
+  font-size: 0.85rem;
+}
+
+.fvtt-notebook .nb-muted {
+  color: var(--nb-ink-muted);
+}
+
+/* ---------- Form controls on paper ---------- */
+
+.fvtt-notebook .nb-page input,
+.fvtt-notebook .nb-page select,
+.fvtt-notebook .nb-page textarea {
+  color: var(--nb-ink);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--nb-line);
+  border-radius: 4px;
+}
+
+.fvtt-notebook .nb-page select option {
+  color: #222;
+  background: #fff;
+}
+
+.fvtt-notebook .nb-page button {
+  margin: 0;
+  cursor: pointer;
+}
+
+.fvtt-notebook .nb-page button:focus-visible,
+.fvtt-notebook .nb-page [role="button"]:focus-visible {
+  outline: 2px solid var(--nb-accent);
+  outline-offset: 1px;
+}
+
+.fvtt-notebook .nb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  line-height: 1;
+  color: var(--nb-ink);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(51, 40, 29, 0.3);
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.fvtt-notebook .nb-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--nb-accent);
+}
+
+.fvtt-notebook .nb-btn.danger:hover {
+  color: #fff;
+  background: var(--nb-accent);
+}
+
+.fvtt-notebook .nb-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* ---------- Bookmark tabs ---------- */
+
+.fvtt-notebook .nb-tabs {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 48px;
+  padding-top: 26px;
+}
+
+.fvtt-notebook .nb-tab {
+  --tab: var(--nb-tab-board);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 38px;
+  min-height: 112px;
+  margin: 0 0 0 -2px;
+  padding: 10px 0;
+  color: rgba(255, 255, 255, 0.92);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tab) 70%, black), var(--tab) 35%);
+  border: none;
+  border-radius: 0 7px 7px 0;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  filter: saturate(0.75) brightness(0.85);
+  transition: width 0.15s, filter 0.15s;
+  cursor: pointer;
+}
+
+.fvtt-notebook .nb-tab:hover {
+  width: 42px;
+  filter: none;
+}
+
+.fvtt-notebook .nb-tab.active {
+  width: 46px;
+  margin-left: -6px;
+  background: var(--tab);
+  filter: none;
+}
+
+.fvtt-notebook .nb-tab:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}
+
+.fvtt-notebook .nb-tab i {
+  font-size: 1rem;
+}
+
+.fvtt-notebook .nb-tab span:not(.nb-badge) {
+  writing-mode: vertical-rl;
+  font-family: var(--nb-title);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+.fvtt-notebook .nb-tab-board { --tab: var(--nb-tab-board); }
+.fvtt-notebook .nb-tab-bestiary { --tab: var(--nb-tab-bestiary); }
+.fvtt-notebook .nb-tab-handouts { --tab: var(--nb-tab-handouts); }
+
+.fvtt-notebook .nb-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  line-height: 18px;
+  text-align: center;
+  color: #fff;
+  background: #d0453a;
+  border: 2px solid var(--nb-leather-dark);
+  border-radius: 9px;
+}
+
+/* ---------- Board ---------- */
+
+.fvtt-notebook .nb-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 22px 18px;
+  padding: 6px 4px;
+}
+
+.fvtt-notebook .nb-card {
+  position: relative;
+}
+
+.fvtt-notebook .nb-postit {
+  min-height: 150px;
+  padding: 18px 14px 14px;
+  background: var(--note);
+  background-image: linear-gradient(170deg, rgba(255, 255, 255, 0.35), transparent 40%);
+  box-shadow: 0 6px 10px -4px rgba(0, 0, 0, 0.45);
+  transform: rotate(-1.2deg);
+}
+
+.fvtt-notebook .nb-board > :nth-child(3n + 2) { transform: rotate(1deg); }
+.fvtt-notebook .nb-board > :nth-child(3n) { transform: rotate(-0.4deg); }
+
+/* Strip of tape holding the note */
+.fvtt-notebook .nb-postit::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 64px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  transform: translateX(-50%) rotate(-3deg);
+}
+
+.fvtt-notebook .nb-postit h3 {
+  margin: 0 0 6px;
+  border: none;
+  font-family: var(--nb-hand);
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--nb-ink);
+}
+
+.fvtt-notebook .nb-postit p {
+  margin: 0;
+  font-family: var(--nb-hand);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.fvtt-notebook .nb-card-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.fvtt-notebook .nb-card:hover .nb-card-actions,
+.fvtt-notebook .nb-card:focus-within .nb-card-actions,
+.fvtt-notebook .nb-card-actions.always {
+  opacity: 1;
+}
+
+.fvtt-notebook .nb-card-actions button,
+.fvtt-notebook .nb-card-delete,
+.fvtt-notebook .nb-note-actions button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--nb-ink);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(51, 40, 29, 0.25);
+  border-radius: 50%;
+}
+
+.fvtt-notebook .nb-card-actions button:hover,
+.fvtt-notebook .nb-card-delete:hover,
+.fvtt-notebook .nb-note-actions button:hover {
+  background: #fff;
+  border-color: var(--nb-accent);
+}
+
+/* Link cards look like index cards */
+.fvtt-notebook .nb-link {
+  display: flex;
+  align-items: stretch;
+  min-height: 70px;
+  background: #fffdf6;
+  background-image: linear-gradient(180deg, transparent 22px, rgba(190, 70, 60, 0.45) 22px, rgba(190, 70, 60, 0.45) 23px, transparent 23px);
+  box-shadow: 0 4px 8px -3px rgba(0, 0, 0, 0.4);
+}
+
+.fvtt-notebook .nb-link-open {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 26px 14px 10px;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--nb-ink);
+  background: none;
+  border: none;
+}
+
+.fvtt-notebook .nb-link-open i {
+  font-size: 1.2rem;
+  color: var(--nb-tab-handouts);
+}
+
+.fvtt-notebook .nb-link-open:hover span {
+  text-decoration: underline;
+}
+
+.fvtt-notebook .nb-card-delete {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  opacity: 0;
+}
+
+.fvtt-notebook .nb-link:hover .nb-card-delete,
+.fvtt-notebook .nb-link:focus-within .nb-card-delete {
+  opacity: 1;
+}
+
+/* GM: choose a player */
+.fvtt-notebook .nb-player-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.fvtt-notebook .nb-player-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: auto;
+  padding: 14px 10px;
+  color: var(--nb-ink);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--nb-line);
+  border-top: 4px solid var(--player, var(--nb-accent));
+  border-radius: 4px;
+}
+
+.fvtt-notebook .nb-player-card:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.fvtt-notebook .nb-player-card img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border: none;
+  border-radius: 50%;
+}
+
+.fvtt-notebook .nb-player-name {
+  font-weight: bold;
+}
+
+.fvtt-notebook .nb-player-card small {
+  color: var(--nb-ink-muted);
+}
+
+/* ---------- Bestiary ---------- */
+
+.fvtt-notebook .nb-page-bestiary .nb-body {
+  display: flex;
+  padding-bottom: 0;
+}
+
+.fvtt-notebook .nb-bestiary {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 18px;
+  min-height: 0;
+}
+
+.fvtt-notebook .nb-creature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  padding-right: 12px;
+  border-right: 1px solid var(--nb-line);
+}
+
+.fvtt-notebook .nb-list-tools {
+  display: flex;
+  gap: 6px;
+}
+
+.fvtt-notebook .nb-list-tools .nb-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.fvtt-notebook .nb-search {
+  height: 28px;
+}
+
+.fvtt-notebook .nb-creature-list ul {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.fvtt-notebook .nb-creature-item button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+  padding: 4px 6px;
+  text-align: left;
+  font-size: 0.88rem;
+  color: var(--nb-ink);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.fvtt-notebook .nb-creature-item button:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.fvtt-notebook .nb-creature-item button.active {
+  background: rgba(142, 47, 42, 0.12);
+  border-color: rgba(142, 47, 42, 0.4);
+  font-weight: bold;
+}
+
+.fvtt-notebook .nb-creature-item button.is-hidden .nb-creature-name {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.fvtt-notebook .nb-creature-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fvtt-notebook .nb-thumb {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  overflow: hidden;
+  background: rgba(51, 40, 29, 0.12);
+  border: 1px solid var(--nb-line);
+  border-radius: 50%;
+}
+
+.fvtt-notebook .nb-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+/* Unrevealed images: only the silhouette shows */
+.fvtt-notebook .silhouette img {
+  filter: brightness(0) opacity(0.82);
+}
+
+.fvtt-notebook .nb-dossier {
+  min-width: 0;
+  overflow-y: auto;
+  padding: 2px 4px 18px 0;
+}
+
+.fvtt-notebook .nb-dossier-head {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.fvtt-notebook .nb-portrait {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 170px;
+  margin: 4px 0 0;
+  padding: 8px 8px 22px;
+  background: #fffdf6;
+  box-shadow: 0 5px 10px -3px rgba(0, 0, 0, 0.45);
+  transform: rotate(-2deg);
+}
+
+.fvtt-notebook .nb-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+}
+
+.fvtt-notebook .nb-portrait > i {
+  font-size: 3rem;
+  color: var(--nb-ink-muted);
+}
+
+.fvtt-notebook .nb-portrait .nb-vis {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+}
+
+.fvtt-notebook .nb-dossier-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fvtt-notebook .nb-dossier-title h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  border: none;
+  font-family: var(--nb-title);
+  font-size: 2rem;
+  font-weight: normal;
+  color: var(--nb-ink);
+}
+
+.fvtt-notebook .nb-dossier-title h2.unknown {
+  letter-spacing: 0.2em;
+  color: var(--nb-ink-muted);
+}
+
+.fvtt-notebook .nb-gm-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Visibility toggle (GM) */
+.fvtt-notebook .nb-vis {
+  --vis: var(--nb-vis-hidden);
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 0.75rem;
+  color: #fff;
+  background: var(--vis);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 13px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.fvtt-notebook .nb-vis.wide {
+  width: auto;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 0.8rem;
+}
+
+.fvtt-notebook .nb-vis:hover {
+  filter: brightness(1.15);
+}
+
+.fvtt-notebook .nb-vis-all { --vis: var(--nb-vis-all); }
+.fvtt-notebook .nb-vis-some { --vis: var(--nb-vis-some); }
+.fvtt-notebook .nb-vis-hint { --vis: var(--nb-vis-hint); }
+
+.fvtt-notebook .nb-fields {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 18px;
+  border-top: 2px solid var(--nb-ink);
+}
+
+.fvtt-notebook .nb-field {
+  display: grid;
+  grid-template-columns: minmax(110px, 30%) 1fr auto;
+  align-items: start;
+  gap: 12px;
+  padding: 7px 4px;
+  border-bottom: 1px solid var(--nb-line);
+}
+
+.fvtt-notebook .nb-field dt {
+  font-family: var(--nb-title);
+  font-size: 1.05rem;
+  color: var(--nb-accent);
+}
+
+.fvtt-notebook .nb-field dd {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Fixed width, so the length of the secret is not given away */
+.fvtt-notebook .nb-redacted {
+  display: inline-block;
+  width: 10em;
+  max-width: 100%;
+  height: 1.05em;
+  margin-top: 2px;
+  background: #1d1814;
+  border-radius: 1px;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.15);
+  transform: rotate(-0.4deg);
+}
+
+.fvtt-notebook .nb-hint-value {
+  font-style: italic;
+  color: var(--nb-vis-hint);
+}
+
+.fvtt-notebook .nb-field-hidden .nb-gm-value {
+  color: var(--nb-ink-muted);
+}
+
+.fvtt-notebook .nb-gm-hint {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--nb-vis-hint);
+}
+
+/* Notes on the creature */
+.fvtt-notebook .nb-notes h3 {
+  margin: 0 0 8px;
+  border: none;
+  font-family: var(--nb-title);
+  font-size: 1.3rem;
+  font-weight: normal;
+  color: var(--nb-ink);
+}
+
+.fvtt-notebook .nb-notes ul {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.fvtt-notebook .nb-note {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 6px 5px 10px;
+  border-left: 3px solid var(--author, var(--nb-ink-muted));
+}
+
+.fvtt-notebook .nb-note + .nb-note {
+  margin-top: 4px;
+}
+
+.fvtt-notebook .nb-note.private {
+  background: rgba(51, 40, 29, 0.05);
+}
+
+.fvtt-notebook .nb-note-author {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: var(--nb-ink-muted);
+  white-space: nowrap;
+}
+
+.fvtt-notebook .nb-note-text {
+  font-family: var(--nb-hand);
+  font-size: 0.88rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.fvtt-notebook .nb-note-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+}
+
+.fvtt-notebook .nb-note:hover .nb-note-actions,
+.fvtt-notebook .nb-note:focus-within .nb-note-actions {
+  opacity: 1;
+}
+
+.fvtt-notebook .nb-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fvtt-notebook .nb-note-input {
+  min-height: 52px;
+  font-family: var(--nb-hand);
+  resize: vertical;
+}
+
+.fvtt-notebook .nb-note-form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.82rem;
+}
+
+.fvtt-notebook .nb-note-form-row label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ---------- Handouts ---------- */
+
+.fvtt-notebook .nb-handouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 22px 18px;
+  padding: 8px 4px;
+}
+
+.fvtt-notebook .nb-handout {
+  background: #fffdf6;
+  box-shadow: 0 5px 10px -4px rgba(0, 0, 0, 0.45);
+}
+
+.fvtt-notebook .nb-handouts > :nth-child(odd) { transform: rotate(-0.8deg); }
+.fvtt-notebook .nb-handouts > :nth-child(even) { transform: rotate(0.7deg); }
+
+/* Pin */
+.fvtt-notebook .nb-handout::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: -6px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 35% 35%, #f07a6f, #a52a22 70%);
+  border-radius: 50%;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
+  transform: translateX(-50%);
+}
+
+.fvtt-notebook .nb-handout.is-hidden {
+  opacity: 0.65;
+  outline: 2px dashed var(--nb-vis-hidden);
+  outline-offset: 3px;
+}
+
+.fvtt-notebook .nb-handout-open {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 100%;
+  padding: 14px 12px 12px;
+  cursor: pointer;
+}
+
+.fvtt-notebook .nb-handout-open img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid var(--nb-line);
+}
+
+.fvtt-notebook .nb-handout-open h3 {
+  margin: 0;
+  border: none;
+  font-family: var(--nb-title);
+  font-size: 1.15rem;
+  font-weight: normal;
+  color: var(--nb-ink);
+}
+
+.fvtt-notebook .nb-handout-open p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  font-size: 0.78rem;
+  color: var(--nb-ink-muted);
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.fvtt-notebook .nb-handout-open:hover h3 {
+  text-decoration: underline;
+}
+
+.fvtt-notebook .nb-handout .nb-card-actions .nb-vis {
+  width: 24px;
+  height: 24px;
+  border-width: 1px;
+}
+
+.fvtt-notebook .nb-new {
+  align-self: flex-start;
+  padding: 1px 8px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  background: #d0453a;
+  border-radius: 8px;
+}
+
+.fvtt-notebook .nb-sheet {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 22px 26px;
+  background: #fffdf6;
+  box-shadow: 0 6px 14px -5px rgba(0, 0, 0, 0.45);
+}
+
+.fvtt-notebook .nb-sheet h2 {
+  margin: 0 0 12px;
+  border: none;
+  font-family: var(--nb-title);
+  font-size: 1.8rem;
+  font-weight: normal;
+  color: var(--nb-ink);
+}
+
+.fvtt-notebook .nb-handout-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 14px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: zoom-in;
+}
+
+.fvtt-notebook .nb-handout-img img {
+  display: block;
+  max-width: 100%;
+  max-height: 420px;
+  margin: 0 auto;
+  border: 1px solid var(--nb-line);
+}
+
+.fvtt-notebook .nb-handout-text {
+  line-height: 1.55;
+  color: var(--nb-ink);
+}
+
+/* ============================================ */
+/*  Dialogs                                     */
+/* ============================================ */
+
+.fvtt-notebook-dialog .nbd {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fvtt-notebook-dialog .nbd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fvtt-notebook-dialog .nbd-label {
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  opacity: 0.8;
+}
+
+.fvtt-notebook-dialog .nbd-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+.fvtt-notebook-dialog .nbd-subject {
+  margin: 0;
+  font-weight: bold;
+}
+
+.fvtt-notebook-dialog textarea {
+  resize: vertical;
+}
+
+.fvtt-notebook-dialog .nbd-file {
+  display: flex;
+  gap: 6px;
+}
+
+.fvtt-notebook-dialog .nbd-file input {
+  flex: 1;
+}
+
+.fvtt-notebook-dialog .nbd-file button,
+.fvtt-notebook-dialog .nbd-add-field {
+  flex: none;
+  width: auto;
+  white-space: nowrap;
+}
+
+.fvtt-notebook-dialog .nbd-swatches {
+  display: flex;
+  gap: 8px;
+}
+
+.fvtt-notebook-dialog .nbd-swatch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fvtt-notebook-dialog .nbd-swatch span {
+  display: block;
+  width: 30px;
+  height: 30px;
+  background: var(--swatch);
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fvtt-notebook-dialog .nbd-swatch input:checked + span {
+  border-color: currentColor;
+  box-shadow: 0 0 0 2px var(--swatch);
+}
+
+.fvtt-notebook-dialog .nbd-swatch input:focus-visible + span {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.fvtt-notebook-dialog .nbd-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 6px;
+}
+
+.fvtt-notebook-dialog .nbd-player,
+.fvtt-notebook-dialog .nbd-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fvtt-notebook-dialog .nbd-player small {
+  opacity: 0.65;
+}
+
+.fvtt-notebook-dialog .nbd-player-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.fvtt-notebook-dialog .nbd-players {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 12px;
+}
+
+.fvtt-notebook-dialog .nbd-players.disabled,
+.fvtt-notebook-dialog .nbd-radio.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Creature editor */
+.fvtt-notebook-dialog .nbd-creature-head {
+  display: flex;
+  gap: 14px;
+}
+
+.fvtt-notebook-dialog .nbd-portrait {
+  flex: none;
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 6px;
+}
+
+.fvtt-notebook-dialog .nbd-creature-id {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fvtt-notebook-dialog .nbd-fields-head,
+.fvtt-notebook-dialog .nbd-field-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 160px 84px;
+  gap: 6px;
+  align-items: start;
+}
+
+.fvtt-notebook-dialog .nbd-fields-head {
+  font-size: 0.75rem;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+.fvtt-notebook-dialog .nbd-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.fvtt-notebook-dialog .nbd-field-row textarea {
+  min-height: 30px;
+}
+
+.fvtt-notebook-dialog .nbd-row-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.fvtt-notebook-dialog .nbd-row-actions button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 0.7rem;
+}
+
+/* ============================================ */
+/*  Token HUD                                   */
+/* ============================================ */
+
+#token-hud .fvtt-notebook-hud.active {
+  color: #f0c060;
+}

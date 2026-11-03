@@ -1,0 +1,339 @@
+<div class="nb-book">
+
+  <div class="nb-page nb-page-{{tab}}">
+
+    {{!-- ================= Header ================= --}}
+    <header class="nb-header">
+      <h2 class="nb-heading">
+        {{#each tabs}}{{#if active}}<i class="{{icon}}" aria-hidden="true"></i> {{label}}{{/if}}{{/each}}
+      </h2>
+
+      {{#if isGM}}
+        <label class="nb-view">
+          <span>{{localize "NOTEBOOK.ViewAs"}}</span>
+          <select class="nb-view-as">
+            <option value="">{{localize "NOTEBOOK.ViewAsGM"}}</option>
+            {{#each players}}
+              <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+            {{/each}}
+          </select>
+        </label>
+      {{/if}}
+    </header>
+
+    {{#if previewing}}
+      <p class="nb-preview-banner">
+        <i class="fas fa-user-secret" aria-hidden="true"></i>
+        {{localize "NOTEBOOK.PreviewNotice" name=viewerName}}
+      </p>
+    {{/if}}
+
+    <div class="nb-body">
+
+      {{!-- ================= Board ================= --}}
+      {{#if isBoard}}
+        {{#if boardOwnerMissing}}
+          <p class="nb-hint">{{localize "NOTEBOOK.Board.ChoosePlayer"}}</p>
+          {{#if playerCards.length}}
+            <div class="nb-player-cards">
+              {{#each playerCards}}
+                <button type="button" class="nb-player-card" data-action="viewPlayer" data-user-id="{{id}}" style="--player:{{color}}">
+                  {{#if avatar}}<img src="{{avatar}}" alt="" />{{/if}}
+                  <span class="nb-player-name">{{name}}</span>
+                  <small>{{localize "NOTEBOOK.Board.Count" count=count}}</small>
+                </button>
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="nb-empty">{{localize "NOTEBOOK.NoPlayers"}}</p>
+          {{/if}}
+        {{else}}
+          {{#unless boardReadOnly}}
+            <div class="nb-toolbar">
+              <button type="button" class="nb-btn" data-action="addNote">
+                <i class="fas fa-note-sticky" aria-hidden="true"></i> {{localize "NOTEBOOK.Board.AddNote"}}
+              </button>
+              <span class="nb-hint">{{localize "NOTEBOOK.Board.DropHint"}}</span>
+            </div>
+          {{/unless}}
+
+          {{#if boardItems.length}}
+            <div class="nb-board">
+              {{#each boardItems}}
+                {{#if isLink}}
+                  <article class="nb-card nb-link">
+                    <button type="button" class="nb-link-open" data-action="openLink" data-uuid="{{uuid}}">
+                      <i class="{{icon}}" aria-hidden="true"></i>
+                      <span>{{title}}</span>
+                    </button>
+                    {{#unless ../boardReadOnly}}
+                      <button type="button" class="nb-card-delete" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
+                        <i class="fas fa-xmark" aria-hidden="true"></i>
+                      </button>
+                    {{/unless}}
+                  </article>
+                {{else}}
+                  <article class="nb-card nb-postit" style="--note:{{color}}">
+                    {{#if title}}<h3>{{title}}</h3>{{/if}}
+                    <p>{{text}}</p>
+                    {{#unless ../boardReadOnly}}
+                      <div class="nb-card-actions">
+                        <button type="button" data-action="editBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Edit'}}">
+                          <i class="fas fa-pen" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
+                          <i class="fas fa-trash" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    {{/unless}}
+                  </article>
+                {{/if}}
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="nb-empty">{{localize "NOTEBOOK.Board.Empty"}}</p>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+
+      {{!-- ================= Bestiary ================= --}}
+      {{#if isBestiary}}
+        <div class="nb-bestiary">
+
+          <aside class="nb-creature-list">
+            {{#if editing}}
+              <div class="nb-list-tools">
+                <button type="button" class="nb-btn" data-action="addCreature" data-tooltip="{{localize 'NOTEBOOK.Bestiary.Add'}}">
+                  <i class="fas fa-plus" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="nb-btn" data-action="addSelectedTokens" data-tooltip="{{localize 'NOTEBOOK.Bestiary.AddSelected'}}">
+                  <i class="fas fa-expand" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="nb-btn" data-action="editTemplate" data-tooltip="{{localize 'NOTEBOOK.Bestiary.Template'}}">
+                  <i class="fas fa-list" aria-hidden="true"></i>
+                </button>
+              </div>
+            {{/if}}
+            <input type="search" class="nb-search" value="{{search}}" placeholder="{{localize 'NOTEBOOK.Bestiary.Search'}}" />
+            <ul>
+              {{#each creatures}}
+                <li class="nb-creature-item" data-name="{{name}}">
+                  <button type="button" class="{{#if active}}active{{/if}} {{#if hiddenEntry}}is-hidden{{/if}}" data-action="selectCreature" data-id="{{id}}">
+                    <span class="nb-thumb {{#if silhouette}}silhouette{{/if}}">
+                      {{#if img}}<img src="{{img}}" alt="" />{{else}}<i class="fas fa-question" aria-hidden="true"></i>{{/if}}
+                    </span>
+                    <span class="nb-creature-name">{{name}}</span>
+                    {{#if hiddenEntry}}<i class="fas fa-eye-slash nb-muted" aria-hidden="true"></i>{{/if}}
+                  </button>
+                </li>
+              {{/each}}
+            </ul>
+            {{#unless creatures.length}}
+              <p class="nb-empty small">
+                {{#if editing}}{{localize "NOTEBOOK.Bestiary.EmptyGM"}}{{else}}{{localize "NOTEBOOK.Bestiary.Empty"}}{{/if}}
+              </p>
+            {{/unless}}
+          </aside>
+
+          <section class="nb-dossier">
+            {{#if creature}}
+              <div class="nb-dossier-head">
+                <figure class="nb-portrait {{#if creature.silhouette}}silhouette{{/if}}">
+                  {{#if creature.img}}
+                    <img src="{{creature.img}}" alt="" />
+                  {{else}}
+                    <i class="fas fa-question" aria-hidden="true"></i>
+                  {{/if}}
+                  {{#if creature.parts}}
+                    <button type="button" class="nb-vis nb-vis-{{creature.parts.img.state}}" data-action="cyclePart" data-part="img" data-tooltip="{{creature.parts.img.tooltip}}">
+                      <i class="{{creature.parts.img.icon}}" aria-hidden="true"></i>
+                    </button>
+                  {{/if}}
+                </figure>
+
+                <div class="nb-dossier-title">
+                  <h2 class="{{#if creature.nameUnknown}}unknown{{/if}}">
+                    {{creature.name}}
+                    {{#if creature.parts}}
+                      <button type="button" class="nb-vis nb-vis-{{creature.parts.name.state}}" data-action="cyclePart" data-part="name" data-tooltip="{{creature.parts.name.tooltip}}">
+                        <i class="{{creature.parts.name.icon}}" aria-hidden="true"></i>
+                      </button>
+                    {{/if}}
+                  </h2>
+
+                  {{#if creature.parts}}
+                    <div class="nb-gm-tools">
+                      <button type="button" class="nb-vis nb-vis-{{creature.parts.entry.state}} wide" data-action="cyclePart" data-part="entry" data-tooltip="{{creature.parts.entry.tooltip}}">
+                        <i class="{{creature.parts.entry.icon}}" aria-hidden="true"></i> {{localize "NOTEBOOK.Vis.Entry"}}
+                      </button>
+                      <button type="button" class="nb-btn" data-action="revealAll"><i class="fas fa-eye" aria-hidden="true"></i> {{localize "NOTEBOOK.Bestiary.RevealAll"}}</button>
+                      <button type="button" class="nb-btn" data-action="hideAll"><i class="fas fa-eye-slash" aria-hidden="true"></i> {{localize "NOTEBOOK.Bestiary.HideAll"}}</button>
+                      <button type="button" class="nb-btn" data-action="editCreature"><i class="fas fa-pen" aria-hidden="true"></i> {{localize "NOTEBOOK.Edit"}}</button>
+                      {{#if creature.hasActor}}
+                        <button type="button" class="nb-btn" data-action="openActor" data-tooltip="{{localize 'NOTEBOOK.Bestiary.OpenActor'}}"><i class="fas fa-user" aria-hidden="true"></i></button>
+                      {{/if}}
+                      <button type="button" class="nb-btn danger" data-action="deleteCreature" data-tooltip="{{localize 'NOTEBOOK.Bestiary.Delete'}}"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                    </div>
+                    <p class="nb-hint">{{localize "NOTEBOOK.Vis.CycleHint"}}</p>
+                  {{/if}}
+                </div>
+              </div>
+
+              <dl class="nb-fields">
+                {{#each creature.fields}}
+                  <div class="nb-field nb-field-{{state}}">
+                    <dt>{{label}}</dt>
+                    <dd>
+                      {{#if ../creature.parts}}
+                        <span class="nb-gm-value">{{#if empty}}<em class="nb-muted">—</em>{{else}}{{text}}{{/if}}</span>
+                        {{#if hint}}<span class="nb-gm-hint"><i class="fas fa-circle-half-stroke" aria-hidden="true"></i> {{hint}}</span>{{/if}}
+                      {{else if (eq state "hidden")}}
+                        <span class="nb-redacted" aria-label="{{localize 'NOTEBOOK.Bestiary.Redacted'}}"></span>
+                      {{else if (eq state "hint")}}
+                        <span class="nb-hint-value">≈ {{text}}</span>
+                      {{else}}
+                        <span class="nb-value">{{text}}</span>
+                      {{/if}}
+                    </dd>
+                    {{#if vis}}
+                      <button type="button" class="nb-vis nb-vis-{{vis.state}}" data-action="cyclePart" data-part="{{id}}" data-tooltip="{{vis.tooltip}}">
+                        <i class="{{vis.icon}}" aria-hidden="true"></i>
+                      </button>
+                    {{/if}}
+                  </div>
+                {{/each}}
+              </dl>
+
+              <section class="nb-notes">
+                <h3><i class="fas fa-feather" aria-hidden="true"></i> {{localize "NOTEBOOK.Bestiary.Notes"}}</h3>
+                {{#if creature.notes.length}}
+                  <ul>
+                    {{#each creature.notes}}
+                      <li class="nb-note {{#unless shared}}private{{/unless}}" style="--author:{{color}}">
+                        <span class="nb-note-author">{{author}}{{#unless shared}} <i class="fas fa-lock" data-tooltip="{{localize 'NOTEBOOK.Bestiary.Private'}}"></i>{{/unless}}</span>
+                        <span class="nb-note-text">{{text}}</span>
+                        <span class="nb-note-actions">
+                          {{#if mine}}
+                            <button type="button" data-action="toggleNoteShared" data-id="{{id}}" data-tooltip="{{#if shared}}{{localize 'NOTEBOOK.Bestiary.MakePrivate'}}{{else}}{{localize 'NOTEBOOK.Bestiary.Share'}}{{/if}}">
+                              <i class="fas {{#if shared}}fa-users{{else}}fa-lock{{/if}}" aria-hidden="true"></i>
+                            </button>
+                          {{/if}}
+                          {{#if canDelete}}
+                            <button type="button" data-action="deleteCreatureNote" data-id="{{id}}" data-user-id="{{userId}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
+                              <i class="fas fa-xmark" aria-hidden="true"></i>
+                            </button>
+                          {{/if}}
+                        </span>
+                      </li>
+                    {{/each}}
+                  </ul>
+                {{else}}
+                  <p class="nb-empty small">{{localize "NOTEBOOK.Bestiary.NoNotes"}}</p>
+                {{/if}}
+
+                {{#if creature.canWriteNotes}}
+                  <div class="nb-note-form">
+                    <textarea class="nb-note-input" rows="2" placeholder="{{localize 'NOTEBOOK.Bestiary.NotePlaceholder'}}"></textarea>
+                    <div class="nb-note-form-row">
+                      <label><input type="checkbox" class="nb-note-shared" checked /> {{localize "NOTEBOOK.Bestiary.Share"}}</label>
+                      <button type="button" class="nb-btn" data-action="addCreatureNote">
+                        <i class="fas fa-feather" aria-hidden="true"></i> {{localize "NOTEBOOK.Bestiary.AddNote"}}
+                      </button>
+                    </div>
+                  </div>
+                {{/if}}
+              </section>
+            {{else}}
+              <p class="nb-empty">
+                {{#if editing}}{{localize "NOTEBOOK.Bestiary.EmptyGM"}}{{else}}{{localize "NOTEBOOK.Bestiary.Empty"}}{{/if}}
+              </p>
+            {{/if}}
+          </section>
+        </div>
+      {{/if}}
+
+      {{!-- ================= Handouts ================= --}}
+      {{#if isHandouts}}
+        {{#if handout}}
+          <article class="nb-handout-view">
+            <div class="nb-toolbar">
+              <button type="button" class="nb-btn" data-action="closeHandout">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{localize "NOTEBOOK.Handouts.Back"}}
+              </button>
+              {{#if handout.vis}}
+                <button type="button" class="nb-vis nb-vis-{{handout.vis.state}}" data-action="cycleHandout" data-id="{{handout.id}}" data-tooltip="{{handout.vis.tooltip}}">
+                  <i class="{{handout.vis.icon}}" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="nb-btn" data-action="editHandout" data-id="{{handout.id}}"><i class="fas fa-pen" aria-hidden="true"></i> {{localize "NOTEBOOK.Edit"}}</button>
+              {{/if}}
+              {{#if handout.uuid}}
+                <button type="button" class="nb-btn" data-action="openLink" data-uuid="{{handout.uuid}}">
+                  <i class="fas fa-link" aria-hidden="true"></i> {{localize "NOTEBOOK.Handouts.OpenLinked"}}
+                </button>
+              {{/if}}
+            </div>
+            <div class="nb-sheet">
+              <h2>{{handout.title}}</h2>
+              {{#if handout.img}}
+                <button type="button" class="nb-handout-img" data-action="showImage" data-src="{{handout.img}}" data-title="{{handout.title}}" data-tooltip="{{localize 'NOTEBOOK.Handouts.Enlarge'}}">
+                  <img src="{{handout.img}}" alt="" />
+                </button>
+              {{/if}}
+              {{#if handout.html}}<div class="nb-handout-text">{{{handout.html}}}</div>{{/if}}
+            </div>
+          </article>
+        {{else}}
+          {{#if editing}}
+            <div class="nb-toolbar">
+              <button type="button" class="nb-btn" data-action="addHandout">
+                <i class="fas fa-plus" aria-hidden="true"></i> {{localize "NOTEBOOK.Handouts.Add"}}
+              </button>
+              <span class="nb-hint">{{localize "NOTEBOOK.Handouts.DropHint"}}</span>
+            </div>
+          {{/if}}
+
+          {{#if handouts.length}}
+            <div class="nb-handouts">
+              {{#each handouts}}
+                <article class="nb-card nb-handout {{#if hidden}}is-hidden{{/if}}">
+                  <div class="nb-handout-open" role="button" tabindex="0" data-action="openHandout" data-id="{{id}}">
+                    {{#if isNew}}<span class="nb-new">{{localize "NOTEBOOK.Handouts.New"}}</span>{{/if}}
+                    {{#if img}}<img src="{{img}}" alt="" />{{/if}}
+                    <h3>{{title}}</h3>
+                    {{#if excerpt}}<p>{{excerpt}}</p>{{/if}}
+                  </div>
+                  {{#if vis}}
+                    <div class="nb-card-actions always">
+                      <button type="button" class="nb-vis nb-vis-{{vis.state}}" data-action="cycleHandout" data-id="{{id}}" data-tooltip="{{vis.tooltip}}">
+                        <i class="{{vis.icon}}" aria-hidden="true"></i>
+                      </button>
+                      <button type="button" data-action="editHandout" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Edit'}}"><i class="fas fa-pen" aria-hidden="true"></i></button>
+                      <button type="button" data-action="deleteHandout" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                    </div>
+                  {{/if}}
+                </article>
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="nb-empty">
+              {{#if editing}}{{localize "NOTEBOOK.Handouts.EmptyGM"}}{{else}}{{localize "NOTEBOOK.Handouts.Empty"}}{{/if}}
+            </p>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+
+    </div>
+  </div>
+
+  {{!-- ================= Bookmark tabs on the edge ================= --}}
+  <nav class="nb-tabs" aria-label="{{localize 'NOTEBOOK.Title'}}">
+    {{#each tabs}}
+      <button type="button" class="nb-tab nb-tab-{{id}} {{#if active}}active{{/if}}" data-action="switchTab" data-tab="{{id}}" aria-pressed="{{active}}">
+        <i class="{{icon}}" aria-hidden="true"></i>
+        <span>{{label}}</span>
+        {{#if badge}}<span class="nb-badge">{{badge}}</span>{{/if}}
+      </button>
+    {{/each}}
+  </nav>
+
+</div>

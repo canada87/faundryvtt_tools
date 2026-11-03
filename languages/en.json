@@ -805,5 +805,125 @@
         "Description": "Handout styled as a handwritten note."
       }
     }
+  },
+  "NOTEBOOK": {
+    "FeatureName": "Notebook",
+    "FeatureDescription": "The players' notebook: post-its, links, GM handouts and a bestiary revealed piece by piece.",
+    "Title": "Notebook",
+    "Toggle": "Open/close the notebook",
+    "Settings": {
+      "Enabled": {
+        "Name": "Notebook: enable",
+        "Hint": "Enable the players' notebook (notes, bestiary, handouts). Requires reload."
+      }
+    },
+    "Tabs": {
+      "Board": "Notes",
+      "Bestiary": "Bestiary",
+      "Handouts": "Handouts"
+    },
+    "ViewAs": "View as",
+    "ViewAsGM": "GM (edit)",
+    "PreviewNotice": "Preview: you are seeing the notebook as {name} sees it.",
+    "NoPlayers": "There are no players in this world.",
+    "Untitled": "Untitled",
+    "Save": "Save",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Browse": "Browse",
+    "MoveUp": "Move up",
+    "MoveDown": "Move down",
+    "DefaultFields": "Hit Points|Armor Class|Speed|Weaknesses|Resistances|Immunities|Attacks|Special abilities|Behavior",
+    "Board": {
+      "AddNote": "New post-it",
+      "EditNote": "Edit post-it",
+      "NoteTitle": "Title",
+      "NoteText": "Text",
+      "NoteColor": "Color",
+      "DropHint": "Drop a journal, item, scene… here to pin a link to it.",
+      "Empty": "The notebook is empty. Add a post-it or drop a journal, item or scene here.",
+      "ChoosePlayer": "Notes belong to the players: choose whose notebook to read.",
+      "Count": "{count} items"
+    },
+    "Bestiary": {
+      "Add": "New creature",
+      "AddSelected": "Add selected tokens",
+      "NewName": "New creature",
+      "Template": "Field template",
+      "TemplateHint": "One field per line. New creatures start with these fields (e.g. HP, AC, Weaknesses…).",
+      "Search": "Search…",
+      "Unknown": "???",
+      "Empty": "You have not met any creatures yet.",
+      "EmptyGM": "No creatures. Drop an actor here, use the Token HUD button or add the selected tokens.",
+      "Edit": "Edit creature",
+      "Delete": "Delete creature",
+      "ConfirmDelete": "Delete <strong>{name}</strong> from the bestiary? Players' notes on this creature will no longer be visible.",
+      "Name": "True name",
+      "Image": "Image",
+      "FieldLabel": "Field",
+      "FieldValue": "True value",
+      "FieldHint": "Hint (optional)",
+      "FieldHintPlaceholder": "e.g. “A lot”",
+      "FieldsHint": "The hint is a vague version you can reveal before the true value.",
+      "AddField": "Add field",
+      "RemoveField": "Remove field",
+      "RevealAll": "Reveal all",
+      "HideAll": "Hide all",
+      "OpenActor": "Open actor",
+      "Redacted": "Unknown information",
+      "Notes": "Notes",
+      "NoNotes": "No notes on this creature yet.",
+      "NotePlaceholder": "What did you find out? (Enter to add)",
+      "AddNote": "Write down",
+      "Share": "Share with the party",
+      "MakePrivate": "Make private",
+      "Private": "Private: only you and the GM see it",
+      "HudAdd": "Add to bestiary",
+      "HudOpen": "Open in bestiary"
+    },
+    "Handouts": {
+      "Add": "New handout",
+      "Edit": "Edit handout",
+      "Delete": "Delete handout",
+      "ConfirmDelete": "Delete the handout <strong>{title}</strong>?",
+      "HandoutTitle": "Title",
+      "Image": "Image",
+      "Text": "Text",
+      "TextHint": "Plain text or HTML; @UUID[…] links work.",
+      "Linked": "Linked document",
+      "OpenLinked": "Open document",
+      "DropHint": "Drop a journal page here to copy its text or image.",
+      "Back": "Back",
+      "Enlarge": "Enlarge",
+      "New": "New",
+      "Empty": "You have not received any handouts yet.",
+      "EmptyGM": "No handouts. Create one or drop a journal page here."
+    },
+    "Vis": {
+      "Title": "Who can see it",
+      "Who": "Visible to",
+      "AllPlayers": "All players",
+      "NobodyHint": "Nothing checked = hidden from players.",
+      "Hidden": "Hidden from players",
+      "All": "Visible to all players",
+      "Some": "Visible to: {names}",
+      "HintOnly": "hint only",
+      "Level": "What to show",
+      "LevelFull": "The true value",
+      "LevelHint": "Only the hint",
+      "Entry": "In bestiary",
+      "Name": "Name",
+      "Image": "Image",
+      "CycleHint": "Click the eye: change visibility (hidden → hint → value). Right-click: choose players."
+    },
+    "Notify": {
+      "Handout": "You received a handout: {title}",
+      "Bestiary": "The bestiary was updated: {name}"
+    },
+    "Warn": {
+      "LinkMissing": "Document not found, or you lack permission to open it.",
+      "DropActor": "Drop an actor or token to add it to the bestiary.",
+      "NoTokens": "Select at least one token on the scene."
+    }
   }
 }

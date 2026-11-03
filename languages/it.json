@@ -805,5 +805,125 @@
         "Description": "Handout in stile biglietto scritto a mano."
       }
     }
+  },
+  "NOTEBOOK": {
+    "FeatureName": "Taccuino",
+    "FeatureDescription": "Il taccuino dei giocatori: post-it, collegamenti, handout del GM e un bestiario che si svela pezzo per pezzo.",
+    "Title": "Taccuino",
+    "Toggle": "Apri/chiudi il taccuino",
+    "Settings": {
+      "Enabled": {
+        "Name": "Taccuino: abilita",
+        "Hint": "Attiva il taccuino dei giocatori (appunti, bestiario, handout). Richiede il ricaricamento."
+      }
+    },
+    "Tabs": {
+      "Board": "Appunti",
+      "Bestiary": "Bestiario",
+      "Handouts": "Handout"
+    },
+    "ViewAs": "Visualizza come",
+    "ViewAsGM": "GM (modifica)",
+    "PreviewNotice": "Anteprima: stai vedendo il taccuino come lo vede {name}.",
+    "NoPlayers": "Non ci sono giocatori nel mondo.",
+    "Untitled": "Senza titolo",
+    "Save": "Salva",
+    "Edit": "Modifica",
+    "Delete": "Elimina",
+    "Browse": "Sfoglia",
+    "MoveUp": "Sposta su",
+    "MoveDown": "Sposta giù",
+    "DefaultFields": "Punti Ferita|Classe Armatura|Velocità|Debolezze|Resistenze|Immunità|Attacchi|Capacità speciali|Comportamento",
+    "Board": {
+      "AddNote": "Nuovo post-it",
+      "EditNote": "Modifica post-it",
+      "NoteTitle": "Titolo",
+      "NoteText": "Testo",
+      "NoteColor": "Colore",
+      "DropHint": "Trascina qui un journal, un oggetto, una scena… per appuntarne il collegamento.",
+      "Empty": "Il taccuino è vuoto. Aggiungi un post-it o trascina qui un journal, un oggetto o una scena.",
+      "ChoosePlayer": "Gli appunti sono dei giocatori: scegli di chi vuoi leggere il taccuino.",
+      "Count": "{count} elementi"
+    },
+    "Bestiary": {
+      "Add": "Nuova creatura",
+      "AddSelected": "Aggiungi i token selezionati",
+      "NewName": "Nuova creatura",
+      "Template": "Modello dei campi",
+      "TemplateHint": "Un campo per riga. Le nuove creature partono con questi campi (es. PF, CA, Debolezze…).",
+      "Search": "Cerca…",
+      "Unknown": "???",
+      "Empty": "Non avete ancora incontrato creature.",
+      "EmptyGM": "Nessuna creatura. Trascina qui un attore, usa il pulsante nell'HUD del token o aggiungi i token selezionati.",
+      "Edit": "Modifica creatura",
+      "Delete": "Elimina creatura",
+      "ConfirmDelete": "Eliminare <strong>{name}</strong> dal bestiario? Gli appunti dei giocatori su questa creatura non saranno più visibili.",
+      "Name": "Nome vero",
+      "Image": "Immagine",
+      "FieldLabel": "Campo",
+      "FieldValue": "Valore vero",
+      "FieldHint": "Indizio (facoltativo)",
+      "FieldHintPlaceholder": "es. «Tantissimi»",
+      "FieldsHint": "L'indizio è una versione vaga che puoi rivelare prima del valore vero.",
+      "AddField": "Aggiungi campo",
+      "RemoveField": "Rimuovi campo",
+      "RevealAll": "Rivela tutto",
+      "HideAll": "Nascondi tutto",
+      "OpenActor": "Apri l'attore",
+      "Redacted": "Informazione sconosciuta",
+      "Notes": "Appunti",
+      "NoNotes": "Ancora nessun appunto su questa creatura.",
+      "NotePlaceholder": "Cosa avete scoperto? (Invio per aggiungere)",
+      "AddNote": "Annota",
+      "Share": "Condividi col gruppo",
+      "MakePrivate": "Rendi privato",
+      "Private": "Privato: lo vedete solo tu e il GM",
+      "HudAdd": "Aggiungi al bestiario",
+      "HudOpen": "Apri nel bestiario"
+    },
+    "Handouts": {
+      "Add": "Nuovo handout",
+      "Edit": "Modifica handout",
+      "Delete": "Elimina handout",
+      "ConfirmDelete": "Eliminare l'handout <strong>{title}</strong>?",
+      "HandoutTitle": "Titolo",
+      "Image": "Immagine",
+      "Text": "Testo",
+      "TextHint": "Testo libero o HTML; i link @UUID[…] funzionano.",
+      "Linked": "Documento collegato",
+      "OpenLinked": "Apri il documento",
+      "DropHint": "Trascina qui una pagina di journal per copiarne testo o immagine.",
+      "Back": "Indietro",
+      "Enlarge": "Ingrandisci",
+      "New": "Nuovo",
+      "Empty": "Non avete ancora ricevuto handout.",
+      "EmptyGM": "Nessun handout. Creane uno o trascina qui una pagina di journal."
+    },
+    "Vis": {
+      "Title": "Chi può vederlo",
+      "Who": "Visibile a",
+      "AllPlayers": "Tutti i giocatori",
+      "NobodyHint": "Nessuna spunta = nascosto ai giocatori.",
+      "Hidden": "Nascosto ai giocatori",
+      "All": "Visibile a tutti i giocatori",
+      "Some": "Visibile a: {names}",
+      "HintOnly": "solo l'indizio",
+      "Level": "Cosa mostrare",
+      "LevelFull": "Il valore vero",
+      "LevelHint": "Solo l'indizio",
+      "Entry": "Nel bestiario",
+      "Name": "Nome",
+      "Image": "Immagine",
+      "CycleHint": "Clic sull'occhio: cambia la visibilità (nascosto → indizio → valore). Clic destro: scegli i giocatori."
+    },
+    "Notify": {
+      "Handout": "Hai ricevuto un handout: {title}",
+      "Bestiary": "Il bestiario è stato aggiornato: {name}"
+    },
+    "Warn": {
+      "LinkMissing": "Documento non trovato o non hai i permessi per aprirlo.",
+      "DropActor": "Trascina un attore o un token per aggiungerlo al bestiario.",
+      "NoTokens": "Seleziona almeno un token sulla scena."
+    }
   }
 }
