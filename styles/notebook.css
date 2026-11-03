@@ -114,6 +114,12 @@
   color: var(--nb-vis-some);
 }
 
+.fvtt-notebook .nb-owner-banner {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  color: var(--nb-vis-some);
+}
+
 .fvtt-notebook .nb-body {
   flex: 1;
   min-height: 0;

@@ -824,6 +824,8 @@
     },
     "ViewAs": "Visualizza come",
     "ViewAsGM": "GM (modifica)",
+    "BoardOf": "Taccuino di",
+    "ChoosePlayerOption": "— scegli un giocatore —",
     "PreviewNotice": "Anteprima: stai vedendo il taccuino come lo vede {name}.",
     "NoPlayers": "Non ci sono giocatori nel mondo.",
     "Untitled": "Senza titolo",
@@ -843,6 +845,7 @@
       "DropHint": "Trascina qui un journal, un oggetto, una scena… per appuntarne il collegamento.",
       "Empty": "Il taccuino è vuoto. Aggiungi un post-it o trascina qui un journal, un oggetto o una scena.",
       "ChoosePlayer": "Gli appunti sono dei giocatori: scegli di chi vuoi leggere il taccuino.",
+      "GMWriting": "Stai scrivendo nel taccuino di {name}: lo vedrà anche lui.",
       "Count": "{count} elementi"
     },
     "Bestiary": {

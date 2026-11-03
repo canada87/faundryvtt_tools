@@ -23,8 +23,8 @@ const VIS_ICONS = {
  * The players' Notebook: a book with bookmark tabs on its edge for the
  * personal board, the bestiary and the GM's handouts.
  *
- * Players see their own notebook. The GM edits bestiary and handouts and,
- * through "View as", reads a player's board or previews what they see.
+ * Players see their own notebook. The GM picks whose board to read and
+ * write, edits bestiary and handouts, and can preview them as a player.
  */
 export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -79,8 +79,11 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @type {"board"|"bestiary"|"handouts"} */
   tab = "board";
 
-  /** GM only: the player whose notebook is shown (null = GM editing). */
-  viewAs = null;
+  /** GM only: the player whose board is shown on the Notes tab. */
+  boardUserId = null;
+
+  /** GM only: preview bestiary and handouts as this player (null = GM editing). */
+  previewAs = null;
 
   creatureId = null;
 
@@ -112,7 +115,7 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
     if (tab) app.tab = tab;
     if (creatureId) {
       app.creatureId = creatureId;
-      app.viewAs = null;
+      app.previewAs = null;
     }
     app.render({ force: true });
     return app;
@@ -133,15 +136,21 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   /*  Context                                  */
   /* ---------------------------------------- */
 
-  /** The user whose perspective is shown. */
-  get #viewer() {
+  /** Owner of the board on the Notes tab (null: the GM has not chosen yet). */
+  get #boardUser() {
     if (!game.user.isGM) return game.user;
-    return (this.viewAs && game.users.get(this.viewAs)) || game.user;
+    return (this.boardUserId && game.users.get(this.boardUserId)) || null;
   }
 
-  /** GM editing (not previewing a player). */
+  /** The user whose perspective is shown on bestiary and handouts. */
+  get #viewer() {
+    if (!game.user.isGM) return game.user;
+    return (this.previewAs && game.users.get(this.previewAs)) || game.user;
+  }
+
+  /** GM editing bestiary and handouts (not previewing a player). */
   get #editing() {
-    return game.user.isGM && !this.viewAs;
+    return game.user.isGM && !this.previewAs;
   }
 
   async _prepareContext() {
@@ -149,10 +158,14 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const viewer = this.#viewer;
     const unseen = isGM ? 0 : NotebookSystem.getVisibleHandouts().filter(h => NotebookSystem.unseenHandouts.has(h.id)).length;
 
+    const isBoardTab = this.tab === "board";
+    const selectedId = isBoardTab ? this.boardUserId : this.previewAs;
+
     const context = {
       isGM,
+      isBoardTab,
       editing: this.#editing,
-      previewing: isGM && !!this.viewAs,
+      previewing: isGM && !isBoardTab && !!this.previewAs,
       viewerName: viewer.name,
       tab: this.tab,
       tabs: TABS.map(t => ({
@@ -164,19 +177,19 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
       players: isGM ? NotebookSystem.getPlayers().map(u => ({
         id: u.id,
         name: u.name,
-        selected: u.id === this.viewAs
+        selected: u.id === selectedId
       })) : []
     };
 
-    if (this.tab === "board") Object.assign(context, this.#prepareBoard(viewer));
+    if (isBoardTab) Object.assign(context, this.#prepareBoard());
     else if (this.tab === "bestiary") Object.assign(context, await this.#prepareBestiary(viewer));
     else Object.assign(context, await this.#prepareHandouts(viewer));
     return context;
   }
 
-  #prepareBoard(viewer) {
-    const isGM = game.user.isGM;
-    if (isGM && !this.viewAs) {
+  #prepareBoard() {
+    const owner = this.#boardUser;
+    if (!owner) {
       return {
         isBoard: true,
         boardOwnerMissing: true,
@@ -189,10 +202,14 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
         }))
       };
     }
-    const items = NotebookSystem.getBoard(viewer)
+    const items = NotebookSystem.getBoard(owner)
       .sort((a, b) => a.createdAt - b.createdAt)
       .map(item => ({ ...item, isLink: item.kind === "link" }));
-    return { isBoard: true, boardItems: items, boardReadOnly: isGM };
+    return {
+      isBoard: true,
+      boardItems: items,
+      boardOwnerName: game.user.isGM ? owner.name : null
+    };
   }
 
   async #prepareBestiary(viewer) {
@@ -373,7 +390,9 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     root.querySelector(".nb-view-as")?.addEventListener("change", (event) => {
-      this.viewAs = event.currentTarget.value || null;
+      const value = event.currentTarget.value || null;
+      if (this.tab === "board") this.boardUserId = value;
+      else this.previewAs = value;
       this.render();
     });
 
@@ -427,7 +446,7 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   /* ---------------------------------------- */
 
   get #acceptsDrop() {
-    if (this.tab === "board") return !game.user.isGM;
+    if (this.tab === "board") return !!this.#boardUser;
     return this.#editing;
   }
 
@@ -440,7 +459,7 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!uuid) return;
 
     if (this.tab === "board") {
-      await NotebookSystem.addBoardLink(uuid);
+      await NotebookSystem.addBoardLink(uuid, this.#boardUser);
       return;
     }
 
@@ -518,7 +537,7 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static #onViewPlayer(event, target) {
-    this.viewAs = target.dataset.userId;
+    this.boardUserId = target.dataset.userId;
     this.render();
   }
 
@@ -527,19 +546,24 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   /* ---------------------------------------- */
 
   static async #onAddNote() {
+    const owner = this.#boardUser;
+    if (!owner) return;
     const data = await NotebookDialogs.editNote();
-    if (data) await NotebookSystem.addBoardItem({ kind: "note", ...data });
+    if (data) await NotebookSystem.addBoardItem({ kind: "note", ...data }, owner);
   }
 
   static async #onEditBoardItem(event, target) {
-    const item = NotebookSystem.getBoard().find(i => i.id === target.dataset.id);
+    const owner = this.#boardUser;
+    if (!owner) return;
+    const item = NotebookSystem.getBoard(owner).find(i => i.id === target.dataset.id);
     if (!item || item.kind !== "note") return;
     const data = await NotebookDialogs.editNote(item);
-    if (data) await NotebookSystem.updateBoardItem(item.id, data);
+    if (data) await NotebookSystem.updateBoardItem(item.id, data, owner);
   }
 
   static async #onDeleteBoardItem(event, target) {
-    await NotebookSystem.deleteBoardItem(target.dataset.id);
+    const owner = this.#boardUser;
+    if (owner) await NotebookSystem.deleteBoardItem(target.dataset.id, owner);
   }
 
   static async #onOpenLink(event, target) {

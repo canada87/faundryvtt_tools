@@ -10,9 +10,9 @@
 
       {{#if isGM}}
         <label class="nb-view">
-          <span>{{localize "NOTEBOOK.ViewAs"}}</span>
+          <span>{{#if isBoardTab}}{{localize "NOTEBOOK.BoardOf"}}{{else}}{{localize "NOTEBOOK.ViewAs"}}{{/if}}</span>
           <select class="nb-view-as">
-            <option value="">{{localize "NOTEBOOK.ViewAsGM"}}</option>
+            <option value="">{{#if isBoardTab}}{{localize "NOTEBOOK.ChoosePlayerOption"}}{{else}}{{localize "NOTEBOOK.ViewAsGM"}}{{/if}}</option>
             {{#each players}}
               <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
             {{/each}}
@@ -48,14 +48,18 @@
             <p class="nb-empty">{{localize "NOTEBOOK.NoPlayers"}}</p>
           {{/if}}
         {{else}}
-          {{#unless boardReadOnly}}
-            <div class="nb-toolbar">
-              <button type="button" class="nb-btn" data-action="addNote">
-                <i class="fas fa-note-sticky" aria-hidden="true"></i> {{localize "NOTEBOOK.Board.AddNote"}}
-              </button>
-              <span class="nb-hint">{{localize "NOTEBOOK.Board.DropHint"}}</span>
-            </div>
-          {{/unless}}
+          {{#if boardOwnerName}}
+            <p class="nb-owner-banner">
+              <i class="fas fa-pen-nib" aria-hidden="true"></i>
+              {{localize "NOTEBOOK.Board.GMWriting" name=boardOwnerName}}
+            </p>
+          {{/if}}
+          <div class="nb-toolbar">
+            <button type="button" class="nb-btn" data-action="addNote">
+              <i class="fas fa-note-sticky" aria-hidden="true"></i> {{localize "NOTEBOOK.Board.AddNote"}}
+            </button>
+            <span class="nb-hint">{{localize "NOTEBOOK.Board.DropHint"}}</span>
+          </div>
 
           {{#if boardItems.length}}
             <div class="nb-board">
@@ -66,26 +70,22 @@
                       <i class="{{icon}}" aria-hidden="true"></i>
                       <span>{{title}}</span>
                     </button>
-                    {{#unless ../boardReadOnly}}
-                      <button type="button" class="nb-card-delete" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
-                        <i class="fas fa-xmark" aria-hidden="true"></i>
-                      </button>
-                    {{/unless}}
+                    <button type="button" class="nb-card-delete" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
+                      <i class="fas fa-xmark" aria-hidden="true"></i>
+                    </button>
                   </article>
                 {{else}}
                   <article class="nb-card nb-postit" style="--note:{{color}}">
                     {{#if title}}<h3>{{title}}</h3>{{/if}}
                     <p>{{text}}</p>
-                    {{#unless ../boardReadOnly}}
-                      <div class="nb-card-actions">
-                        <button type="button" data-action="editBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Edit'}}">
-                          <i class="fas fa-pen" aria-hidden="true"></i>
-                        </button>
-                        <button type="button" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
-                          <i class="fas fa-trash" aria-hidden="true"></i>
-                        </button>
-                      </div>
-                    {{/unless}}
+                    <div class="nb-card-actions">
+                      <button type="button" data-action="editBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Edit'}}">
+                        <i class="fas fa-pen" aria-hidden="true"></i>
+                      </button>
+                      <button type="button" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                      </button>
+                    </div>
                   </article>
                 {{/if}}
               {{/each}}

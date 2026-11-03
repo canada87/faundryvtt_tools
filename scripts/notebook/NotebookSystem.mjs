@@ -79,12 +79,14 @@ export class NotebookSystem {
     return foundry.utils.deepClone(user?.getFlag(MODULE_ID, "notebook.board") ?? []);
   }
 
-  static async #saveBoard(items) {
-    await game.user.setFlag(MODULE_ID, "notebook.board", items);
+  /** Players write their own board; the GM may write any player's. */
+  static async #saveBoard(items, user = game.user) {
+    if (user.id !== game.user.id && !game.user.isGM) return;
+    await user.setFlag(MODULE_ID, "notebook.board", items);
   }
 
-  static async addBoardItem(data) {
-    const items = this.getBoard();
+  static async addBoardItem(data, user = game.user) {
+    const items = this.getBoard(user);
     items.push({
       id: foundry.utils.randomID(),
       kind: data.kind ?? "note",
@@ -95,35 +97,36 @@ export class NotebookSystem {
       icon: data.icon ?? null,
       createdAt: Date.now()
     });
-    await this.#saveBoard(items);
+    await this.#saveBoard(items, user);
   }
 
-  static async updateBoardItem(id, updates) {
-    const items = this.getBoard();
+  static async updateBoardItem(id, updates, user = game.user) {
+    const items = this.getBoard(user);
     const item = items.find(i => i.id === id);
     if (!item) return;
     Object.assign(item, updates);
-    await this.#saveBoard(items);
+    await this.#saveBoard(items, user);
   }
 
-  static async deleteBoardItem(id) {
-    await this.#saveBoard(this.getBoard().filter(i => i.id !== id));
+  static async deleteBoardItem(id, user = game.user) {
+    await this.#saveBoard(this.getBoard(user).filter(i => i.id !== id), user);
   }
 
   /**
    * Pin any dropped document (journal, item, scene, actor…) to the board.
    * @param {string} uuid
+   * @param {User} [user]  owner of the board
    */
-  static async addBoardLink(uuid) {
+  static async addBoardLink(uuid, user = game.user) {
     const doc = await fromUuid(uuid);
     if (!doc) return;
-    if (this.getBoard().some(i => i.kind === "link" && i.uuid === uuid)) return;
+    if (this.getBoard(user).some(i => i.kind === "link" && i.uuid === uuid)) return;
     await this.addBoardItem({
       kind: "link",
       title: doc.name ?? "",
       uuid,
       icon: this.documentIcon(doc.documentName)
-    });
+    }, user);
   }
 
   static documentIcon(documentName) {
