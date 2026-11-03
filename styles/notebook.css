@@ -162,6 +162,12 @@
   border-radius: 4px;
 }
 
+.fvtt-notebook .nb-page input::placeholder,
+.fvtt-notebook .nb-page textarea::placeholder {
+  color: var(--nb-ink-muted);
+  opacity: 0.8;
+}
+
 .fvtt-notebook .nb-page select option {
   color: #222;
   background: #fff;
@@ -713,11 +719,13 @@
   color: var(--nb-accent);
 }
 
+/* Foundry themes color dl/dd: keep the ink on paper */
 .fvtt-notebook .nb-field dd {
   display: flex;
   flex-direction: column;
   gap: 2px;
   margin: 0;
+  color: var(--nb-ink);
   min-width: 0;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -742,6 +750,7 @@
 
 .fvtt-notebook .nb-estimate {
   padding-left: 6px;
+  color: var(--nb-ink);
   font-family: var(--nb-hand);
   font-size: 0.82rem;
   border-left: 3px solid var(--author, var(--nb-ink-muted));
@@ -755,6 +764,7 @@
 
 .fvtt-notebook .nb-page .nb-estimate-input {
   width: 100%;
+  color: var(--nb-ink);
   height: 24px;
   padding: 0 4px;
   font-family: var(--nb-hand);
