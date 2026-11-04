@@ -438,48 +438,6 @@
   opacity: 1;
 }
 
-/* GM: choose a player */
-.fvtt-notebook .nb-player-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 14px;
-  margin-top: 14px;
-}
-
-.fvtt-notebook .nb-player-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  height: auto;
-  padding: 14px 10px;
-  color: var(--nb-ink);
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid var(--nb-line);
-  border-top: 4px solid var(--player, var(--nb-accent));
-  border-radius: 4px;
-}
-
-.fvtt-notebook .nb-player-card:hover {
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.fvtt-notebook .nb-player-card img {
-  width: 56px;
-  height: 56px;
-  object-fit: cover;
-  border: none;
-  border-radius: 50%;
-}
-
-.fvtt-notebook .nb-player-name {
-  font-weight: bold;
-}
-
-.fvtt-notebook .nb-player-card small {
-  color: var(--nb-ink-muted);
-}
-
 /* ---------- Bestiary ---------- */
 
 .fvtt-notebook .nb-page-bestiary .nb-body {

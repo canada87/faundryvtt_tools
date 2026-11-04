@@ -12,7 +12,7 @@
         <label class="nb-view">
           <span>{{#if isBoardTab}}{{localize "NOTEBOOK.BoardOf"}}{{else}}{{localize "NOTEBOOK.ViewAs"}}{{/if}}</span>
           <select class="nb-view-as">
-            <option value="">{{#if isBoardTab}}{{localize "NOTEBOOK.ChoosePlayerOption"}}{{else}}{{localize "NOTEBOOK.ViewAsGM"}}{{/if}}</option>
+            <option value="">{{#if isBoardTab}}{{localize "NOTEBOOK.MyNotebook"}}{{else}}{{localize "NOTEBOOK.ViewAsGM"}}{{/if}}</option>
             {{#each players}}
               <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
             {{/each}}
@@ -32,67 +32,50 @@
 
       {{!-- ================= Board ================= --}}
       {{#if isBoard}}
-        {{#if boardOwnerMissing}}
-          <p class="nb-hint">{{localize "NOTEBOOK.Board.ChoosePlayer"}}</p>
-          {{#if playerCards.length}}
-            <div class="nb-player-cards">
-              {{#each playerCards}}
-                <button type="button" class="nb-player-card" data-action="viewPlayer" data-user-id="{{id}}" style="--player:{{color}}">
-                  {{#if avatar}}<img src="{{avatar}}" alt="" />{{/if}}
-                  <span class="nb-player-name">{{name}}</span>
-                  <small>{{localize "NOTEBOOK.Board.Count" count=count}}</small>
-                </button>
-              {{/each}}
-            </div>
-          {{else}}
-            <p class="nb-empty">{{localize "NOTEBOOK.NoPlayers"}}</p>
-          {{/if}}
-        {{else}}
-          {{#if boardOwnerName}}
-            <p class="nb-owner-banner">
-              <i class="fas fa-pen-nib" aria-hidden="true"></i>
-              {{localize "NOTEBOOK.Board.GMWriting" name=boardOwnerName}}
-            </p>
-          {{/if}}
-          <div class="nb-toolbar">
-            <button type="button" class="nb-btn" data-action="addNote">
-              <i class="fas fa-note-sticky" aria-hidden="true"></i> {{localize "NOTEBOOK.Board.AddNote"}}
-            </button>
-            <span class="nb-hint">{{localize "NOTEBOOK.Board.DropHint"}}</span>
-          </div>
+        {{#if boardOwnerName}}
+          <p class="nb-owner-banner">
+            <i class="fas fa-pen-nib" aria-hidden="true"></i>
+            {{localize "NOTEBOOK.Board.GMWriting" name=boardOwnerName}}
+          </p>
+        {{/if}}
+        <div class="nb-toolbar">
+          <button type="button" class="nb-btn" data-action="addNote">
+            <i class="fas fa-note-sticky" aria-hidden="true"></i> {{localize "NOTEBOOK.Board.AddNote"}}
+          </button>
+          <span class="nb-hint">{{localize "NOTEBOOK.Board.DropHint"}}</span>
+        </div>
 
-          {{#if boardItems.length}}
-            <div class="nb-board">
-              {{#each boardItems}}
-                {{#if isLink}}
-                  <article class="nb-card nb-link">
-                    <button type="button" class="nb-link-open" data-action="openLink" data-uuid="{{uuid}}">
-                      <i class="{{icon}}" aria-hidden="true"></i>
-                      <span>{{title}}</span>
+        {{#if boardItems.length}}
+          <div class="nb-board">
+            {{#each boardItems}}
+              {{#if isLink}}
+                <article class="nb-card nb-link">
+                  <button type="button" class="nb-link-open" data-action="openLink" data-uuid="{{uuid}}">
+                    <i class="{{icon}}" aria-hidden="true"></i>
+                    <span>{{title}}</span>
+                  </button>
+                  <button type="button" class="nb-card-delete" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
+                  </button>
+                </article>
+              {{else}}
+                <article class="nb-card nb-postit" style="--note:{{color}}">
+                  {{#if title}}<h3>{{title}}</h3>{{/if}}
+                  <p>{{text}}</p>
+                  <div class="nb-card-actions">
+                    <button type="button" data-action="editBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Edit'}}">
+                      <i class="fas fa-pen" aria-hidden="true"></i>
                     </button>
-                    <button type="button" class="nb-card-delete" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
-                      <i class="fas fa-xmark" aria-hidden="true"></i>
+                    <button type="button" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
+                      <i class="fas fa-trash" aria-hidden="true"></i>
                     </button>
-                  </article>
-                {{else}}
-                  <article class="nb-card nb-postit" style="--note:{{color}}">
-                    {{#if title}}<h3>{{title}}</h3>{{/if}}
-                    <p>{{text}}</p>
-                    <div class="nb-card-actions">
-                      <button type="button" data-action="editBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Edit'}}">
-                        <i class="fas fa-pen" aria-hidden="true"></i>
-                      </button>
-                      <button type="button" data-action="deleteBoardItem" data-id="{{id}}" aria-label="{{localize 'NOTEBOOK.Delete'}}">
-                        <i class="fas fa-trash" aria-hidden="true"></i>
-                      </button>
-                    </div>
-                  </article>
-                {{/if}}
-              {{/each}}
-            </div>
-          {{else}}
-            <p class="nb-empty">{{localize "NOTEBOOK.Board.Empty"}}</p>
-          {{/if}}
+                  </div>
+                </article>
+              {{/if}}
+            {{/each}}
+          </div>
+        {{else}}
+          <p class="nb-empty">{{localize "NOTEBOOK.Board.Empty"}}</p>
         {{/if}}
       {{/if}}
 

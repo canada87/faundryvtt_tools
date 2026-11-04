@@ -825,7 +825,7 @@
     "ViewAs": "View as",
     "ViewAsGM": "GM (edit)",
     "BoardOf": "Notebook of",
-    "ChoosePlayerOption": "— choose a player —",
+    "MyNotebook": "My notebook",
     "PreviewNotice": "Preview: you are seeing the notebook as {name} sees it.",
     "NoPlayers": "There are no players in this world.",
     "Untitled": "Untitled",
@@ -844,9 +844,7 @@
       "NoteColor": "Color",
       "DropHint": "Drop a journal, item, scene… here to pin a link to it.",
       "Empty": "The notebook is empty. Add a post-it or drop a journal, item or scene here.",
-      "ChoosePlayer": "Notes belong to the players: choose whose notebook to read.",
-      "GMWriting": "You are writing in {name}'s notebook: they will see it too.",
-      "Count": "{count} items"
+      "GMWriting": "You are writing in {name}'s notebook: they will see it too."
     },
     "Bestiary": {
       "Add": "New creature",

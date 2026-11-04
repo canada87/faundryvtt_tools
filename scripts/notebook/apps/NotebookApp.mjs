@@ -23,8 +23,8 @@ const VIS_ICONS = {
  * The players' Notebook: a book with bookmark tabs on its edge for the
  * personal board, the bestiary and the GM's handouts.
  *
- * Players see their own notebook. The GM picks whose board to read and
- * write, edits bestiary and handouts, and can preview them as a player.
+ * Players see their own notebook. The GM has a board too, can open any
+ * player's board, edits bestiary and handouts, and can preview them as a player.
  */
 export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
@@ -46,7 +46,6 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
       editBoardItem: NotebookApp.#onEditBoardItem,
       deleteBoardItem: NotebookApp.#onDeleteBoardItem,
       openLink: NotebookApp.#onOpenLink,
-      viewPlayer: NotebookApp.#onViewPlayer,
       selectCreature: NotebookApp.#onSelectCreature,
       addCreature: NotebookApp.#onAddCreature,
       addSelectedTokens: NotebookApp.#onAddSelectedTokens,
@@ -79,7 +78,7 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @type {"board"|"bestiary"|"handouts"} */
   tab = "board";
 
-  /** GM only: the player whose board is shown on the Notes tab. */
+  /** GM only: whose board the Notes tab shows (null = the GM's own). */
   boardUserId = null;
 
   /** GM only: preview bestiary and handouts as this player (null = GM editing). */
@@ -139,10 +138,10 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   /*  Context                                  */
   /* ---------------------------------------- */
 
-  /** Owner of the board on the Notes tab (null: the GM has not chosen yet). */
+  /** Owner of the board on the Notes tab. */
   get #boardUser() {
     if (!game.user.isGM) return game.user;
-    return (this.boardUserId && game.users.get(this.boardUserId)) || null;
+    return (this.boardUserId && game.users.get(this.boardUserId)) || game.user;
   }
 
   /** The user whose perspective is shown on bestiary and handouts. */
@@ -192,26 +191,14 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
   #prepareBoard() {
     const owner = this.#boardUser;
-    if (!owner) {
-      return {
-        isBoard: true,
-        boardOwnerMissing: true,
-        playerCards: NotebookSystem.getPlayers().map(u => ({
-          id: u.id,
-          name: u.name,
-          color: u.color?.css ?? u.color,
-          avatar: u.character?.img ?? u.avatar,
-          count: NotebookSystem.getBoard(u).length
-        }))
-      };
-    }
     const items = NotebookSystem.getBoard(owner)
       .sort((a, b) => a.createdAt - b.createdAt)
       .map(item => ({ ...item, isLink: item.kind === "link" }));
     return {
       isBoard: true,
       boardItems: items,
-      boardOwnerName: game.user.isGM ? owner.name : null
+      // Banner when the GM writes in someone else's notebook
+      boardOwnerName: owner.id !== game.user.id ? owner.name : null
     };
   }
 
@@ -474,7 +461,7 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   /* ---------------------------------------- */
 
   get #acceptsDrop() {
-    if (this.tab === "board") return !!this.#boardUser;
+    if (this.tab === "board") return true;
     return this.#editing;
   }
 
@@ -564,25 +551,18 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
     this.render();
   }
 
-  static #onViewPlayer(event, target) {
-    this.boardUserId = target.dataset.userId;
-    this.render();
-  }
-
   /* ---------------------------------------- */
   /*  Actions: board                           */
   /* ---------------------------------------- */
 
   static async #onAddNote() {
     const owner = this.#boardUser;
-    if (!owner) return;
     const data = await NotebookDialogs.editNote();
     if (data) await NotebookSystem.addBoardItem({ kind: "note", ...data }, owner);
   }
 
   static async #onEditBoardItem(event, target) {
     const owner = this.#boardUser;
-    if (!owner) return;
     const item = NotebookSystem.getBoard(owner).find(i => i.id === target.dataset.id);
     if (!item || item.kind !== "note") return;
     const data = await NotebookDialogs.editNote(item);
@@ -590,8 +570,7 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static async #onDeleteBoardItem(event, target) {
-    const owner = this.#boardUser;
-    if (owner) await NotebookSystem.deleteBoardItem(target.dataset.id, owner);
+    await NotebookSystem.deleteBoardItem(target.dataset.id, this.#boardUser);
   }
 
   static async #onOpenLink(event, target) {
