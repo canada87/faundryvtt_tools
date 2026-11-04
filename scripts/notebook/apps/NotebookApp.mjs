@@ -42,6 +42,7 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
     },
     actions: {
       switchTab: NotebookApp.#onSwitchTab,
+      selectView: NotebookApp.#onSelectView,
       addNote: NotebookApp.#onAddNote,
       editBoardItem: NotebookApp.#onEditBoardItem,
       deleteBoardItem: NotebookApp.#onDeleteBoardItem,
@@ -176,9 +177,11 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
         active: t.id === this.tab,
         badge: t.id === "handouts" ? unseen : 0
       })),
+      selfSelected: !selectedId,
       players: isGM ? NotebookSystem.getPlayers().map(u => ({
         id: u.id,
         name: u.name,
+        color: u.color?.css ?? u.color,
         selected: u.id === selectedId
       })) : []
     };
@@ -404,13 +407,6 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
       input?.setSelectionRange?.(input.value.length, input.value.length);
     }
 
-    root.querySelector(".nb-view-as")?.addEventListener("change", (event) => {
-      const value = event.currentTarget.value || null;
-      if (this.tab === "board") this.boardUserId = value;
-      else this.previewAs = value;
-      this.render();
-    });
-
     // Right-click on a visibility button: choose the players
     root.querySelectorAll("[data-action='cyclePart'], [data-action='cycleHandout']").forEach(button => {
       button.addEventListener("contextmenu", (event) => {
@@ -548,6 +544,14 @@ export class NotebookApp extends HandlebarsApplicationMixin(ApplicationV2) {
   static #onSwitchTab(event, target) {
     this.tab = target.dataset.tab;
     this.handoutId = null;
+    this.render();
+  }
+
+  /** GM header buttons: whose board (Notes tab) or whose view (other tabs). */
+  static #onSelectView(event, target) {
+    const userId = target.dataset.userId || null;
+    if (this.tab === "board") this.boardUserId = userId;
+    else this.previewAs = userId;
     this.render();
   }
 

@@ -9,15 +9,22 @@
       </h2>
 
       {{#if isGM}}
-        <label class="nb-view">
-          <span>{{#if isBoardTab}}{{localize "NOTEBOOK.BoardOf"}}{{else}}{{localize "NOTEBOOK.ViewAs"}}{{/if}}</span>
-          <select class="nb-view-as">
-            <option value="">{{#if isBoardTab}}{{localize "NOTEBOOK.MyNotebook"}}{{else}}{{localize "NOTEBOOK.ViewAsGM"}}{{/if}}</option>
+        <div class="nb-view" role="group" aria-labelledby="nb-view-label">
+          <span id="nb-view-label">{{#if isBoardTab}}{{localize "NOTEBOOK.BoardOf"}}{{else}}{{localize "NOTEBOOK.ViewAs"}}{{/if}}</span>
+          <div class="nb-view-buttons">
+            <button type="button" class="nb-view-btn self" data-action="selectView" data-user-id="" aria-pressed="{{selfSelected}}">
+              <i class="fas {{#if isBoardTab}}fa-book{{else}}fa-pen{{/if}}" aria-hidden="true"></i>
+              {{#if isBoardTab}}{{localize "NOTEBOOK.MyNotebook"}}{{else}}{{localize "NOTEBOOK.ViewAsGM"}}{{/if}}
+            </button>
             {{#each players}}
-              <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
+              <button type="button" class="nb-view-btn" data-action="selectView" data-user-id="{{id}}" aria-pressed="{{selected}}"
+                      style="--player:{{color}}" data-tooltip="{{name}}">
+                <span class="nb-player-dot" aria-hidden="true"></span>
+                <span class="nb-view-name">{{name}}</span>
+              </button>
             {{/each}}
-          </select>
-        </label>
+          </div>
+        </div>
       {{/if}}
     </header>
 

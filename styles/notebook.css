@@ -72,6 +72,7 @@
 
 .fvtt-notebook .nb-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -96,14 +97,59 @@
 .fvtt-notebook .nb-view {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 0.8rem;
   color: var(--nb-ink-muted);
   white-space: nowrap;
 }
 
-.fvtt-notebook .nb-view select {
-  min-width: 150px;
+/* GM: one button per player instead of a dropdown (parties are small) */
+.fvtt-notebook .nb-view-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.fvtt-notebook .nb-page .nb-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  height: 26px;
+  padding: 0 10px;
+  font-size: 0.78rem;
+  line-height: 1;
+  color: var(--nb-ink);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(51, 40, 29, 0.25);
+  border-radius: 13px;
+  box-shadow: none;
+}
+
+.fvtt-notebook .nb-page .nb-view-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--nb-accent);
+}
+
+.fvtt-notebook .nb-page .nb-view-btn[aria-pressed="true"] {
+  color: #fff;
+  background: var(--nb-ink);
+  border-color: var(--nb-ink);
+}
+
+.fvtt-notebook .nb-view-name {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fvtt-notebook .nb-player-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  background: var(--player, var(--nb-ink-muted));
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
 }
 
 .fvtt-notebook .nb-preview-banner {
