@@ -975,5 +975,58 @@
     "PausedCombat": "Paused: combat in progress",
     "Empty": "No player token of an online player in this scene.",
     "AutoAdvanced": "Exploration: every token reached the quota, the clock advanced by {seconds} s."
+  },
+  "REACH": {
+    "FeatureName": "Movement Reach",
+    "FeatureDescription": "Color the cells the selected token can reach with one, two or three movements, minus what it already walked this turn.",
+    "Toggle": "Show/hide movement reach",
+    "ToggleHint": "Color the cells reachable by the selected token.",
+    "Reset": "Reset walked distance",
+    "ResetHint": "Reset the distance walked outside combat by the selected tokens (or all of them).",
+    "ResetDone": "Movement reach: walked distance reset.",
+    "NoToken": "Movement reach: select one of your tokens.",
+    "NoSpeed": "Movement reach: speed of {name} not found (field: {path}). The GM must set the sheet field in the module settings.",
+    "Label": "Movement: {left} / {speed} {units}",
+    "LabelExtra": "movement {n}",
+    "LabelNone": "No movement left",
+    "Settings": {
+      "Enabled": {
+        "Name": "Movement Reach: enable",
+        "Hint": "Enable movement reach (Shift+R colors the cells reachable by the selected token). Requires a reload."
+      },
+      "SpeedPath": {
+        "Name": "Movement Reach: speed field",
+        "Hint": "Path of the actor field holding the speed, e.g. system.attributes.movement.walk (dnd5e) or system.attributes.speed.total (pf2e). Objects use value/total. Empty: try a few common paths."
+      },
+      "SpeedUnit": {
+        "Name": "Movement Reach: speed unit",
+        "Hint": "Unit of the value read from the sheet.",
+        "Distance": "Scene units (e.g. meters or feet)",
+        "Spaces": "Grid spaces"
+      },
+      "SpeedFactor": {
+        "Name": "Movement Reach: multiplier",
+        "Hint": "Multiply the speed read, e.g. 0.3 when the sheet uses feet and the scene meters."
+      },
+      "Rings": {
+        "Name": "Movement Reach: movements shown",
+        "Hint": "How many full movements to color (1 = green, 2 = yellow, 3 = orange)."
+      },
+      "ResetOnTime": {
+        "Name": "Movement Reach: reset when time passes",
+        "Hint": "Outside combat the walked distance resets when the world clock advances (Exploration turns included). In combat the Foundry movement history is always used."
+      },
+      "HideUnseen": {
+        "Name": "Movement Reach: hide unseen areas",
+        "Hint": "Players only see colored cells that are visible or explored, so the reach does not reveal unknown rooms."
+      },
+      "Mode": {
+        "Name": "Movement Reach: precision",
+        "Hint": "Chosen by every player according to their PC. Computed only while the reach is on and something changes.",
+        "Free": "Light: ignore walls",
+        "Line": "Medium: drop cells behind walls in a straight line",
+        "Path": "Full: real path around walls"
+      }
+    }
   }
 }

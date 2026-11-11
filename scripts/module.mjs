@@ -15,6 +15,7 @@ import { initSceneNav } from "./scene-nav/index.mjs";
 import { initJournalStyles } from "./journal-styles/index.mjs";
 import { initNotebook } from "./notebook/index.mjs";
 import { initExploration } from "./exploration/index.mjs";
+import { initMovementReach } from "./movement-reach/index.mjs";
 
 /* ---------------------------------------- */
 /*  Settings menu launcher (FormApplication */
@@ -70,6 +71,7 @@ Hooks.once("init", () => {
   initJournalStyles();
   initNotebook();
   initExploration();
+  initMovementReach();
 
   console.log("Faundryvtt Tools | Module initialized");
 });

@@ -74,6 +74,11 @@ scripts/
     ExplorationSystem.mjs  — Logica core: quota caselle per token fuori combat, blocco preMoveToken (giocatori), conteggio moveToken, avanzamento tempo e reset
     apps/
       ExplorationTracker.mjs — UI GM: token dei giocatori online con barra quota, escludi token, pulsante turno successivo
+  movement-reach/
+    index.mjs              — Init portata di movimento (disattivo di default: setting reachEnabled; keybinding Shift+R per tutti)
+    ReachSystem.mjs        — Logica core: velocità dal campo scheda configurabile, distanza percorsa (cronologia core in combat, contatore locale fuori), budget per anello
+    ReachCalculator.mjs    — Calcolo caselle raggiungibili: free (no muri), line (linea retta), path (Dijkstra sui muri); indice locale dei muri
+    ReachOverlay.mjs       — Overlay solo locale (highlight layer della griglia + etichetta), segue il token controllato
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting

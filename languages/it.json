@@ -975,5 +975,58 @@
     "PausedCombat": "In pausa: combattimento in corso",
     "Empty": "Nessun token di giocatori online in questa scena.",
     "AutoAdvanced": "Esplorazione: tutti i token hanno raggiunto la quota, l'orologio è avanzato di {seconds} s."
+  },
+  "REACH": {
+    "FeatureName": "Portata di movimento",
+    "FeatureDescription": "Colora le caselle che il token selezionato può raggiungere con uno, due o tre movimenti, tolto quanto ha già camminato nel turno.",
+    "Toggle": "Mostra/nascondi la portata di movimento",
+    "ToggleHint": "Colora le caselle raggiungibili dal token selezionato.",
+    "Reset": "Azzera il movimento percorso",
+    "ResetHint": "Azzera la distanza già percorsa fuori dal combattimento dai token selezionati (o da tutti).",
+    "ResetDone": "Portata di movimento: distanza percorsa azzerata.",
+    "NoToken": "Portata di movimento: seleziona un tuo token.",
+    "NoSpeed": "Portata di movimento: velocità di {name} non trovata (campo: {path}). Il GM deve indicare il campo della scheda nelle impostazioni del modulo.",
+    "Label": "Movimento: {left} / {speed} {units}",
+    "LabelExtra": "{n}° movimento",
+    "LabelNone": "Movimento esaurito",
+    "Settings": {
+      "Enabled": {
+        "Name": "Portata di movimento: abilita",
+        "Hint": "Attiva la portata di movimento (Shift+R colora le caselle raggiungibili dal token selezionato). Richiede il ricaricamento."
+      },
+      "SpeedPath": {
+        "Name": "Portata di movimento: campo velocità",
+        "Hint": "Percorso del campo dell'attore con la velocità, es. system.attributes.movement.walk (dnd5e) o system.attributes.speed.total (pf2e). Se è un oggetto si usa value/total. Vuoto: prova alcuni percorsi comuni."
+      },
+      "SpeedUnit": {
+        "Name": "Portata di movimento: unità della velocità",
+        "Hint": "Unità del valore letto dalla scheda.",
+        "Distance": "Unità della scena (es. metri o piedi)",
+        "Spaces": "Caselle della griglia"
+      },
+      "SpeedFactor": {
+        "Name": "Portata di movimento: moltiplicatore",
+        "Hint": "Moltiplica la velocità letta, es. 0.3 se la scheda è in piedi e la scena in metri."
+      },
+      "Rings": {
+        "Name": "Portata di movimento: movimenti mostrati",
+        "Hint": "Quanti movimenti interi colorare (1 = verde, 2 = giallo, 3 = arancione)."
+      },
+      "ResetOnTime": {
+        "Name": "Portata di movimento: azzera quando passa il tempo",
+        "Hint": "Fuori dal combattimento la distanza percorsa si azzera quando l'orologio del mondo avanza (anche i turni di Esplorazione). In combattimento si usa sempre la cronologia dei movimenti di Foundry."
+      },
+      "HideUnseen": {
+        "Name": "Portata di movimento: nascondi le zone non viste",
+        "Hint": "I giocatori vedono colorate solo le caselle visibili o già esplorate, così la portata non rivela stanze sconosciute."
+      },
+      "Mode": {
+        "Name": "Portata di movimento: precisione",
+        "Hint": "Scelta per ogni giocatore in base al proprio PC. Il calcolo avviene solo quando la portata è accesa e qualcosa cambia.",
+        "Free": "Leggera: ignora i muri",
+        "Line": "Media: esclude le caselle dietro i muri in linea retta",
+        "Path": "Completa: percorso reale attorno ai muri"
+      }
+    }
   }
 }
