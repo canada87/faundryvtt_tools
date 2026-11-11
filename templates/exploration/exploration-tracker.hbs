@@ -1,0 +1,64 @@
+<div class="exploration-tracker-content">
+
+  <div class="exploration-settings">
+    <label title="{{localize 'EXPLORATION.Settings.Quota.Hint'}}">
+      <i class="fas fa-shoe-prints"></i>
+      <input type="number" min="1" step="1" data-setting="explorationQuota" value="{{quota}}" />
+      <span>{{localize "EXPLORATION.Cells"}}</span>
+    </label>
+    <label title="{{localize 'EXPLORATION.Settings.Seconds.Hint'}}">
+      <i class="fas fa-clock"></i>
+      <input type="number" min="0" step="1" data-setting="explorationSeconds" value="{{seconds}}" />
+      <span>{{localize "EXPLORATION.Seconds"}}</span>
+    </label>
+  </div>
+
+  {{#if paused}}
+    <div class="exploration-banner">
+      <i class="fas fa-swords"></i> {{localize "EXPLORATION.PausedCombat"}}
+    </div>
+  {{/if}}
+
+  {{#if tokens.length}}
+    <div class="exploration-summary">
+      <span>{{localize "EXPLORATION.Ready"}}</span>
+      <span class="exploration-summary-count">{{ready}}/{{total}}</span>
+    </div>
+
+    <ul class="exploration-list">
+      {{#each tokens}}
+        <li class="exploration-row{{#if done}} is-done{{/if}}{{#if excluded}} is-excluded{{/if}}" data-token-id="{{id}}">
+          <img class="exploration-img" src="{{img}}" alt="" data-action="panToToken" />
+          <div class="exploration-info">
+            <div class="exploration-line">
+              <a class="exploration-name" data-action="panToToken" title="{{owners}}">{{name}}</a>
+              <span class="exploration-count">{{used}}/{{../quota}}</span>
+            </div>
+            <div class="exploration-bar"{{#if color}} style="--owner-color: {{color}}"{{/if}}>
+              <div class="exploration-bar-fill" style="width: {{pct}}%"></div>
+            </div>
+            <div class="exploration-line exploration-sub">
+              <span class="exploration-owner">{{owners}}</span>
+              <span class="exploration-pct">{{pct}}%</span>
+            </div>
+          </div>
+          <button type="button" class="exploration-exclude" data-action="toggleExcluded"
+                  title="{{#if excluded}}{{localize 'EXPLORATION.Include'}}{{else}}{{localize 'EXPLORATION.Exclude'}}{{/if}}">
+            <i class="fas {{#if excluded}}fa-eye-slash{{else}}fa-eye{{/if}}"></i>
+          </button>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <div class="exploration-empty">
+      <i class="fas fa-user-slash"></i>
+      <p>{{localize "EXPLORATION.Empty"}}</p>
+    </div>
+  {{/if}}
+
+  <button type="button" class="exploration-next" data-action="nextTurn" {{#if paused}}disabled{{/if}}>
+    <i class="fas fa-forward"></i> {{localize "EXPLORATION.NextTurn"}}
+    <span class="exploration-next-seconds">+{{seconds}} s</span>
+  </button>
+
+</div>

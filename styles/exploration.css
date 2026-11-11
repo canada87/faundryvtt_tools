@@ -1,0 +1,213 @@
+/* ============================================ */
+/*  Exploration — GM tracker                     */
+/* ============================================ */
+
+/* Neutral tokens derive from the themed text color, so the panel
+   reads the same in Foundry's light and dark application themes. */
+.exploration-tracker {
+  --ex-surface: color-mix(in srgb, currentColor 6%, transparent);
+  --ex-border: color-mix(in srgb, currentColor 22%, transparent);
+  --ex-muted: color-mix(in srgb, currentColor 65%, transparent);
+  --ex-track: color-mix(in srgb, currentColor 14%, transparent);
+  --ex-accent: #e8862f;
+  --ex-done: #4caf72;
+}
+
+.exploration-tracker .exploration-tracker-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+/* ---- Quota / seconds ---- */
+
+.exploration-tracker .exploration-settings {
+  display: flex;
+  gap: 8px;
+}
+
+.exploration-tracker .exploration-settings label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: var(--ex-surface);
+  border: 1px solid var(--ex-border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--ex-muted);
+}
+
+.exploration-tracker .exploration-settings i {
+  color: var(--ex-accent);
+}
+
+.exploration-tracker .exploration-settings input {
+  width: 4em;
+  height: 24px;
+  text-align: center;
+}
+
+/* ---- Status ---- */
+
+.exploration-tracker .exploration-banner {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--ex-accent);
+  background: color-mix(in srgb, var(--ex-accent) 15%, transparent);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.exploration-tracker .exploration-summary {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ex-muted);
+}
+
+.exploration-tracker .exploration-summary-count {
+  font-weight: 700;
+}
+
+/* ---- Token rows ---- */
+
+.exploration-tracker .exploration-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.exploration-tracker .exploration-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: var(--ex-surface);
+  border: 1px solid var(--ex-border);
+  border-radius: 6px;
+}
+
+.exploration-tracker .exploration-row.is-excluded {
+  opacity: 0.45;
+}
+
+.exploration-tracker .exploration-img {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  object-fit: contain;
+  border: none;
+  cursor: pointer;
+}
+
+.exploration-tracker .exploration-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.exploration-tracker .exploration-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.exploration-tracker .exploration-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.exploration-tracker .exploration-count {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+}
+
+.exploration-tracker .exploration-sub {
+  font-size: 0.75rem;
+  color: var(--ex-muted);
+}
+
+.exploration-tracker .exploration-owner {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exploration-tracker .exploration-pct {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.exploration-tracker .exploration-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ex-track);
+  overflow: hidden;
+}
+
+.exploration-tracker .exploration-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--owner-color, var(--ex-accent));
+  transition: width 0.2s ease-out;
+}
+
+.exploration-tracker .exploration-row.is-done .exploration-bar-fill {
+  background: var(--ex-done);
+}
+
+.exploration-tracker .exploration-row.is-done .exploration-count {
+  color: var(--ex-done);
+  font-weight: 700;
+}
+
+.exploration-tracker .exploration-exclude {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  line-height: 1;
+}
+
+/* ---- Empty / footer ---- */
+
+.exploration-tracker .exploration-empty {
+  padding: 16px 8px;
+  text-align: center;
+  color: var(--ex-muted);
+}
+
+.exploration-tracker .exploration-empty i {
+  font-size: 1.6rem;
+}
+
+.exploration-tracker .exploration-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  font-weight: 600;
+}
+
+.exploration-tracker .exploration-next-seconds {
+  font-weight: 400;
+  color: var(--ex-muted);
+}

@@ -946,5 +946,34 @@
       "DropActor": "Drop an actor or token to add it to the bestiary.",
       "NoTokens": "Select at least one token on the scene."
     }
+  },
+  "EXPLORATION": {
+    "FeatureName": "Exploration",
+    "FeatureDescription": "Outside combat, limit how many cells each player token moves per turn and advance the clock when everyone is done.",
+    "Title": "Exploration",
+    "Toggle": "Open/close the Exploration panel",
+    "Settings": {
+      "Enabled": {
+        "Name": "Exploration: enable",
+        "Hint": "Enable the Exploration feature (movement quota outside combat, GM panel with Shift+V). Requires reload."
+      },
+      "Quota": {
+        "Name": "Exploration: cells per turn",
+        "Hint": "How many grid cells each player token can move before the turn ends."
+      },
+      "Seconds": {
+        "Name": "Exploration: seconds per turn",
+        "Hint": "Seconds the world clock advances when the turn ends."
+      }
+    },
+    "Cells": "cells",
+    "Seconds": "seconds",
+    "Ready": "Ready",
+    "NextTurn": "Next turn",
+    "Exclude": "Exclude from the quota",
+    "Include": "Include in the quota",
+    "PausedCombat": "Paused: combat in progress",
+    "Empty": "No player token of an online player in this scene.",
+    "AutoAdvanced": "Exploration: every token reached the quota, the clock advanced by {seconds} s."
   }
 }

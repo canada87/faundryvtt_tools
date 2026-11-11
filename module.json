@@ -30,7 +30,8 @@
     "styles/hexmap.css",
     "styles/scene-nav.css",
     "styles/journal-styles.css",
-    "styles/notebook.css"
+    "styles/notebook.css",
+    "styles/exploration.css"
   ],
   "languages": [
     {

@@ -946,5 +946,34 @@
       "DropActor": "Trascina un attore o un token per aggiungerlo al bestiario.",
       "NoTokens": "Seleziona almeno un token sulla scena."
     }
+  },
+  "EXPLORATION": {
+    "FeatureName": "Esplorazione",
+    "FeatureDescription": "Fuori dal combattimento limita quante caselle muove ogni token giocatore per turno e manda avanti l'orologio quando tutti hanno finito.",
+    "Title": "Esplorazione",
+    "Toggle": "Apri/chiudi il pannello Esplorazione",
+    "Settings": {
+      "Enabled": {
+        "Name": "Esplorazione: abilita",
+        "Hint": "Attiva la funzionalità Esplorazione (quota di movimento fuori dal combattimento, pannello GM con Shift+V). Richiede il ricaricamento."
+      },
+      "Quota": {
+        "Name": "Esplorazione: caselle per turno",
+        "Hint": "Quante caselle della griglia può muovere ogni token giocatore prima che il turno finisca."
+      },
+      "Seconds": {
+        "Name": "Esplorazione: secondi per turno",
+        "Hint": "Secondi di cui avanza l'orologio del mondo alla fine del turno."
+      }
+    },
+    "Cells": "caselle",
+    "Seconds": "secondi",
+    "Ready": "Pronti",
+    "NextTurn": "Turno successivo",
+    "Exclude": "Escludi dalla quota",
+    "Include": "Includi nella quota",
+    "PausedCombat": "In pausa: combattimento in corso",
+    "Empty": "Nessun token di giocatori online in questa scena.",
+    "AutoAdvanced": "Esplorazione: tutti i token hanno raggiunto la quota, l'orologio è avanzato di {seconds} s."
   }
 }

@@ -69,6 +69,11 @@ scripts/
     apps/
       NotebookApp.mjs      — UI a forma di taccuino con linguette: Appunti, Bestiario (campi oscurati), Handout; il GM "visualizza come" un giocatore
       NotebookDialogs.mjs  — Dialoghi: post-it, handout, editor creatura, visibilità per giocatore, modello campi
+  exploration/
+    index.mjs              — Init esplorazione (disattivo di default: setting explorationEnabled; keybinding Shift+V solo GM)
+    ExplorationSystem.mjs  — Logica core: quota caselle per token fuori combat, blocco preMoveToken (giocatori), conteggio moveToken, avanzamento tempo e reset
+    apps/
+      ExplorationTracker.mjs — UI GM: token dei giocatori online con barra quota, escludi token, pulsante turno successivo
 styles/
   hub.css                  — Stili dell'hub menu
   crafting.css             — Stili di tutte le UI crafting
@@ -80,6 +85,7 @@ styles/
   lighting.css             — Stili controllo luci, dialoghi preset e palette HUD token
   journal-styles.css       — Riquadri, pill, tabelle e banner per i journal (scoped su classe body)
   notebook.css             — Stili taccuino (copertina, linguette, post-it, scheda creatura, handout) e dialoghi
+  exploration.css          — Stili pannello GM esplorazione
 templates/
   hub-menu.hbs             — Template hub
   crafting/
@@ -102,6 +108,8 @@ templates/
     journal-styles-reference.hbs — Template cheatsheet riquadri journal
   notebook/
     notebook.hbs             — Template taccuino (pagina + linguette sul bordo)
+  exploration/
+    exploration-tracker.hbs  — Template pannello GM esplorazione
 languages/
   en.json                  — Traduzioni inglese
   it.json                  — Traduzioni italiano
