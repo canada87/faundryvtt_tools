@@ -1,69 +1,95 @@
 <div class="recipe-editor-content">
+  <div class="editor-body">
 
-  {{!-- Description --}}
-  <div class="form-group">
-    <label>{{localize "CRAFTING.Description"}}</label>
-    <textarea name="description" rows="3" placeholder="{{localize 'CRAFTING.Description'}}">{{recipe.description}}</textarea>
-  </div>
+    {{!-- Result (drag item here) — shown first since it defines the recipe name/image --}}
+    <div class="form-group">
+      <label class="cb-label">{{localize "CRAFTING.Result"}}</label>
+      <div class="result-drop-zone drop-zone">
+        {{#if recipe.result}}
+          <div class="result-entry">
+            <img src="{{recipe.result.img}}" class="cb-tile xl ring" alt="" />
+            <div class="result-name">
+              <strong>{{recipe.result.name}}</strong>
+              <span>{{localize "CRAFTING.DropResultChange"}}</span>
+            </div>
+            <div class="cb-stepper">
+              <button type="button" data-action="stepQty" data-step="-1"
+                      aria-label="{{localize 'CRAFTING.Decrease'}}">−</button>
+              <input type="number" name="result.quantity" value="{{recipe.result.quantity}}"
+                     min="1" class="result-qty" aria-label="{{localize 'CRAFTING.Quantity'}}" />
+              <button type="button" data-action="stepQty" data-step="1"
+                      aria-label="{{localize 'CRAFTING.Increase'}}">+</button>
+            </div>
+            <button type="button" class="cb-ibtn danger" data-action="removeResult"
+                    title="{{localize 'CRAFTING.Remove'}}" aria-label="{{localize 'CRAFTING.Remove'}}">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        {{else}}
+          <p class="drop-hint">
+            <i class="fas fa-plus-circle"></i> {{localize "CRAFTING.DropResultHint"}}
+          </p>
+        {{/if}}
+      </div>
+    </div>
 
-  {{!-- Result (drag item here) — shown first since it defines the recipe name/image --}}
-  <div class="form-group">
-    <label>{{localize "CRAFTING.Result"}}</label>
-    <div class="result-drop-zone drop-zone">
-      {{#if recipe.result}}
-        <div class="result-entry">
-          <img src="{{recipe.result.img}}" width="32" height="32" />
-          <span>{{recipe.result.name}}</span>
-          <input type="number" name="result.quantity"
-                 value="{{recipe.result.quantity}}" min="1" class="result-qty" />
-          <button type="button" data-action="removeResult"
-                  title="{{localize 'CRAFTING.Remove'}}">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      {{else}}
+    {{!-- Components (drag items here) --}}
+    <div class="form-group">
+      <div class="components-header">
+        <label class="cb-label">{{localize "CRAFTING.Components"}}</label>
+        <button type="button" data-action="autoGenerate" class="cb-btn cb-btn-sm auto-generate-btn"
+                title="{{localize 'CRAFTING.AutoGenerateHint'}}">
+          <i class="fas fa-magic"></i> {{localize "CRAFTING.AutoGenerate"}}
+        </button>
+      </div>
+      <div class="component-drop-zone drop-zone">
+        {{#if recipe.components.length}}
+          <ul class="component-list">
+            {{#each recipe.components}}
+              <li class="component-entry" data-index="{{@index}}">
+                <img src="{{this.img}}" class="cb-tile" alt="" />
+                <span class="component-name" title="{{this.name}}">{{this.name}}</span>
+                <div class="component-controls">
+                  <button type="button" class="cb-ibtn sm danger" data-action="removeComponent" data-index="{{@index}}"
+                          title="{{localize 'CRAFTING.Remove'}}" aria-label="{{localize 'CRAFTING.Remove'}}">
+                    <i class="fas fa-times"></i>
+                  </button>
+                  <div class="cb-stepper">
+                    <button type="button" data-action="stepQty" data-step="-1"
+                            aria-label="{{localize 'CRAFTING.Decrease'}}">−</button>
+                    <input type="number" name="components.{{@index}}.quantity"
+                           value="{{this.quantity}}" min="1" class="component-qty"
+                           aria-label="{{localize 'CRAFTING.Quantity'}}" />
+                    <button type="button" data-action="stepQty" data-step="1"
+                            aria-label="{{localize 'CRAFTING.Increase'}}">+</button>
+                  </div>
+                </div>
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
         <p class="drop-hint">
-          <i class="fas fa-plus-circle"></i> {{localize "CRAFTING.DropResultHint"}}
+          <i class="fas fa-plus-circle"></i> {{localize "CRAFTING.DropComponentHint"}}
         </p>
-      {{/if}}
+      </div>
     </div>
+
+    {{!-- Description --}}
+    <div class="form-group">
+      <label class="cb-label">{{localize "CRAFTING.Description"}}</label>
+      <textarea name="description" rows="3" class="cb-field"
+                placeholder="{{localize 'CRAFTING.Description'}}">{{recipe.description}}</textarea>
+    </div>
+
   </div>
 
-  {{!-- Components (drag items here) --}}
-  <div class="form-group">
-    <div class="components-header">
-      <label>{{localize "CRAFTING.Components"}}</label>
-      <button type="button" data-action="autoGenerate" class="auto-generate-btn"
-              title="{{localize 'CRAFTING.AutoGenerateHint'}}">
-        <i class="fas fa-magic"></i> {{localize "CRAFTING.AutoGenerate"}}
-      </button>
-    </div>
-    <div class="component-drop-zone drop-zone">
-      {{#if recipe.components.length}}
-        <ul class="component-list">
-          {{#each recipe.components}}
-            <li class="component-entry" data-index="{{@index}}">
-              <img src="{{this.img}}" width="24" height="24" />
-              <span class="component-name">{{this.name}}</span>
-              <input type="number" name="components.{{@index}}.quantity"
-                     value="{{this.quantity}}" min="1" class="component-qty" />
-              <button type="button" data-action="removeComponent" data-index="{{@index}}"
-                      title="{{localize 'CRAFTING.Remove'}}">
-                <i class="fas fa-trash"></i>
-              </button>
-            </li>
-          {{/each}}
-        </ul>
-      {{/if}}
-      <p class="drop-hint">
-        <i class="fas fa-plus-circle"></i> {{localize "CRAFTING.DropComponentHint"}}
-      </p>
-    </div>
+  {{!-- Sticky action bar --}}
+  <div class="editor-foot">
+    <button type="button" class="cb-btn" data-action="cancel">
+      {{localize "Cancel"}}
+    </button>
+    <button type="submit" class="cb-btn cb-btn-primary submit-btn">
+      <i class="fas fa-save"></i> {{localize "CRAFTING.Save"}}
+    </button>
   </div>
-
-  {{!-- Submit --}}
-  <button type="submit" class="submit-btn">
-    <i class="fas fa-save"></i> {{localize "CRAFTING.Save"}}
-  </button>
-
 </div>

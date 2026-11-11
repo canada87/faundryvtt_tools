@@ -12,7 +12,7 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static DEFAULT_OPTIONS = {
     id: "crafting-recipe-editor",
-    classes: ["crafting", "recipe-editor"],
+    classes: ["crafting", "crafting-bench", "recipe-editor"],
     tag: "form",
     window: {
       title: "CRAFTING.RecipeEditor",
@@ -20,8 +20,8 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
       resizable: true
     },
     position: {
-      width: 500,
-      height: 620
+      width: 540,
+      height: 640
     },
     form: {
       submitOnChange: false,
@@ -31,7 +31,9 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
     actions: {
       removeComponent: RecipeEditor.#onRemoveComponent,
       removeResult: RecipeEditor.#onRemoveResult,
-      autoGenerate: RecipeEditor.#onAutoGenerate
+      autoGenerate: RecipeEditor.#onAutoGenerate,
+      stepQty: RecipeEditor.#onStepQty,
+      cancel: RecipeEditor.#onCancel
     }
   };
 
@@ -148,6 +150,19 @@ export class RecipeEditor extends HandlebarsApplicationMixin(ApplicationV2) {
   static async #onRemoveResult() {
     this.recipeData.result = null;
     this.render();
+  }
+
+  /** Increase / decrease the quantity input next to the clicked stepper button. */
+  static #onStepQty(event, target) {
+    const input = target.closest(".cb-stepper")?.querySelector("input");
+    if (!input) return;
+    const step = Number(target.dataset.step) || 0;
+    input.value = Math.max(1, (Number(input.value) || 1) + step);
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  static #onCancel() {
+    this.close();
   }
 
   /**

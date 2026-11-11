@@ -12,7 +12,7 @@ export class RecipeManager extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static DEFAULT_OPTIONS = {
     id: "crafting-recipe-manager",
-    classes: ["crafting", "recipe-manager"],
+    classes: ["crafting", "crafting-bench", "recipe-manager"],
     window: {
       title: "CRAFTING.RecipeManager",
       icon: "fas fa-flask",
@@ -20,7 +20,7 @@ export class RecipeManager extends HandlebarsApplicationMixin(ApplicationV2) {
     },
     position: {
       width: 700,
-      height: 550
+      height: 600
     },
     actions: {
       createRecipe: RecipeManager.#onCreate,
@@ -36,12 +36,70 @@ export class RecipeManager extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   };
 
+  /** Current search text (survives re-renders). */
+  #query = "";
+
   async _prepareContext(options) {
-    const recipes = CraftingSystem.getRecipes();
+    const MAX_MINIS = 6;
+    const MAX_AVATARS = 4;
+    const playerActors = game.actors.filter(a => a.hasPlayerOwner);
+    const knownByActor = new Map(playerActors.map(a => [a.id, CraftingSystem.getActorRecipeIds(a)]));
+
+    const recipes = CraftingSystem.getRecipes().map(recipe => {
+      const components = recipe.components ?? [];
+      const assignedAll = playerActors.filter(a => knownByActor.get(a.id).includes(recipe.id));
+      return {
+        ...recipe,
+        minis: components.slice(0, MAX_MINIS),
+        extraCount: Math.max(0, components.length - MAX_MINIS),
+        assigned: assignedAll.slice(0, MAX_AVATARS).map(a => ({ name: a.name, img: a.img })),
+        assignedExtra: Math.max(0, assignedAll.length - MAX_AVATARS),
+        assignedTitle: assignedAll.length
+          ? game.i18n.format("CRAFTING.AssignedTo", { names: assignedAll.map(a => a.name).join(", ") })
+          : game.i18n.localize("CRAFTING.NotAssigned"),
+        searchText: [recipe.name, ...components.map(c => c.name)].join(" ").toLowerCase()
+      };
+    });
+
     return {
       recipes,
       isEmpty: recipes.length === 0
     };
+  }
+
+  /* ---------------------------------------- */
+  /*  Search                                  */
+  /* ---------------------------------------- */
+
+  _onFirstRender(context, options) {
+    super._onFirstRender?.(context, options);
+    this.element.addEventListener("input", event => {
+      if (!event.target.matches(".recipe-search")) return;
+      this.#query = event.target.value;
+      this.#applyFilter();
+    });
+  }
+
+  _onRender(context, options) {
+    super._onRender?.(context, options);
+    const input = this.element.querySelector(".recipe-search");
+    if (input) input.value = this.#query;
+    this.#applyFilter();
+  }
+
+  #applyFilter() {
+    const root = this.element;
+    const query = this.#query.trim().toLowerCase();
+    let visible = 0;
+
+    for (const row of root.querySelectorAll(".recipe-row")) {
+      const matches = !query || row.dataset.search.includes(query);
+      row.hidden = !matches;
+      if (matches) visible++;
+    }
+
+    const empty = root.querySelector(".no-results");
+    if (empty) empty.hidden = visible > 0;
   }
 
   /* ---------------------------------------- */

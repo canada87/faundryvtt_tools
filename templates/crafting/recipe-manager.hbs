@@ -1,7 +1,13 @@
 <div class="recipe-manager-content">
 
-  <div class="manager-header">
-    <button type="button" data-action="createRecipe" class="create-btn">
+  <div class="cb-toolbar manager-header">
+    <div class="cb-search">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input type="search" class="cb-field recipe-search" autocomplete="off"
+             placeholder="{{localize 'CRAFTING.SearchPlaceholder'}}"
+             aria-label="{{localize 'CRAFTING.SearchRecipes'}}" />
+    </div>
+    <button type="button" data-action="createRecipe" class="cb-btn cb-btn-primary create-btn">
       <i class="fas fa-plus"></i> {{localize "CRAFTING.NewRecipe"}}
     </button>
   </div>
@@ -14,33 +20,40 @@
   {{else}}
     <div class="recipe-table">
       {{#each recipes}}
-        <div class="recipe-row" data-recipe-id="{{this.id}}">
-          <img src="{{this.img}}" width="36" height="36" class="recipe-icon" />
+        <div class="recipe-row" data-recipe-id="{{this.id}}" data-search="{{this.searchText}}">
+          <img src="{{this.img}}" class="cb-tile recipe-icon" alt="" />
           <div class="recipe-info">
             <strong>{{this.name}}</strong>
             <span class="recipe-summary">
-              {{this.components.length}} {{localize "CRAFTING.Components"}}
-              {{#if this.result}}
-                &rarr; {{this.result.name}}
-              {{/if}}
+              <span class="minis">
+                {{#each this.minis}}<img src="{{this.img}}" class="cb-tile xs" title="{{this.name}}" alt="" />{{/each}}
+                {{#if this.extraCount}}<span class="minis-extra">+{{this.extraCount}}</span>{{/if}}
+              </span>
+              {{localize "CRAFTING.ComponentsCount" count=this.components.length}}
             </span>
           </div>
+          <div class="assignees" title="{{this.assignedTitle}}">
+            {{#each this.assigned}}<img src="{{this.img}}" class="avatar" alt="{{this.name}}" />{{/each}}
+            {{#if this.assignedExtra}}<span class="avatar avatar-extra">+{{this.assignedExtra}}</span>{{/if}}
+            {{#unless this.assigned.length}}<span class="assignees-none">{{localize "CRAFTING.NotAssigned"}}</span>{{/unless}}
+          </div>
           <div class="recipe-actions">
-            <button type="button" data-action="assignRecipe"
-                    title="{{localize 'CRAFTING.AssignRecipe'}}">
+            <button type="button" class="cb-ibtn" data-action="assignRecipe"
+                    title="{{localize 'CRAFTING.AssignRecipe'}}" aria-label="{{localize 'CRAFTING.AssignRecipe'}}">
               <i class="fas fa-users"></i>
             </button>
-            <button type="button" data-action="editRecipe"
-                    title="{{localize 'CRAFTING.EditRecipe'}}">
+            <button type="button" class="cb-ibtn" data-action="editRecipe"
+                    title="{{localize 'CRAFTING.EditRecipe'}}" aria-label="{{localize 'CRAFTING.EditRecipe'}}">
               <i class="fas fa-edit"></i>
             </button>
-            <button type="button" data-action="deleteRecipe"
-                    title="{{localize 'CRAFTING.DeleteRecipe'}}">
+            <button type="button" class="cb-ibtn danger" data-action="deleteRecipe"
+                    title="{{localize 'CRAFTING.DeleteRecipe'}}" aria-label="{{localize 'CRAFTING.DeleteRecipe'}}">
               <i class="fas fa-trash"></i>
             </button>
           </div>
         </div>
       {{/each}}
+      <p class="no-results" hidden>{{localize "CRAFTING.NoResults"}}</p>
     </div>
   {{/if}}
 
