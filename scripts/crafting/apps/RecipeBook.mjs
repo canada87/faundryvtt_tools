@@ -95,6 +95,9 @@ export class RecipeBook extends HandlebarsApplicationMixin(ApplicationV2) {
   /*  Search and filter                       */
   /* ---------------------------------------- */
 
+  /** Active Hooks registrations (item changes on this actor), removed on close. */
+  #hooks = [];
+
   _onFirstRender(context, options) {
     super._onFirstRender?.(context, options);
     this.element.addEventListener("input", event => {
@@ -102,6 +105,20 @@ export class RecipeBook extends HandlebarsApplicationMixin(ApplicationV2) {
       this.#query = event.target.value;
       this.#applyFilter();
     });
+
+    // Keep component counts in sync with the inventory, however it changes
+    // (crafting, dragging items in or out of the sheet, a GM editing quantities).
+    const refresh = foundry.utils.debounce(() => { if (this.rendered) this.render(); }, 100);
+    const onItemChange = item => { if (item.parent?.id === this.actor.id) refresh(); };
+    for (const hook of ["createItem", "updateItem", "deleteItem"]) {
+      this.#hooks.push([hook, Hooks.on(hook, onItemChange)]);
+    }
+  }
+
+  _onClose(options) {
+    for (const [hook, id] of this.#hooks) Hooks.off(hook, id);
+    this.#hooks = [];
+    super._onClose?.(options);
   }
 
   _onRender(context, options) {
@@ -143,7 +160,8 @@ export class RecipeBook extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onCraft(event, target) {
     const recipeId = target.closest("[data-recipe-id]").dataset.recipeId;
-    const success = await CraftingSystem.craft(this.actor, recipeId);
-    if (success) this.render();
+    await CraftingSystem.craft(this.actor, recipeId);
+    // Re-render even on failure: components may already have been consumed.
+    this.render();
   }
 }

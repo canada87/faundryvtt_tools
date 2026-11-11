@@ -98,23 +98,31 @@ export class CraftingSystem {
    * E.g. "legno lv2" → { baseName: "legno", level: 2 }
    */
   static _parseLevel(name) {
-    const match = name.match(/^(.+?)\s+lv(\d+)$/i);
+    // Tolerant on purpose: "Ash Lv1", "ash lv 2", "Ash (Lv.3)", "Ash - Livello 2", trailing spaces.
+    const match = String(name ?? "").trim()
+      .match(/^(.+?)[\s\-–:(]+(?:lv|lvl|liv|livello|level)\.?\s*(\d+)\)?$/i);
     if (!match) return null;
     return { baseName: match[1].trim(), level: parseInt(match[2], 10) };
+  }
+
+  /** Case- and whitespace-insensitive key used to compare item names. */
+  static _nameKey(name) {
+    return String(name ?? "").normalize("NFKC").trim().replace(/\s+/g, " ").toLowerCase();
   }
 
   /**
    * Check if a candidate item can substitute for a required component.
    * A higher-level item (same base name, level >=) can replace a lower-level one.
    * Items without a level suffix require exact name match.
+   * Names are compared ignoring case and extra whitespace.
    */
   static _isCompatible(requiredName, candidateName) {
-    if (requiredName === candidateName) return true;
+    if (this._nameKey(requiredName) === this._nameKey(candidateName)) return true;
     const req = this._parseLevel(requiredName);
     if (!req) return false;
     const cand = this._parseLevel(candidateName);
     if (!cand) return false;
-    return cand.baseName === req.baseName && cand.level >= req.level;
+    return this._nameKey(cand.baseName) === this._nameKey(req.baseName) && cand.level >= req.level;
   }
 
   /**
@@ -193,6 +201,14 @@ export class CraftingSystem {
       return false;
     }
 
+    // Resolve the result item BEFORE touching the inventory, so a broken
+    // recipe never consumes the components without giving anything back.
+    const sourceItem = await this._resolveSourceItem(recipe.result);
+    if (!sourceItem) {
+      ui.notifications.error(game.i18n.format("CRAFTING.Error.ItemNotFound", { uuid: recipe.result.uuid }));
+      return false;
+    }
+
     // Remove components (most restrictive first, matching canCraft allocation order)
     const sortedComponents = [...recipe.components].sort((a, b) => {
       const la = this._parseLevel(a.name)?.level ?? 0;
@@ -208,7 +224,7 @@ export class CraftingSystem {
     }
 
     // Add result
-    const ok = await this._addItem(actor, recipe.result);
+    const ok = await this._addItem(actor, recipe.result, sourceItem);
     if (!ok) {
       ui.notifications.error(game.i18n.localize("CRAFTING.Error.CreateFailed"));
       return false;
@@ -269,9 +285,36 @@ export class CraftingSystem {
     return true;
   }
 
-  static async _addItem(actor, resultData) {
+  /**
+   * Find the item to hand out as a result. Tries the stored UUID first;
+   * if it no longer exists (item deleted or re-imported), falls back to an
+   * item with the same name in the world, then in the Item compendiums.
+   */
+  static async _resolveSourceItem(resultData) {
     try {
-      const sourceItem = await fromUuid(resultData.uuid);
+      const byUuid = resultData?.uuid ? await fromUuid(resultData.uuid) : null;
+      if (byUuid) return byUuid;
+    } catch (err) {
+      console.warn("Faundryvtt Tools | Crafting: result UUID lookup failed:", err);
+    }
+
+    const key = this._nameKey(resultData?.name);
+    if (!key) return null;
+
+    const worldItem = game.items.find(i => this._nameKey(i.name) === key);
+    if (worldItem) return worldItem;
+
+    for (const pack of game.packs) {
+      if (pack.documentName !== "Item") continue;
+      const entry = pack.index.find(e => this._nameKey(e.name) === key);
+      if (entry) return await pack.getDocument(entry._id);
+    }
+    return null;
+  }
+
+  static async _addItem(actor, resultData, sourceItem = null) {
+    try {
+      sourceItem ??= await this._resolveSourceItem(resultData);
       if (!sourceItem) {
         ui.notifications.error(game.i18n.format("CRAFTING.Error.ItemNotFound", { uuid: resultData.uuid }));
         return false;
