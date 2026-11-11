@@ -11,6 +11,12 @@ const RING_ALPHA = 0.3;
 /** Tolerance when assigning a cell to a ring. */
 const EPSILON = 1e-6;
 
+/** While the token moves, re-check this often (ms) ... */
+const WAIT_INTERVAL = 300;
+
+/** ... but give up waiting after this many checks (about 15 s) and draw. */
+const MAX_WAIT_RETRIES = 50;
+
 /**
  * Local overlay that colors the cells reachable by the selected token.
  *
@@ -28,6 +34,8 @@ export class ReachOverlay {
   static #label = null;
   static #warned = new Set();
   static #refresh = foundry.utils.debounce(() => this.render(), 60);
+  static #waitTimer = null;
+  static #waitRetries = 0;
 
   static get active() {
     return this.#active;
@@ -78,6 +86,15 @@ export class ReachOverlay {
     const token = this.#pickToken();
     this.#tokenId = token?.id ?? null;
     if (!token) return;
+
+    // A movement with several waypoints updates the document one segment at
+    // a time while the token animates: drawing now would use a midway cell.
+    // Stay hidden and draw once the token has really stopped.
+    if (this.#isMoving(token)) {
+      this.#waitForStop(token);
+      return;
+    }
+    this.#waitRetries = 0;
 
     const info = ReachSystem.budgetsOf(token.document);
     if (!info) {
@@ -177,6 +194,30 @@ export class ReachOverlay {
   /* ---------------------------------------- */
   /*  Helpers                                  */
   /* ---------------------------------------- */
+
+  /** True while the token is animating or still has movement waypoints to walk. */
+  static #isMoving(token) {
+    if (this.#waitRetries >= MAX_WAIT_RETRIES) return false; // never hide forever
+    const state = token.document.movement?.state;
+    if (state === "pending") return true;
+    if (token.document.movement?.pending?.waypoints?.length && state !== "paused" && state !== "stopped") return true;
+    for (const context of token.animationContexts?.values?.() ?? []) {
+      if (context?.to && ("x" in context.to || "y" in context.to)) return true;
+    }
+    return false;
+  }
+
+  /**
+   * Re-check after the current movement animation (or shortly, if the core
+   * gives no promise). Each check is a couple of property reads.
+   */
+  static #waitForStop(token) {
+    this.#waitRetries++;
+    clearTimeout(this.#waitTimer);
+    const promise = token.movementAnimationPromise;
+    if (promise?.then) promise.then(() => this.scheduleRefresh(), () => this.scheduleRefresh());
+    this.#waitTimer = setTimeout(() => this.scheduleRefresh(), WAIT_INTERVAL);
+  }
 
   /** Controlled token owned by the user, otherwise the user's character token. */
   static #pickToken() {

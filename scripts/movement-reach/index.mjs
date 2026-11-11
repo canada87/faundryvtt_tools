@@ -159,6 +159,12 @@ export function initMovementReach() {
     Hooks.on("updateToken", (tokenDoc) => {
       if (ReachOverlay.concerns(tokenDoc)) schedule();
     });
+    // Movement interrupted or paused midway: draw from where it stopped
+    for (const hook of ["stopToken", "pauseToken"]) {
+      Hooks.on(hook, (tokenDoc) => {
+        if (ReachOverlay.concerns(tokenDoc)) schedule();
+      });
+    }
     Hooks.on("deleteToken", (tokenDoc) => {
       ReachSystem.reset(tokenDoc.id);
       if (ReachOverlay.concerns(tokenDoc)) schedule();
