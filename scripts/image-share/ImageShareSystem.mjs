@@ -101,7 +101,7 @@ export class ImageShareSystem {
       overlay.appendChild(titleEl);
     }
 
-    // GM-only controls
+    // Stop button: GM only (ends the share for everyone)
     if (game.user.isGM) {
       const stopBtn = document.createElement("button");
       stopBtn.type = "button";
@@ -110,15 +110,18 @@ export class ImageShareSystem {
         `<i class="fas fa-times-circle"></i> ${game.i18n.localize("IMAGE_SHARE.StopSharing")}`;
       stopBtn.addEventListener("click", () => ImageShareSystem.stopSharing());
       overlay.appendChild(stopBtn);
-
-      const collapseBtn = document.createElement("button");
-      collapseBtn.type = "button";
-      collapseBtn.className = "collapse-sharing-btn";
-      collapseBtn.innerHTML =
-        `<i class="fas fa-compress"></i> ${game.i18n.localize("IMAGE_SHARE.Collapse")}`;
-      collapseBtn.addEventListener("click", () => ImageShareSystem.#collapseLocal());
-      overlay.appendChild(collapseBtn);
+    } else {
+      overlay.classList.add("player-view");
     }
+
+    // Collapse button: everyone (purely local, no socket message)
+    const collapseBtn = document.createElement("button");
+    collapseBtn.type = "button";
+    collapseBtn.className = "collapse-sharing-btn";
+    collapseBtn.innerHTML =
+      `<i class="fas fa-compress"></i> ${game.i18n.localize("IMAGE_SHARE.Collapse")}`;
+    collapseBtn.addEventListener("click", () => ImageShareSystem.#collapseLocal());
+    overlay.appendChild(collapseBtn);
 
     document.body.appendChild(overlay);
 
@@ -167,24 +170,25 @@ export class ImageShareSystem {
   }
 
   /* ---------------------------------------- */
-  /*  GM-local collapse / expand               */
+  /*  Local collapse / expand (GM and players) */
   /* ---------------------------------------- */
 
   /**
-   * Hide the overlay locally for the GM and show a floating restore button.
-   * Players are unaffected — no socket message is emitted.
+   * Hide the overlay locally and show a floating restore button.
+   * Other clients are unaffected — no socket message is emitted.
    */
   static #collapseLocal() {
     const overlay = ImageShareSystem.#overlayElement;
-    if (!overlay || !game.user.isGM) return;
+    if (!overlay) return;
 
-    overlay.classList.add("gm-collapsed");
+    overlay.classList.add("collapsed");
 
     if (ImageShareSystem.#floatingButton) return;
 
     const btn = document.createElement("button");
     btn.type = "button";
     btn.id = "image-share-floating-restore";
+    if (!game.user.isGM) btn.classList.add("player-view");
     btn.title = game.i18n.localize("IMAGE_SHARE.Expand");
     btn.innerHTML =
       `<i class="fas fa-image"></i> ${game.i18n.localize("IMAGE_SHARE.Expand")}`;
@@ -195,11 +199,11 @@ export class ImageShareSystem {
   }
 
   /**
-   * Re-show the overlay locally for the GM.
+   * Re-show the overlay locally.
    */
   static #expandLocal() {
     const overlay = ImageShareSystem.#overlayElement;
-    if (overlay) overlay.classList.remove("gm-collapsed");
+    if (overlay) overlay.classList.remove("collapsed");
     ImageShareSystem.#removeFloatingButton();
   }
 

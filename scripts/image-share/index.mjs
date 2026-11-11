@@ -1,6 +1,7 @@
 import { MODULE_ID } from "../shared/constants.mjs";
 import { HubMenu } from "../hub/HubMenu.mjs";
 import { ImageShareSystem } from "./ImageShareSystem.mjs";
+import { JournalImageShare } from "./JournalImageShare.mjs";
 
 /**
  * Initialize the Image Share feature.
@@ -81,6 +82,7 @@ export function initImageShare() {
 
   Hooks.once("ready", () => {
     ImageShareSystem.setupSocket();
+    JournalImageShare.init();
   });
 
   /* ---- Public API ---- */
