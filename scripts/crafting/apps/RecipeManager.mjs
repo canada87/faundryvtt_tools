@@ -42,7 +42,7 @@ export class RecipeManager extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext(options) {
     const MAX_MINIS = 6;
     const MAX_AVATARS = 4;
-    const playerActors = game.actors.filter(a => a.hasPlayerOwner);
+    const playerActors = CraftingSystem.getPlayerActors();
     const knownByActor = new Map(playerActors.map(a => [a.id, CraftingSystem.getActorRecipeIds(a)]));
 
     const recipes = CraftingSystem.getRecipes().map(recipe => {
@@ -147,7 +147,7 @@ export class RecipeManager extends HandlebarsApplicationMixin(ApplicationV2) {
     const recipe = CraftingSystem.getRecipes().find(r => r.id === recipeId);
     if (!recipe) return;
 
-    const actors = game.actors.filter(a => a.hasPlayerOwner);
+    const actors = CraftingSystem.getPlayerActors();
     if (!actors.length) {
       ui.notifications.warn(game.i18n.localize("CRAFTING.NoActors"));
       return;

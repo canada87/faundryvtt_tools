@@ -62,6 +62,21 @@ export class CraftingSystem {
     return all.filter(r => knownIds.includes(r.id));
   }
 
+  /**
+   * Actors that really belong to a player: the character assigned to a
+   * non-GM user, or an actor a non-GM user explicitly owns.
+   * `Actor#hasPlayerOwner` is not used because it also counts the actor's
+   * default ownership, which makes every actor look player-owned when the
+   * default permission is Owner.
+   */
+  static getPlayerActors() {
+    const players = game.users.filter(u => !u.isGM);
+    const OWNER = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+    return game.actors.filter(actor => players.some(user =>
+      user.character?.id === actor.id || actor.ownership?.[user.id] === OWNER
+    ));
+  }
+
   static async assignRecipe(actor, recipeId) {
     const known = this.getActorRecipeIds(actor);
     if (!known.includes(recipeId)) {

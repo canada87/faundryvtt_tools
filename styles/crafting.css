@@ -38,6 +38,25 @@
   display: none !important;
 }
 
+/* Book and manager scroll inside the window; children must not shrink to fit. */
+.crafting.recipe-book .window-content,
+.crafting.recipe-manager .window-content {
+  overflow: hidden;
+}
+
+.crafting.recipe-book .recipe-book-content,
+.crafting.recipe-manager .recipe-manager-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.crafting.recipe-book .recipe-book-content > *,
+.crafting.recipe-book .recipe-list > *,
+.crafting.recipe-manager .recipe-manager-content > * {
+  flex-shrink: 0;
+}
+
 .crafting-bench h3,
 .crafting-bench p,
 .crafting-bench ul {
