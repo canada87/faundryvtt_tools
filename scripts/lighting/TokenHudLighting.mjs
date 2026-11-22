@@ -44,10 +44,11 @@ export class TokenHudLighting {
       const active = light.bright === preset.bright && light.dim === preset.dim && light.angle === preset.angle;
       palette.append(TokenHudLighting.#buildEntry({
         icon: preset.icon,
+        color: preset.color,
         label: preset.label,
         detail: `${preset.bright}/${preset.dim}/${preset.angle}°`,
         active,
-        onClick: () => LightingSystem.updateTokenLight(preset.bright, preset.dim, preset.angle, [token])
+        onClick: () => LightingSystem.updateTokenLight(LightingSystem.lightFromPreset(preset), [token])
       }));
     }
 
@@ -73,7 +74,7 @@ export class TokenHudLighting {
     return wrap;
   }
 
-  static #buildEntry({ icon, label, detail = "", active = false, off = false, onClick }) {
+  static #buildEntry({ icon, color = null, label, detail = "", active = false, off = false, onClick }) {
     const entry = document.createElement("button");
     entry.type = "button";
     entry.className = "faundryvtt-light-entry";
@@ -82,6 +83,7 @@ export class TokenHudLighting {
 
     const i = document.createElement("i");
     i.className = icon;
+    if (color) i.style.color = color;
     const name = document.createElement("span");
     name.textContent = label;
     entry.append(i, name);

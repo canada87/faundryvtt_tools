@@ -147,6 +147,19 @@
   font-variant-numeric: tabular-nums;
 }
 
+.lighting.lighting-control .custom-look {
+  margin-top: var(--lc-space-2);
+}
+
+.lighting.lighting-control .custom-animation {
+  grid-column: span 2;
+}
+
+.lighting.lighting-control .custom-animation select {
+  width: 100%;
+  height: var(--lc-control-h);
+}
+
 /* --- Preset grid --- */
 
 /* Equal-width columns: cards stay aligned at any window width. */
@@ -729,4 +742,31 @@
   .lighting.lighting-dialog-window .icon-choice {
     transition: none;
   }
+}
+
+/* Color: checkbox ("use it") + picker, shared by the panel and the preset dialog */
+.lighting .color-pick {
+  display: flex;
+  align-items: center;
+  gap: var(--lc-space-1);
+  height: var(--lc-control-h);
+}
+
+.lighting .color-pick input[type="checkbox"] {
+  flex: none;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+.lighting .color-pick input[type="color"] {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 2px;
+}
+
+.lighting.lighting-dialog-window .ld-field select {
+  width: 100%;
+  height: var(--lc-control-h);
 }

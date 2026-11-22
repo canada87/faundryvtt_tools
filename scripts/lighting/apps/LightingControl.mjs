@@ -58,7 +58,8 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
       }),
       hasPresets: presets.length > 0,
       darknessLevels,
-      hasDarknessLevels: darknessLevels.length > 0
+      hasDarknessLevels: darknessLevels.length > 0,
+      animations: LightingSystem.getAnimationChoices()
     };
   }
 
@@ -67,18 +68,46 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
     await super._preRender(context, options);
     if (!this.element) return;
     this.#customValues = Object.fromEntries(
-      ["custom-bright", "custom-dim", "custom-angle", "darkness-select"]
-        .map(id => [id, this.element.querySelector(`#${id}`)?.value])
+      ["custom-bright", "custom-dim", "custom-angle", "custom-color", "custom-color-on", "custom-animation", "darkness-select"]
+        .map(id => {
+          const input = this.element.querySelector(`#${id}`);
+          return [id, input?.type === "checkbox" ? input.checked : input?.value];
+        })
     );
   }
 
   _onRender(context, options) {
     super._onRender(context, options);
+    const el = this.element;
+    // Picking a color means "use it"
+    el.querySelector("#custom-color")?.addEventListener("input", () => {
+      el.querySelector("#custom-color-on").checked = true;
+    });
     if (!this.#customValues) return;
     for (const [id, value] of Object.entries(this.#customValues)) {
-      const input = this.element.querySelector(`#${id}`);
-      if (input && value !== undefined) input.value = value;
+      const input = el.querySelector(`#${id}`);
+      if (!input || value === undefined) continue;
+      if (input.type === "checkbox") input.checked = value;
+      else input.value = value;
     }
+  }
+
+  /**
+   * Custom fields the user filled in, as partial light data: empty fields are left out.
+   * Animation "" keeps the current one, "none" removes it.
+   * @returns {object}
+   */
+  #readOverrides() {
+    const el = this.element;
+    const light = {};
+    for (const key of ["bright", "dim", "angle"]) {
+      const value = el.querySelector(`#custom-${key}`)?.value;
+      if (value !== "" && value !== undefined) light[key] = Number(value);
+    }
+    if (el.querySelector("#custom-color-on")?.checked) light.color = el.querySelector("#custom-color").value;
+    const animation = el.querySelector("#custom-animation")?.value;
+    if (animation) light.animation = { type: animation === "none" ? null : animation };
+    return light;
   }
 
   /* ---------------------------------------- */
@@ -86,45 +115,29 @@ export class LightingControl extends HandlebarsApplicationMixin(ApplicationV2) {
   /* ---------------------------------------- */
 
   static async #onApplyPreset(event, target) {
-    const el = this.element;
     const index = Number(target.closest("[data-preset-index]").dataset.presetIndex);
     const preset = LightingSystem.getPresets()[index];
     if (!preset) return;
 
-    // Allow custom overrides
-    const brightVal = el.querySelector("#custom-bright")?.value;
-    const dimVal = el.querySelector("#custom-dim")?.value;
-    const angleVal = el.querySelector("#custom-angle")?.value;
-
-    const bright = brightVal !== "" ? Number(brightVal) : preset.bright;
-    const dim = dimVal !== "" ? Number(dimVal) : preset.dim;
-    const angle = angleVal !== "" ? Number(angleVal) : preset.angle;
-
-    await LightingSystem.updateTokenLight(bright, dim, angle);
+    // Filled custom fields override the preset
+    const light = foundry.utils.mergeObject(LightingSystem.lightFromPreset(preset), this.#readOverrides());
+    await LightingSystem.updateTokenLight(light);
   }
 
   static async #onTurnOff() {
     await LightingSystem.turnOffLight();
   }
 
+  /** Empty radius fields mean 0 (angle 360); empty color/animation keep the token's current ones. */
   static async #onApplyCustom() {
-    const el = this.element;
-    const bright = Number(el.querySelector("#custom-bright")?.value) || 0;
-    const dim = Number(el.querySelector("#custom-dim")?.value) || 0;
-    const angle = Number(el.querySelector("#custom-angle")?.value) || 360;
-
-    await LightingSystem.updateTokenLight(bright, dim, angle);
+    const light = { bright: 0, dim: 0, angle: 360, ...this.#readOverrides() };
+    if (!light.angle) light.angle = 360;
+    await LightingSystem.updateTokenLight(light);
   }
 
   /** Create a preset, pre-filled with the custom values when typed. */
   static async #onNewPreset() {
-    const el = this.element;
-    const defaults = {};
-    for (const key of ["bright", "dim", "angle"]) {
-      const value = el.querySelector(`#custom-${key}`)?.value;
-      if (value !== "" && value !== undefined) defaults[key] = Number(value);
-    }
-    await LightingDialogs.editPreset(null, defaults);
+    await LightingDialogs.editPreset(null, this.#readOverrides());
   }
 
   static async #onEditPreset(event, target) {

@@ -24,8 +24,14 @@ export class LightingDialogs {
     const esc = Handlebars.escapeExpression;
     const loc = key => game.i18n.localize(key);
     const isNew = !preset;
-    const data = preset ?? { label: "", icon: "fas fa-lightbulb", bright: 3, dim: 6, angle: 360, ...defaults };
+    // normalizePreset fills color/animation for new presets and for ones saved before they existed
+    const data = LightingSystem.normalizePreset(
+      preset ?? { label: "", icon: "fas fa-lightbulb", bright: 3, dim: 6, angle: 360, ...defaults }
+    );
     const access = isNew ? { all: false, users: [] } : LightingSystem.getPresetAccess(preset.id);
+    const animations = LightingSystem.getAnimationChoices().map(a => `
+      <option value="${esc(a.value)}" ${a.value === data.animation.type ? "selected" : ""}>${esc(a.label)}</option>`)
+      .join("");
 
     const icons = ICON_SUGGESTIONS.map(icon => `
       <button type="button" class="icon-choice" data-icon="${icon}" aria-label="${icon}"
@@ -67,6 +73,40 @@ export class LightingDialogs {
           </div>
         </section>
 
+        <section class="ld-section">
+          <span class="ld-label">${loc("LIGHTING.PresetLook")}</span>
+          <div class="light-values">
+            <div class="ld-field">
+              <span class="ld-sublabel">${loc("LIGHTING.Color")}</span>
+              <span class="color-pick">
+                <input type="checkbox" name="useColor" ${data.color ? "checked" : ""}
+                       aria-label="${loc("LIGHTING.UseColor")}" data-tooltip="LIGHTING.UseColor" />
+                <input type="color" name="color" value="${data.color ?? "#ffb35c"}" aria-label="${loc("LIGHTING.Color")}" />
+              </span>
+            </div>
+            <label class="ld-field">
+              <span class="ld-sublabel">${loc("LIGHTING.ColorIntensity")}</span>
+              <input type="number" name="alpha" value="${data.alpha}" min="0" max="1" step="0.05" />
+            </label>
+          </div>
+          <div class="light-values">
+            <label class="ld-field">
+              <span class="ld-sublabel">${loc("LIGHTING.Animation")}</span>
+              <select name="animationType">
+                <option value="">${loc("LIGHTING.AnimationNone")}</option>${animations}
+              </select>
+            </label>
+            <label class="ld-field">
+              <span class="ld-sublabel">${loc("LIGHTING.AnimationSpeed")}</span>
+              <input type="number" name="animationSpeed" value="${data.animation.speed}" min="1" max="10" step="1" />
+            </label>
+            <label class="ld-field">
+              <span class="ld-sublabel">${loc("LIGHTING.AnimationIntensity")}</span>
+              <input type="number" name="animationIntensity" value="${data.animation.intensity}" min="1" max="10" step="1" />
+            </label>
+          </div>
+        </section>
+
         ${this.#accessFields(access)}
       </div>`;
 
@@ -85,7 +125,14 @@ export class LightingDialogs {
             icon: f.icon.value,
             bright: f.bright.value,
             dim: f.dim.value,
-            angle: f.angle.value
+            angle: f.angle.value,
+            color: f.useColor.checked ? f.color.value : null,
+            alpha: f.alpha.value,
+            animation: {
+              type: f.animationType.value,
+              speed: f.animationSpeed.value,
+              intensity: f.animationIntensity.value
+            }
           },
           access: this.#readAccess(button.form)
         };
@@ -114,6 +161,10 @@ export class LightingDialogs {
         const root = dialog?.element ?? dialog;
         this.#activateIconPicker(root);
         this.#activateAccessFields(root);
+        // Picking a color means "use it"
+        root?.querySelector('input[name="color"]')?.addEventListener("input", () => {
+          root.querySelector('input[name="useColor"]').checked = true;
+        });
       }
     });
     if (!result || typeof result !== "object") return;

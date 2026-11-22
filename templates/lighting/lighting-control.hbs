@@ -43,6 +43,24 @@
         <input type="number" id="custom-angle" placeholder="–" min="0" max="360" step="1" />
       </label>
     </div>
+    <div class="custom-inputs custom-look">
+      <div class="custom-field">
+        <span>{{localize "LIGHTING.Color"}}</span>
+        <span class="color-pick">
+          <input type="checkbox" id="custom-color-on" aria-label="{{localize "LIGHTING.UseColor"}}"
+                 data-tooltip="LIGHTING.UseColor" />
+          <input type="color" id="custom-color" value="#ffb35c" aria-label="{{localize "LIGHTING.Color"}}" />
+        </span>
+      </div>
+      <label class="custom-field custom-animation">
+        <span>{{localize "LIGHTING.Animation"}}</span>
+        <select id="custom-animation">
+          <option value="">–</option>
+          <option value="none">{{localize "LIGHTING.AnimationNone"}}</option>
+          {{#each animations}}<option value="{{this.value}}">{{this.label}}</option>{{/each}}
+        </select>
+      </label>
+    </div>
     <button type="button" data-action="applyCustom" class="lc-btn lc-btn-block">
       <i class="fas fa-check" aria-hidden="true"></i> {{localize "LIGHTING.ApplyCustom"}}
     </button>
@@ -61,7 +79,7 @@
         <div class="preset-card" data-preset-index="{{this.index}}">
           <button type="button" data-action="applyPreset" class="preset-apply"
                   data-tooltip="{{this.label}}">
-            <i class="preset-icon {{this.icon}}" aria-hidden="true"></i>
+            <i class="preset-icon {{this.icon}}" aria-hidden="true"{{#if this.color}} style="color: {{this.color}}"{{/if}}></i>
             <span class="preset-text">
               <span class="preset-name">{{this.label}}</span>
               <span class="preset-values">{{this.bright}} / {{this.dim}} / {{this.angle}}°</span>

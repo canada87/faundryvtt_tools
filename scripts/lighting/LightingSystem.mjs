@@ -46,14 +46,43 @@ export class LightingSystem {
    * @returns {object}
    */
   static normalizePreset(data) {
+    const animation = data.animation ?? {};
     return {
       id: data.id || foundry.utils.randomID(),
       label: String(data.label ?? "").trim(),
       icon: String(data.icon ?? "").trim() || "fas fa-lightbulb",
       bright: Number(data.bright) || 0,
       dim: Number(data.dim) || 0,
-      angle: Number(data.angle) || 360
+      angle: Number(data.angle) || 360,
+      // null = no tint (presets saved before colors existed have none)
+      color: /^#[0-9a-f]{6}$/i.test(data.color ?? "") ? data.color : null,
+      alpha: Math.clamp(Number(data.alpha ?? 0.5) || 0, 0, 1),
+      animation: {
+        type: animation.type && animation.type !== "none" ? animation.type : null,
+        speed: Math.clamp(Number(animation.speed) || 5, 1, 10),
+        intensity: Math.clamp(Number(animation.intensity) || 5, 1, 10)
+      }
     };
+  }
+
+  /**
+   * Token light data for a preset: radius, angle, color and animation.
+   * @param {object} preset
+   * @returns {object}
+   */
+  static lightFromPreset(preset) {
+    const { bright, dim, angle, color, alpha, animation } = this.normalizePreset(preset);
+    return { bright, dim, angle, color, alpha, animation };
+  }
+
+  /**
+   * Light animations offered by Foundry (and the game system), sorted by name.
+   * @returns {{value: string, label: string}[]}
+   */
+  static getAnimationChoices() {
+    return Object.entries(CONFIG.Canvas.lightAnimations)
+      .map(([value, cfg]) => ({ value, label: game.i18n.localize(cfg.label) }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   }
 
   /**
@@ -173,19 +202,20 @@ export class LightingSystem {
 
   /**
    * Update light on the given tokens (defaults to the controlled ones).
-   * @param {number} bright
-   * @param {number} dim
-   * @param {number} angle
+   * Fields left out of `light` keep the token's current value.
+   * @param {{bright: number, dim: number, angle: number, color?: string|null, alpha?: number,
+   *          animation?: {type?: string|null, speed?: number, intensity?: number}}} light
    * @param {Token[]} [tokens]
    */
-  static async updateTokenLight(bright, dim, angle, tokens = canvas.tokens.controlled) {
+  static async updateTokenLight(light, tokens = canvas.tokens.controlled) {
     if (tokens.length === 0) {
       ui.notifications.warn(game.i18n.localize("LIGHTING.Warn.NoToken"));
       return;
     }
     for (const token of tokens) {
-      await token.document.update({ light: { bright, dim, angle } });
+      await token.document.update({ light });
     }
+    const { bright, dim, angle } = light;
     ui.notifications.info(
       game.i18n.format("LIGHTING.Info.LightUpdated", { bright, dim, angle })
     );
@@ -193,10 +223,11 @@ export class LightingSystem {
 
   /**
    * Turn off light on the given tokens (defaults to the controlled ones).
+   * Color and animation are kept, so turning a light back on looks the same.
    * @param {Token[]} [tokens]
    */
   static async turnOffLight(tokens = canvas.tokens.controlled) {
-    await this.updateTokenLight(0, 0, 360, tokens);
+    await this.updateTokenLight({ bright: 0, dim: 0, angle: 360 }, tokens);
   }
 
   /**

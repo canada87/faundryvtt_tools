@@ -67,10 +67,14 @@ export class LightingSettings extends HandlebarsApplicationMixin(ApplicationV2) 
   #syncFormToState() {
     const el = this.element;
 
+    // Color and animation aren't in this table: carry them over by id
+    const previous = new Map(this.#presets.map(p => [p.id, p]));
     const presets = [];
     el.querySelectorAll(".preset-entry").forEach(entry => {
+      const id = entry.querySelector('input[name$=".id"]')?.value || foundry.utils.randomID();
       presets.push({
-        id: entry.querySelector('input[name$=".id"]')?.value || foundry.utils.randomID(),
+        ...previous.get(id),
+        id,
         label: entry.querySelector('input[name$=".label"]')?.value || "",
         icon: entry.querySelector('input[name$=".icon"]')?.value || "fas fa-lightbulb",
         bright: Number(entry.querySelector('input[name$=".bright"]')?.value) || 0,
@@ -123,9 +127,11 @@ export class LightingSettings extends HandlebarsApplicationMixin(ApplicationV2) 
   static async #onSubmit(event, form, formData) {
     const data = foundry.utils.expandObject(formData.object);
 
+    // Color and animation aren't in this form: carry them over by id
+    const previous = new Map(this.#presets.map(p => [p.id, p]));
     const presets = Object.values(data.presets || {})
       .filter(p => p.label?.trim())
-      .map(p => LightingSystem.normalizePreset(p));
+      .map(p => LightingSystem.normalizePreset({ ...previous.get(p.id), ...p }));
     await game.settings.set(MODULE_ID, "lightingPresets", presets);
 
     // Drop player access entries for presets that no longer exist
