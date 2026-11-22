@@ -78,6 +78,8 @@ export function initExploration() {
 
   HubMenu.registerFeature({
     id: "exploration",
+    setting: "explorationEnabled",
+    keybinding: "explorationToggle",
     icon: "fas fa-shoe-prints",
     name: "EXPLORATION.FeatureName",
     description: "EXPLORATION.FeatureDescription",

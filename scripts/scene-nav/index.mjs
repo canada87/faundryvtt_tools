@@ -102,6 +102,8 @@ export function initSceneNav() {
 
   HubMenu.registerFeature({
     id: "scene-nav",
+    setting: "scenesNavEnabled",
+    keybinding: "scenesNavToggle",
     icon: "fas fa-map",
     name: "SCENENAV.FeatureName",
     description: "SCENENAV.FeatureDescription",

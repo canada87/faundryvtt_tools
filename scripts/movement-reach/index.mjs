@@ -136,6 +136,8 @@ export function initMovementReach() {
 
   HubMenu.registerFeature({
     id: "movement-reach",
+    setting: "reachEnabled",
+    keybinding: "reachToggle",
     icon: "fas fa-person-walking-arrow-right",
     name: "REACH.FeatureName",
     description: "REACH.FeatureDescription",

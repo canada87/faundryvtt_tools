@@ -49,6 +49,8 @@ export function initHexMap() {
 
   HubMenu.registerFeature({
     id: "hexmap",
+    setting: "hexmapEnabled",
+    key: "KeyX",
     icon: "fas fa-map",
     name: "HEXMAP.FeatureName",
     description: "HEXMAP.FeatureDescription",

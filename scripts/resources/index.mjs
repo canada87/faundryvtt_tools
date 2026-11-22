@@ -47,6 +47,8 @@ export function initResources() {
 
   HubMenu.registerFeature({
     id: "resources",
+    setting: "resourcesEnabled",
+    key: "KeyU",
     icon: "fas fa-list-ol",
     name: "RESOURCES.FeatureName",
     description: "RESOURCES.FeatureDescription",

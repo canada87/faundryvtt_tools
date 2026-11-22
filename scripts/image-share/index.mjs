@@ -60,6 +60,8 @@ export function initImageShare() {
 
   HubMenu.registerFeature({
     id: "imageShare",
+    setting: "imageShareEnabled",
+    key: "KeyI",
     icon: "fas fa-image",
     name: "IMAGE_SHARE.FeatureName",
     description: "IMAGE_SHARE.FeatureDescription",

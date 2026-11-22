@@ -36,10 +36,38 @@ export class HubMenu extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Register a feature so it appears in the hub menu.
-   * @param {{id: string, icon: string, name: string, description: string, open: Function}} feature
+   * `key` (e.g. "KeyF") adds a GM shortcut Shift+key that opens the feature;
+   * `keybinding` instead points to a shortcut the feature registered itself.
+   * `setting` is the feature's "enabled" setting, where the shortcut is shown.
+   * Must be called during `init` (keybindings can only be registered there).
+   * @param {{id: string, icon: string, name: string, description: string, open: Function,
+   *          key?: string, keybinding?: string, setting?: string}} feature
    */
   static registerFeature(feature) {
     this.features.push(feature);
+    if (!feature.key) return;
+    feature.keybinding = `hubOpen_${feature.id}`;
+    game.keybindings.register(MODULE_ID, feature.keybinding, {
+      name: feature.name,
+      hint: "FVTT_TOOLS.ShortcutHint",
+      editable: [{ key: feature.key, modifiers: ["Shift"] }],
+      restricted: true,
+      onDown: () => {
+        feature.open();
+        return true;
+      }
+    });
+  }
+
+  /**
+   * Current keys of a module keybinding, as shown to the user ("Shift+F").
+   * @param {string} action
+   * @returns {string} empty when unbound
+   */
+  static shortcutLabel(action) {
+    return game.keybindings.get(MODULE_ID, action)
+      .map(({ key, modifiers = [] }) => [...modifiers, key.replace(/^(Key|Digit)/, "")].join("+"))
+      .join(" / ");
   }
 
   async _prepareContext(options) {

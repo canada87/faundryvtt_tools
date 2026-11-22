@@ -90,6 +90,8 @@ export function initLoot() {
 
   HubMenu.registerFeature({
     id: "loot",
+    setting: "lootEnabled",
+    key: "KeyO",
     icon: "fas fa-coins",
     name: "LOOT.FeatureName",
     description: "LOOT.FeatureDescription",

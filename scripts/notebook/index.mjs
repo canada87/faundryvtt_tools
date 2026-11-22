@@ -74,6 +74,8 @@ export function initNotebook() {
 
   HubMenu.registerFeature({
     id: "notebook",
+    setting: "notebookEnabled",
+    keybinding: "notebookToggle",
     icon: "fas fa-book",
     name: "NOTEBOOK.FeatureName",
     description: "NOTEBOOK.FeatureDescription",

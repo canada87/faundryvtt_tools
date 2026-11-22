@@ -23,6 +23,8 @@ export function initBackup() {
 
   HubMenu.registerFeature({
     id: "backup",
+    setting: "backupEnabled",
+    key: "KeyK",
     icon: "fas fa-archive",
     name: "BACKUP.FeatureName",
     description: "BACKUP.FeatureDescription",

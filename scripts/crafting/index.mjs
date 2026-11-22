@@ -94,6 +94,8 @@ export function initCrafting() {
 
   HubMenu.registerFeature({
     id: "crafting",
+    setting: "craftingEnabled",
+    key: "KeyF",
     icon: "fas fa-flask",
     name: "CRAFTING.FeatureName",
     description: "CRAFTING.FeatureDescription",

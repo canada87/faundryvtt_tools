@@ -42,6 +42,8 @@ export function initJournalStyles() {
 
   HubMenu.registerFeature({
     id: "journal-styles",
+    setting: "journalStylesEnabled",
+    key: "KeyJ",
     icon: "fas fa-palette",
     name: "JOURNALSTYLES.FeatureName",
     description: "JOURNALSTYLES.FeatureDescription",

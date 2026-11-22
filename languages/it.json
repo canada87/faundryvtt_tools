@@ -2,7 +2,10 @@
   "FVTT_TOOLS": {
     "HubTitle": "Faundryvtt Tools",
     "OpenHub": "Apri Hub Strumenti",
-    "HubHint": "Apri l'hub strumenti per accedere a tutte le funzionalità disponibili."
+    "HubHint": "Apri l'hub strumenti per accedere a tutte le funzionalità disponibili.",
+    "Shortcut": "Scorciatoia da tastiera: {keys} (modificabile in Configura Controlli)",
+    "ShortcutNone": "nessuna",
+    "ShortcutHint": "Apre la funzionalità (solo GM)."
   },
   "CRAFTING": {
     "FeatureName": "Crafting",

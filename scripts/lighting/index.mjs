@@ -94,6 +94,8 @@ export function initLighting() {
 
   HubMenu.registerFeature({
     id: "lighting",
+    setting: "lightingEnabled",
+    key: "KeyL",
     icon: "fas fa-lightbulb",
     name: "LIGHTING.FeatureName",
     description: "LIGHTING.FeatureDescription",

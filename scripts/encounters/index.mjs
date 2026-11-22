@@ -116,6 +116,8 @@ export function initEncounters() {
 
   HubMenu.registerFeature({
     id: "encounters",
+    setting: "encountersEnabled",
+    key: "KeyG",
     icon: "fas fa-dice-d20",
     name: "ENCOUNTERS.FeatureName",
     description: "ENCOUNTERS.FeatureDescription",

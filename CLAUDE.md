@@ -145,7 +145,7 @@ Quando si deve riferire alla parte che li collega lo chiamera Hub.
 2. Crea `templates/<feature-name>/` per i template Handlebars
 3. Crea `styles/<feature-name>.css` per gli stili
 4. Aggiungi il CSS in `module.json` sotto `styles`
-5. In `scripts/<feature-name>/index.mjs`, chiama `HubMenu.registerFeature(...)` per aggiungere la feature all'hub
+5. In `scripts/<feature-name>/index.mjs`, chiama `HubMenu.registerFeature(...)` per aggiungere la feature all'hub. Passa `setting: "<feature>Enabled"` e `key: "KeyX"` (scorciatoia GM Shift+X, mostrata sotto il setting) oppure `keybinding: "<azione>"` se la feature registra già la sua scorciatoia
 6. In `scripts/module.mjs`, importa e chiama `initFeatureName()` dentro il hook `init`
 7. Aggiungi le chiavi di traduzione in `languages/*.json` sotto un nuovo namespace (es. `FEATURE_NAME.*`)
 

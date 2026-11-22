@@ -130,6 +130,25 @@ Hooks.on("getSceneControlButtons", (controls) => {
 });
 
 /* ---------------------------------------- */
+/*  Settings: show each feature's shortcut  */
+/*  under its "enabled" checkbox            */
+/* ---------------------------------------- */
+
+Hooks.on("renderSettingsConfig", (app, html) => {
+  const root = html instanceof HTMLElement ? html : html[0];
+  for (const feature of HubMenu.features) {
+    if (!feature.setting || !feature.keybinding) continue;
+    const group = root.querySelector(`[name="${MODULE_ID}.${feature.setting}"]`)?.closest(".form-group");
+    if (!group || group.querySelector(".fvtt-tools-shortcut")) continue;
+    const keys = HubMenu.shortcutLabel(feature.keybinding) || game.i18n.localize("FVTT_TOOLS.ShortcutNone");
+    const hint = document.createElement("p");
+    hint.className = "hint fvtt-tools-shortcut";
+    hint.textContent = game.i18n.format("FVTT_TOOLS.Shortcut", { keys });
+    group.append(hint);
+  }
+});
+
+/* ---------------------------------------- */
 /*  Ready                                    */
 /* ---------------------------------------- */
 

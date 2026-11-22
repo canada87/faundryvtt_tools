@@ -27,6 +27,8 @@ export function initParty() {
 
   HubMenu.registerFeature({
     id: "party",
+    setting: "partyEnabled",
+    key: "KeyP",
     icon: "fas fa-users",
     name: "PARTY.FeatureName",
     description: "PARTY.FeatureDescription",
