@@ -240,6 +240,13 @@
   opacity: 0.7;
 }
 
+.resource-decay-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
 .resource-decay-loop {
   margin-left: auto;
 }

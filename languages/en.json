@@ -624,6 +624,8 @@
     "Decrease": "Decrease",
     "Increase": "Increase",
     "Minutes": "min (game time)",
+    "NextTick": "Next tick in",
+    "NextTickHint": "Game minutes left before the value changes",
     "DecayLoop": "Restart from initial value at 0",
     "DecayLoopHint": "When the value reaches 0, restart it from the value it had when decay was enabled instead of stopping at 0.",
     "Confirm": {

@@ -91,6 +91,17 @@ export class ResourceSystem {
   }
 
   /**
+   * Game minutes left before the next decay tick, or null if decay is off.
+   */
+  static minutesToNextTick(resource, worldTime = game.time.worldTime) {
+    const decay = resource?.decay;
+    const intervalSeconds = (Number(decay?.interval) || 0) * 60;
+    if (!decay?.enabled || intervalSeconds <= 0) return null;
+    const lastTick = Number.isFinite(decay.lastTick) ? decay.lastTick : worldTime;
+    return Math.max(0, Math.ceil((lastTick + intervalSeconds - worldTime) / 60));
+  }
+
+  /**
    * Apply any pending decay ticks to all resources, based on elapsed game-world time.
    * Should only be invoked by the active GM client (see updateWorldTime hook).
    */

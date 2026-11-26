@@ -47,9 +47,18 @@ export class ResourceManager extends HandlebarsApplicationMixin(ApplicationV2) {
         direction: "decrease",
         loop: true,
         ...resource.decay
-      }
+      },
+      nextTick: ResourceSystem.minutesToNextTick(resource)
     }));
     return { resources };
+  }
+
+  /** Update the "next tick in" counters in place when game time moves (no re-render). */
+  refreshNextTicks(worldTime) {
+    this.element?.querySelectorAll("[data-next-tick]").forEach(el => {
+      const minutes = ResourceSystem.minutesToNextTick(ResourceSystem.getResource(el.dataset.nextTick), worldTime);
+      if (minutes !== null) el.textContent = minutes;
+    });
   }
 
   /** Re-render the manager whenever the resources setting changes. */

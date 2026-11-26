@@ -101,6 +101,12 @@
                 <option value="increase">{{localize "RESOURCES.Increase"}}</option>
               </select>
             </label>
+            <span class="resource-decay-next" title="{{localize 'RESOURCES.NextTickHint'}}">
+              <i class="fas fa-stopwatch"></i>
+              <span>{{localize "RESOURCES.NextTick"}}</span>
+              <strong data-next-tick="{{id}}">{{nextTick}}</strong>
+              <span class="resource-decay-unit">{{localize "RESOURCES.Minutes"}}</span>
+            </span>
             <label class="resource-decay-loop" title="{{localize 'RESOURCES.DecayLoopHint'}}">
               <input type="checkbox" data-resource-id="{{id}}" data-decay-field="loop" {{#if decay.loop}}checked{{/if}} />
               <span>{{localize "RESOURCES.DecayLoop"}}</span>

@@ -68,6 +68,9 @@ export function initResources() {
 
   Hooks.on("updateWorldTime", (worldTime) => {
     if (!game.user.isGM) return;
+    for (const app of foundry.applications.instances.values()) {
+      if (app instanceof ResourceManager && app.rendered) app.refreshNextTicks(worldTime);
+    }
     if (game.user.isActiveGM === false) return;
     ResourceSystem.processDecay(worldTime);
   });

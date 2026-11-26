@@ -624,6 +624,8 @@
     "Decrease": "Riduci",
     "Increase": "Aumenta",
     "Minutes": "min (tempo di gioco)",
+    "NextTick": "Prossimo tick tra",
+    "NextTickHint": "Minuti di gioco mancanti prima che il valore cambi",
     "DecayLoop": "Riparte dal valore iniziale a 0",
     "DecayLoopHint": "Quando il valore raggiunge 0, riparte dal valore che aveva al momento dell'attivazione invece di fermarsi a 0.",
     "Confirm": {
