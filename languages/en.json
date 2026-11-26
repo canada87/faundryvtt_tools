@@ -730,6 +730,8 @@
       "AssignedTo": "{actor} assigned to {scene}.",
       "DragHint": "Drag an actor onto the map to place it · Click: open sheet",
       "Empty": "No actors here. Drop an actor on the bar to assign it to this scene.",
+      "BubbleHint": "Click: show the actors of this map",
+      "ShowMaps": "click: show its maps",
       "NoCompendium": "Import the actor into the world first: compendium actors can't be assigned."
     },
     "Warn": {

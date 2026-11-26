@@ -23,6 +23,15 @@ const DIRECTION_VECTORS = {
   up: [0, -1], down: [0, 1], "": [1, 0]
 };
 
+/** Cast counters of a node; a click opens the cast bubble (same markup as the grid cards). */
+function castBadge(sceneId, cast) {
+  return `<button type="button" class="scenenav-cast-badge" data-action="castBubble" data-cast-scene="${sceneId}"
+      data-tooltip="${game.i18n.localize("SCENENAV.Cast.BubbleHint")}">
+      ${cast.assigned ? `<span><i class="fas fa-thumbtack"></i> ${cast.assigned}</span>` : ""}
+      ${cast.onMap ? `<span><i class="fas fa-chess-pawn"></i> ${cast.onMap}</span>` : ""}
+    </button>`;
+}
+
 /** 8-way directions ordered by angle, starting East and going clockwise (screen y grows down). */
 const COMPASS = ["e", "se", "s", "sw", "w", "nw", "n", "ne"];
 
@@ -150,7 +159,7 @@ export class SceneGraph {
   /**
    * @param {HTMLElement} host
    * @param {object} model
-   * @param {Array<object>} model.nodes   {id, name, thumb, active, isView, ghost, dim, highlight}
+   * @param {Array<object>} model.nodes   {id, name, thumb, active, isView, ghost, dim, highlight, cast?: {assigned, onMap}}
    * @param {Array<object>} model.edges   {id, type, from, to, label}
    * @param {Map<string, {x, y}>} model.positions
    * @param {object} options
@@ -252,13 +261,14 @@ export class SceneGraph {
         ? `<button type="button" class="scenenav-gnode-note" data-action="openNote"
              data-tooltip="${esc(node.note.preview || node.note.name)}"><i class="fas fa-book-open"></i></button>`
         : "";
+      const cast = node.cast && !node.ghost ? castBadge(node.id, node.cast) : "";
       return `
         <div class="${classes}" data-scene-id="${node.id}" style="left:${pos.x}px; top:${pos.y}px; width:${NODE_W}px; height:${NODE_H}px"
              ${node.ghost ? `data-tooltip="${loc("SCENENAV.Graph.External")}"` : ""}>
           ${viewers}
           <div class="scenenav-gnode-thumb">${thumb}${actions}</div>
           <div class="scenenav-gnode-name" title="${esc(node.name)}">
-            ${node.active ? `<i class="fas fa-bullseye"></i>` : ""}<span>${esc(node.name)}</span>${note}
+            ${node.active ? `<i class="fas fa-bullseye"></i>` : ""}<span>${esc(node.name)}</span>${cast}${note}
           </div>
           ${node.ghost ? "" : `<span class="scenenav-gnode-handle" data-tooltip="${loc("SCENENAV.Graph.LinkHandle")}"></span>`}
         </div>`;

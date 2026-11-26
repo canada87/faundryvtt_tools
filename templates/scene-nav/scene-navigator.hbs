@@ -192,6 +192,13 @@
                   <div class="scenenav-badges">
                     {{#if active}}<span class="scenenav-badge badge-active"><i class="fas fa-bullseye"></i> {{localize "SCENENAV.Active"}}</span>{{/if}}
                     {{#if isView}}<span class="scenenav-badge badge-view"><i class="fas fa-eye"></i> {{localize "SCENENAV.Viewing"}}</span>{{/if}}
+                    {{#if cast}}
+                      <button type="button" class="scenenav-cast-badge" data-action="castBubble" data-cast-scene="{{id}}"
+                              data-tooltip="{{localize "SCENENAV.Cast.BubbleHint"}}">
+                        {{#if cast.assigned}}<span><i class="fas fa-thumbtack"></i> {{cast.assigned}}</span>{{/if}}
+                        {{#if cast.onMap}}<span><i class="fas fa-chess-pawn"></i> {{cast.onMap}}</span>{{/if}}
+                      </button>
+                    {{/if}}
                   </div>
 
                   <button type="button" class="scenenav-fav {{#if favorite}}is-fav{{/if}}" data-action="toggleFavorite"
@@ -230,11 +237,6 @@
                       {{else}}
                         <button type="button" class="scenenav-icon-btn" data-action="assignActor" data-tooltip="{{localize "SCENENAV.Cast.Assign"}}"><i class="fas fa-thumbtack"></i></button>
                       {{/if}}
-                    </div>
-                  {{else if cast}}
-                    <div class="scenenav-cast-summary" data-tooltip="{{cast.tooltip}}">
-                      {{#if cast.assigned}}<span><i class="fas fa-thumbtack"></i> {{cast.assigned}}</span>{{/if}}
-                      {{#if cast.onMap}}<span><i class="fas fa-chess-pawn"></i> {{cast.onMap}}</span>{{/if}}
                     </div>
                   {{/if}}
 

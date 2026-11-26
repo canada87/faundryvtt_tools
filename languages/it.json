@@ -730,6 +730,8 @@
       "AssignedTo": "{actor} assegnato a {scene}.",
       "DragHint": "Trascina un actor sulla mappa per piazzarlo · Clic: apri scheda",
       "Empty": "Nessun actor qui. Trascina un actor sulla barra per assegnarlo a questa scena.",
+      "BubbleHint": "Clic: mostra gli actor di questa mappa",
+      "ShowMaps": "clic: mostra le sue mappe",
       "NoCompendium": "Importa prima l'actor nel mondo: gli actor dei compendi non si possono assegnare."
     },
     "Warn": {

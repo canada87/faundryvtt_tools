@@ -50,6 +50,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       pullPlayers: SceneNavigator.#onPullPlayers,
       focusScene: SceneNavigator.#onFocusScene,
       selectActor: SceneNavigator.#onSelectActor,
+      castBubble: SceneNavigator.#onCastBubble,
       clearActor: SceneNavigator.#onClearActor,
       toggleActorFolder: SceneNavigator.#onToggleActorFolder,
       openActorSheet: SceneNavigator.#onOpenActorSheet,
@@ -94,6 +95,9 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   #actorId = null;
   #actorSearch = "";
   #openActorFolders = new Set();
+
+  /** Scene whose cast bubble is open. */
+  #castBubbleSceneId = null;
 
   /** Connected players by viewed scene, refreshed on every render. */
   #players = new Map();
@@ -263,16 +267,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     const viewers = this.#players.get(scene.id) ?? [];
     const note = S.getSceneNote(scene);
 
-    // Cast as two small counters; names only in the tooltip, so busy maps stay compact
     const cast = S.getSceneCast(scene, data);
-    const assigned = cast.filter(c => c.assigned);
-    const onMap = cast.filter(c => c.count);
-    const names = list => list.slice(0, 12).map(c => (c.count > 1 ? `${c.name} ×${c.count}` : c.name)).join(", ")
-      + (list.length > 12 ? ` +${list.length - 12}` : "");
-    const castTooltip = [
-      assigned.length ? `${game.i18n.localize("SCENENAV.Cast.Assigned")}: ${names(assigned)}` : "",
-      onMap.length ? `${game.i18n.localize("SCENENAV.Cast.OnMap")}: ${names(onMap)}` : ""
-    ].filter(Boolean).join(" — ");
     const selected = this.#actorId ? cast.find(c => c.id === this.#actorId) : null;
 
     return {
@@ -290,7 +285,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       hasLinks: !!parentId || children.length > 0 || continues.length > 0,
       viewers,
       note: note ? { name: note.journal.name, preview: S.getNotePreview(scene) } : null,
-      cast: cast.length ? { assigned: assigned.length, onMap: onMap.length, tooltip: castTooltip } : null,
+      cast: SceneNavigator.#castCounts(cast),
       // State of the selected actor on this scene (only in the actor view)
       actorState: this.#actorId ? {
         assigned: !!selected?.assigned,
@@ -301,6 +296,77 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       } : null,
       highlight: this.#highlightSceneId === scene.id
     };
+  }
+
+  /** Cast as two small counters (assigned, on the map); the names are in the cast bubble. */
+  static #castCounts(cast) {
+    if (!cast.length) return null;
+    return { assigned: cast.filter(c => c.assigned).length, onMap: cast.filter(c => c.count).length };
+  }
+
+  /* ---------------------------------------- */
+  /*  Cast bubble (click the counters)        */
+  /* ---------------------------------------- */
+
+  /** Show, refresh or remove the bubble anchored to the open scene's cast counters. */
+  #updateCastBubble() {
+    const old = this.element?.querySelector(":scope > .scenenav-cast-bubble");
+    const scene = game.scenes.get(this.#castBubbleSceneId);
+    const anchor = scene && this.element.querySelector(`[data-cast-scene="${scene.id}"]`);
+    if (!anchor) {
+      old?.remove();
+      this.#castBubbleSceneId = null;
+      return;
+    }
+    const bubble = old ?? document.createElement("div");
+    bubble.className = "scenenav-cast-bubble";
+    bubble.dataset.sceneId = scene.id;
+    bubble.innerHTML = this.#castBubbleHtml(scene);
+    if (!old) this.element.appendChild(bubble);
+    this.#positionCastBubble();
+  }
+
+  /** Place the bubble below its counters (above if there is no room), inside the window. */
+  #positionCastBubble() {
+    const bubble = this.element?.querySelector(":scope > .scenenav-cast-bubble");
+    const anchor = bubble && this.element.querySelector(`[data-cast-scene="${bubble.dataset.sceneId}"]`);
+    if (!anchor) return;
+    const a = anchor.getBoundingClientRect();
+    const w = bubble.offsetWidth;
+    const h = bubble.offsetHeight;
+    const left = Math.min(Math.max(8, a.left + a.width / 2 - w / 2), window.innerWidth - w - 8);
+    const below = a.bottom + 8 + h <= window.innerHeight;
+    bubble.style.left = `${left}px`;
+    bubble.style.top = `${below ? a.bottom + 8 : Math.max(8, a.top - h - 8)}px`;
+  }
+
+  #castBubbleHtml(scene) {
+    const esc = Handlebars.escapeExpression;
+    const loc = key => game.i18n.localize(key);
+    const cast = SceneNavSystem.getSceneCast(scene);
+
+    const chip = c => `
+      <div class="scenenav-cast-actor ${c.count ? "is-present" : "is-offmap"} ${c.hostile ? "is-hostile" : ""}"
+           data-action="selectActor" data-actor-id="${c.id}"
+           data-tooltip="${esc(c.count ? game.i18n.format("SCENENAV.Cast.OnMapCount", { count: c.count }) : loc("SCENENAV.Cast.OffMap"))} — ${loc("SCENENAV.Cast.ShowMaps")}">
+        <img src="${esc(c.img)}" alt="" />
+        <span class="scenenav-cast-name">${esc(c.name)}</span>
+        ${c.count > 1 ? `<span class="scenenav-cast-count">×${c.count}</span>` : ""}
+        <button type="button" class="scenenav-icon-btn" data-action="${c.assigned ? "unassignActor" : "assignActor"}"
+                data-tooltip="${loc(c.assigned ? "SCENENAV.Cast.Unassign" : "SCENENAV.Cast.Assign")}">
+          <i class="fas ${c.assigned ? "fa-times" : "fa-thumbtack"}"></i>
+        </button>
+      </div>`;
+
+    const section = (title, items) => items.length
+      ? `<h4>${title} <span class="scenenav-cast-total">${items.length}</span></h4>
+         <div class="scenenav-cast-list">${items.map(chip).join("")}</div>`
+      : "";
+
+    return `
+      <div class="scenenav-cast-bubble-title">${esc(scene.name)}</div>
+      ${section(loc("SCENENAV.Cast.Assigned"), cast.filter(c => c.assigned))}
+      ${section(loc("SCENENAV.Cast.OnMap"), cast.filter(c => !c.assigned))}`;
   }
 
   /** Actor folders and actors as a flat indented list; a search shows matching actors only. */
@@ -340,10 +406,21 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   async _onFirstRender(context, options) {
     await super._onFirstRender(context, options);
     window.addEventListener("keydown", this.#onKeyDown, true);
+    // The cast bubble closes on any click or wheel (scroll, graph zoom) outside it
+    const closeBubble = ev => {
+      if (!this.#castBubbleSceneId || ev.target.closest?.(".scenenav-cast-bubble, [data-action=castBubble]")) return;
+      this.#castBubbleSceneId = null;
+      this.#updateCastBubble();
+    };
+    this.element.addEventListener("pointerdown", closeBubble, true);
+    this.element.addEventListener("wheel", closeBubble, { capture: true, passive: true });
+    // Re-renders restore scroll positions: follow the counters instead of closing
+    this.element.addEventListener("scroll", () => this.#positionCastBubble(), true);
   }
 
   _onClose(options) {
     window.removeEventListener("keydown", this.#onKeyDown, true);
+    this.#castBubbleSceneId = null;
     super._onClose(options);
   }
 
@@ -434,6 +511,21 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     if (this.#isGraphMode) {
       this.#renderGraph(root.querySelector(".scenenav-graph"));
       this.#highlightSceneId = null;
+      // Graph nodes accept the same drops as the cards (actors, journals)
+      root.querySelectorAll(".scenenav-gnode[data-scene-id]:not(.is-ghost)").forEach(node => {
+        node.addEventListener("dragover", ev => {
+          ev.preventDefault();
+          node.classList.add("drag-over");
+        });
+        node.addEventListener("dragleave", ev => {
+          if (!node.contains(ev.relatedTarget)) node.classList.remove("drag-over");
+        });
+        node.addEventListener("drop", ev => {
+          node.classList.remove("drag-over");
+          this.#onDropOnCard(ev, node.dataset.sceneId);
+        });
+      });
+      this.#updateCastBubble();
       return;
     }
 
@@ -443,6 +535,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       card?.scrollIntoView({ block: "center", behavior: "smooth" });
       this.#highlightSceneId = null;
     }
+    this.#updateCastBubble();
   }
 
   /* ---------------------------------------- */
@@ -492,6 +585,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
         dim: (!!search && !matches(scene)) || (!!actorScenes && !actorScenes.has(id)),
         highlight: this.#highlightSceneId === id,
         viewers: this.#players.get(id) ?? [],
+        cast: SceneNavigator.#castCounts(S.getSceneCast(scene, data)),
         note: S.getSceneNote(scene) ? { name: S.getSceneNote(scene).journal.name, preview: S.getNotePreview(scene, 200) } : null
       };
     }).sort(S.sortByName);
@@ -753,7 +847,15 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   static #onSelectActor(event, target) {
     const actorId = target.closest("[data-actor-id]").dataset.actorId;
     this.#actorId = this.#actorId === actorId ? null : actorId;
+    this.#castBubbleSceneId = null;
     this.render();
+  }
+
+  /** Click the cast counters of a scene: open its bubble (click again to close). */
+  static #onCastBubble(event, target) {
+    const sceneId = target.dataset.castScene;
+    this.#castBubbleSceneId = this.#castBubbleSceneId === sceneId ? null : sceneId;
+    this.#updateCastBubble();
   }
 
   static #onClearActor() {
@@ -771,12 +873,22 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     game.actors.get(this.#actorId)?.sheet.render(true);
   }
 
+  /** Actor from the cast bubble chip, or the selected actor on a card. */
+  #castTarget(target) {
+    return {
+      sceneId: target.closest("[data-scene-id]")?.dataset.sceneId,
+      actorId: target.closest("[data-actor-id]")?.dataset.actorId ?? this.#actorId
+    };
+  }
+
   static async #onAssignActor(event, target) {
-    if (this.#actorId) await SceneNavSystem.assignActor(target.closest("[data-scene-id]").dataset.sceneId, this.#actorId);
+    const { sceneId, actorId } = this.#castTarget(target);
+    if (sceneId && actorId) await SceneNavSystem.assignActor(sceneId, actorId);
   }
 
   static async #onUnassignActor(event, target) {
-    if (this.#actorId) await SceneNavSystem.unassignActor(target.closest("[data-scene-id]").dataset.sceneId, this.#actorId);
+    const { sceneId, actorId } = this.#castTarget(target);
+    if (sceneId && actorId) await SceneNavSystem.unassignActor(sceneId, actorId);
   }
 
   static async #onToggleFolder(event, target) {

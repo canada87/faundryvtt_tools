@@ -1392,7 +1392,6 @@ body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
   object-fit: cover;
 }
 
-.scenenav-cast-summary,
 .scenenav-actor-state {
   display: inline-flex;
   align-items: center;
@@ -1469,18 +1468,18 @@ body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
   letter-spacing: 1px;
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-total {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-total {
   opacity: 0.6;
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-list {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-list {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   margin-bottom: 6px;
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-actor {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-actor {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -1493,21 +1492,21 @@ body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
 }
 
 /* Assigned but not placed: the ones to drag onto the map */
-.faundryvtt-scenenav-bar .scenenav-cast-actor.is-offmap {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-actor.is-offmap {
   border-style: dashed;
   border-color: rgba(255, 255, 255, 0.35);
   background: transparent;
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-actor.is-hostile {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-actor.is-hostile {
   border-color: rgba(220, 80, 80, 0.8);
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-actor.is-hostile.is-present {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-actor.is-hostile.is-present {
   background: rgba(200, 60, 60, 0.22);
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-actor img {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-actor img {
   width: 22px;
   height: 22px;
   border: none;
@@ -1515,26 +1514,103 @@ body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
   object-fit: cover;
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-name {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-count {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-count {
   font-weight: 700;
   opacity: 0.8;
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-actor .scenenav-bar-btn {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-actor .scenenav-bar-btn {
   width: 18px;
   height: 18px;
   font-size: 10px;
 }
 
-.faundryvtt-scenenav-bar .scenenav-cast-hint {
+:is(.faundryvtt-scenenav-bar, .scenenav-cast-bubble) .scenenav-cast-hint {
   margin: 2px 0 0;
   font-size: 11px;
   font-style: italic;
   opacity: 0.6;
+}
+
+/* ---- Cast counters on thumbnails and graph nodes, and their bubble ---- */
+
+.scene-navigator .scenenav-cast-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 2px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #f0f0f0;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.scene-navigator .scenenav-cast-badge:hover {
+  border-color: var(--scenenav-accent);
+  color: var(--scenenav-accent);
+}
+
+.scene-navigator .scenenav-gnode-name .scenenav-cast-badge {
+  flex: 0 0 auto;
+  padding: 1px 5px;
+  font-size: 10px;
+}
+
+.scenenav-gnode.drag-over {
+  outline: 2px dashed var(--scenenav-accent);
+  outline-offset: 2px;
+}
+
+.scenenav-cast-bubble {
+  position: fixed;
+  z-index: 10;
+  width: 320px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 8px 10px;
+  border: 1px solid var(--scenenav-accent);
+  border-radius: 10px;
+  background: rgba(20, 20, 22, 0.97);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.scenenav-cast-bubble-title {
+  margin-bottom: 4px;
+  font-weight: 700;
+  color: var(--scenenav-accent);
+}
+
+.scenenav-cast-bubble h4 {
+  margin: 6px 0 4px;
+  border: none;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.scenenav-cast-bubble .scenenav-cast-actor {
+  cursor: pointer;
+}
+
+.scene-navigator .scenenav-cast-bubble .scenenav-icon-btn {
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
 }
