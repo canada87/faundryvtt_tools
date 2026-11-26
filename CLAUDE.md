@@ -11,6 +11,7 @@ scripts/
     constants.mjs          — Costanti condivise (MODULE_ID)
   hub/
     HubMenu.mjs            — Menu di alto livello per scegliere la funzionalità
+    ShortcutsPanel.mjs     — Linguetta in basso a sinistra (setting utente shortcutsPanelEnabled) con le scorciatoie delle feature attive, si apre al passaggio del mouse
   crafting/
     index.mjs              — Init della feature crafting (settings, hooks, API)
     CraftingSystem.mjs     — Logica core: CRUD ricette, inventario, crafting
@@ -63,19 +64,19 @@ scripts/
       LightingDialogs.mjs  — Dialoghi: editor preset e scelta giocatori
       LightingSettings.mjs — UI GM (menu impostazioni): tabella preset e livelli oscurità
   notebook/
-    index.mjs              — Init taccuino giocatori (settings, keybinding Shift+B, pulsante controlli token, hook HUD, API)
+    index.mjs              — Init taccuino giocatori (settings, keybinding Shift+N, pulsante controlli token, hook HUD, API)
     NotebookSystem.mjs     — Logica core: appunti/post-it e note sulle creature nei flag User, handout e bestiario in setting world, visibilità {all, users}
     TokenHudNotebook.mjs   — Pulsante GM nell'HUD del token: aggiunge la creatura (nome e immagine dall'attore) al bestiario
     apps/
       NotebookApp.mjs      — UI a forma di taccuino con linguette: Appunti, Bestiario (campi oscurati), Handout; il GM "visualizza come" un giocatore
       NotebookDialogs.mjs  — Dialoghi: post-it, handout, editor creatura, visibilità per giocatore, modello campi
   exploration/
-    index.mjs              — Init esplorazione (disattivo di default: setting explorationEnabled; keybinding Shift+V solo GM)
+    index.mjs              — Init esplorazione (disattivo di default: setting explorationEnabled; keybinding Shift+E solo GM)
     ExplorationSystem.mjs  — Logica core: quota caselle per token fuori combat, blocco preMoveToken (giocatori), conteggio moveToken, avanzamento tempo e reset
     apps/
       ExplorationTracker.mjs — UI GM: token dei giocatori online con barra quota, escludi token, pulsante turno successivo
   movement-reach/
-    index.mjs              — Init portata di movimento (disattivo di default: setting reachEnabled; keybinding Shift+R per tutti)
+    index.mjs              — Init portata di movimento (disattivo di default: setting reachEnabled; keybinding Shift+A per tutti)
     ReachSystem.mjs        — Logica core: velocità dal campo scheda configurabile, distanza percorsa (cronologia core in combat, contatore locale fuori), budget per anello
     ReachCalculator.mjs    — Calcolo caselle raggiungibili: free (no muri), line (linea retta), path (Dijkstra sui muri); indice locale dei muri
     ReachOverlay.mjs       — Overlay solo locale (highlight layer della griglia + etichetta), segue il token controllato

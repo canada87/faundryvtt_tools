@@ -66,7 +66,7 @@ export function initExploration() {
 
   game.keybindings.register(MODULE_ID, "explorationToggle", {
     name: "EXPLORATION.Toggle",
-    editable: [{ key: "KeyV", modifiers: ["Shift"] }],
+    editable: [{ key: "KeyE", modifiers: ["Shift"] }],
     restricted: true,
     onDown: () => {
       ExplorationTracker.toggle();

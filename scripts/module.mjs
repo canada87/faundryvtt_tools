@@ -1,5 +1,6 @@
 import { MODULE_ID } from "./shared/constants.mjs";
 import { HubMenu } from "./hub/HubMenu.mjs";
+import { ShortcutsPanel } from "./hub/ShortcutsPanel.mjs";
 import { initCrafting } from "./crafting/index.mjs";
 import { initEncounters } from "./encounters/index.mjs";
 import { initLoot } from "./loot/index.mjs";
@@ -72,6 +73,8 @@ Hooks.once("init", () => {
   initNotebook();
   initExploration();
   initMovementReach();
+
+  ShortcutsPanel.register();
 
   console.log("Faundryvtt Tools | Module initialized");
 });

@@ -28,7 +28,7 @@ export function initSavingThrow() {
   HubMenu.registerFeature({
     id: "savingThrow",
     setting: "savingThrowEnabled",
-    key: "KeyY",
+    key: "KeyT",
     icon: "fas fa-shield-alt",
     name: "SAVING_THROW.FeatureName",
     description: "SAVING_THROW.FeatureDescription",

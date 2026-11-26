@@ -115,7 +115,7 @@ export function initMovementReach() {
   game.keybindings.register(MODULE_ID, "reachToggle", {
     name: "REACH.Toggle",
     hint: "REACH.ToggleHint",
-    editable: [{ key: "KeyR", modifiers: ["Shift"] }],
+    editable: [{ key: "KeyA", modifiers: ["Shift"] }],
     onDown: () => {
       ReachOverlay.toggle();
       return true;

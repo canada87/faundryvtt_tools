@@ -90,7 +90,7 @@ export function initSceneNav() {
 
   game.keybindings.register(MODULE_ID, "scenesNavToggle", {
     name: "SCENENAV.Toggle",
-    editable: [{ key: "KeyN", modifiers: ["Shift"] }],
+    editable: [{ key: "KeyM", modifiers: ["Shift"] }],
     restricted: true,
     onDown: () => {
       SceneNavigator.toggle();

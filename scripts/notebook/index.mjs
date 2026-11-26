@@ -63,7 +63,7 @@ export function initNotebook() {
 
   game.keybindings.register(MODULE_ID, "notebookToggle", {
     name: "NOTEBOOK.Toggle",
-    editable: [{ key: "KeyB", modifiers: ["Shift"] }],
+    editable: [{ key: "KeyN", modifiers: ["Shift"] }],
     onDown: () => {
       NotebookApp.toggle();
       return true;

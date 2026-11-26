@@ -33,7 +33,7 @@ export function initMindMap() {
   HubMenu.registerFeature({
     id: "mindmap",
     setting: "mindmapEnabled",
-    key: "KeyM",
+    key: "KeyW",
     icon: "fas fa-project-diagram",
     name: "MINDMAP.FeatureName",
     description: "MINDMAP.FeatureDescription",

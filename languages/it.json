@@ -5,7 +5,12 @@
     "HubHint": "Apri l'hub strumenti per accedere a tutte le funzionalità disponibili.",
     "Shortcut": "Scorciatoia da tastiera: {keys} (modificabile in Configura Controlli)",
     "ShortcutNone": "nessuna",
-    "ShortcutHint": "Apre la funzionalità (solo GM)."
+    "ShortcutHint": "Apre la funzionalità (solo GM).",
+    "ShortcutsPanel": {
+      "Name": "Mostra pannello scorciatoie",
+      "Hint": "Mostra una piccola linguetta con la tastiera in basso a sinistra; passaci sopra col mouse per vedere le scorciatoie delle funzionalità attive. Salvato per il tuo utente su ogni PC.",
+      "Empty": "Nessuna scorciatoia per le funzionalità attive."
+    }
   },
   "CRAFTING": {
     "FeatureName": "Crafting",
@@ -639,7 +644,7 @@
     "Settings": {
       "Enabled": {
         "Name": "Navigatore Scene: abilita",
-        "Hint": "Attiva il Navigatore Scene (solo GM): un pannello a tutto schermo con le cartelle delle scene, le miniature e i collegamenti tra le scene. Si apre con Shift+N o dall'Hub. Richiede il ricaricamento."
+        "Hint": "Attiva il Navigatore Scene (solo GM): un pannello a tutto schermo con le cartelle delle scene, le miniature e i collegamenti tra le scene. Si apre con Shift+M o dall'Hub. Richiede il ricaricamento."
       }
     },
     "SearchPlaceholder": "Cerca scene...",
@@ -993,7 +998,7 @@
     "Settings": {
       "Enabled": {
         "Name": "Esplorazione: abilita",
-        "Hint": "Attiva la funzionalità Esplorazione (quota di movimento fuori dal combattimento, pannello GM con Shift+V). Richiede il ricaricamento."
+        "Hint": "Attiva la funzionalità Esplorazione (quota di movimento fuori dal combattimento, pannello GM con Shift+E). Richiede il ricaricamento."
       },
       "Quota": {
         "Name": "Esplorazione: caselle per turno",
@@ -1032,7 +1037,7 @@
     "Settings": {
       "Enabled": {
         "Name": "Portata di movimento: abilita",
-        "Hint": "Attiva la portata di movimento (Shift+R colora le caselle raggiungibili dal token selezionato). Richiede il ricaricamento."
+        "Hint": "Attiva la portata di movimento (Shift+A colora le caselle raggiungibili dal token selezionato). Richiede il ricaricamento."
       },
       "SpeedPath": {
         "Name": "Portata di movimento: campo velocità",

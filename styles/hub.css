@@ -46,3 +46,86 @@
   font-size: 0.8rem;
   color: var(--color-text-dark-secondary, #666);
 }
+
+/* ============================================ */
+/*  Shortcuts panel (bottom-left, opens on hover) */
+/* ============================================ */
+
+.fvtt-tools-shortcuts {
+  position: fixed;
+  bottom: 10px;
+  left: 120px; /* set from the macro bar position in JS */
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 4px;
+  color: #f0f0f0;
+  font-family: var(--font-primary, "Signika", sans-serif);
+  font-size: 13px;
+}
+
+.fvtt-tools-shortcuts-tab {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 20, 20, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  opacity: 0.45;
+  transition: opacity 0.15s;
+}
+
+.fvtt-tools-shortcuts-list {
+  display: none;
+  margin: 0;
+  padding: 6px 10px;
+  list-style: none;
+  background: rgba(20, 20, 20, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+.fvtt-tools-shortcuts:hover .fvtt-tools-shortcuts-tab {
+  opacity: 1;
+}
+
+.fvtt-tools-shortcuts:hover .fvtt-tools-shortcuts-list {
+  display: block;
+}
+
+.fvtt-tools-shortcuts-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.fvtt-tools-shortcuts-list li i {
+  width: 16px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.fvtt-tools-shortcuts-list li span {
+  flex: 1;
+}
+
+.fvtt-tools-shortcuts-list kbd {
+  margin-left: 12px;
+  padding: 1px 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.fvtt-tools-shortcuts-list li.is-empty {
+  opacity: 0.7;
+}

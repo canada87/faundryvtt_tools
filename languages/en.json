@@ -5,7 +5,12 @@
     "HubHint": "Open the tools hub to access all available features.",
     "Shortcut": "Keyboard shortcut: {keys} (change it in Configure Controls)",
     "ShortcutNone": "none",
-    "ShortcutHint": "Opens the feature (GM only)."
+    "ShortcutHint": "Opens the feature (GM only).",
+    "ShortcutsPanel": {
+      "Name": "Show shortcuts panel",
+      "Hint": "Shows a small keyboard tab at the bottom left; hover it to see the shortcuts of the active features. Saved for your user on every PC.",
+      "Empty": "No shortcut for the active features."
+    }
   },
   "CRAFTING": {
     "FeatureName": "Crafting",
@@ -639,7 +644,7 @@
     "Settings": {
       "Enabled": {
         "Name": "Scene Navigator: enable",
-        "Hint": "Enable the Scene Navigator (GM only): a full-screen panel with scene folders, thumbnails and links between scenes. Open it with Shift+N or from the Hub. Requires reload."
+        "Hint": "Enable the Scene Navigator (GM only): a full-screen panel with scene folders, thumbnails and links between scenes. Open it with Shift+M or from the Hub. Requires reload."
       }
     },
     "SearchPlaceholder": "Search scenes...",
@@ -993,7 +998,7 @@
     "Settings": {
       "Enabled": {
         "Name": "Exploration: enable",
-        "Hint": "Enable the Exploration feature (movement quota outside combat, GM panel with Shift+V). Requires reload."
+        "Hint": "Enable the Exploration feature (movement quota outside combat, GM panel with Shift+E). Requires reload."
       },
       "Quota": {
         "Name": "Exploration: cells per turn",
@@ -1032,7 +1037,7 @@
     "Settings": {
       "Enabled": {
         "Name": "Movement Reach: enable",
-        "Hint": "Enable movement reach (Shift+R colors the cells reachable by the selected token). Requires a reload."
+        "Hint": "Enable movement reach (Shift+A colors the cells reachable by the selected token). Requires a reload."
       },
       "SpeedPath": {
         "Name": "Movement Reach: speed field",
