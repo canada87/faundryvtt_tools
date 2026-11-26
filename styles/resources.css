@@ -60,8 +60,18 @@
    Resources — Manager
    ======================================== */
 
+/* Auto height grows with the list: cap it to the viewport and scroll inside. */
+.application.resource-manager {
+  max-height: 95vh;
+}
+
+.resource-manager section.window-content {
+  overflow: auto;
+}
+
 .resource-manager-content {
   padding: 12px;
+  min-width: max-content;
 }
 
 .resource-manager-header {

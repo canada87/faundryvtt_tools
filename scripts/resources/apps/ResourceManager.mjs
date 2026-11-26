@@ -17,7 +17,7 @@ export class ResourceManager extends HandlebarsApplicationMixin(ApplicationV2) {
       resizable: true
     },
     position: {
-      width: 820,
+      width: 960,
       height: "auto"
     },
     actions: {
