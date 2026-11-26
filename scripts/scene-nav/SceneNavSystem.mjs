@@ -24,7 +24,7 @@ const OPPOSITE = {
  * and deleting them here changes them in the Scenes sidebar too.
  * Module-only data (favorites, typed links, graph positions) lives in a world setting:
  * {
- *   sceneMeta: { [sceneId]: { favorite } },
+ *   sceneMeta: { [sceneId]: { favorite, cast: [actorId] } },
  *   links:     [{ id, type, from, to, direction }],
  *   layout:    { [viewKey]: { [sceneId]: { x, y } } }
  * }
@@ -96,6 +96,105 @@ export class SceneNavSystem {
       const meta = data.sceneMeta[sceneId] ?? {};
       data.sceneMeta[sceneId] = { ...meta, favorite: !meta.favorite };
     });
+  }
+
+  /* ---------------------------------------- */
+  /*  Cast (actors assigned to or on a scene) */
+  /* ---------------------------------------- */
+
+  /** World actor ids assigned to a scene (deleted actors are skipped). */
+  static getAssignedActorIds(sceneId, data = this.getData()) {
+    return (data.sceneMeta[sceneId]?.cast ?? []).filter(id => game.actors.has(id));
+  }
+
+  static async assignActor(sceneId, actorId) {
+    if (!game.scenes.has(sceneId) || !game.actors.has(actorId)) return false;
+    return this.#mutate(data => {
+      const meta = data.sceneMeta[sceneId] ?? {};
+      const cast = meta.cast ?? [];
+      if (cast.includes(actorId)) return false;
+      data.sceneMeta[sceneId] = { ...meta, cast: [...cast, actorId] };
+    });
+  }
+
+  static async unassignActor(sceneId, actorId) {
+    return this.#mutate(data => {
+      const meta = data.sceneMeta[sceneId];
+      if (!meta?.cast?.includes(actorId)) return false;
+      meta.cast = meta.cast.filter(id => id !== actorId);
+    });
+  }
+
+  /** Number of tokens per world actor on a scene. */
+  static getTokenCounts(scene) {
+    const counts = new Map();
+    for (const token of scene?.tokens ?? []) {
+      if (token.actorId && game.actors.has(token.actorId)) counts.set(token.actorId, (counts.get(token.actorId) ?? 0) + 1);
+    }
+    return counts;
+  }
+
+  /**
+   * Cast of a scene: assigned actors plus actors with tokens on it, by name.
+   * Player characters only count when assigned: the party already shows as players.
+   * @returns {Array<{id, name, img, uuid, assigned: boolean, count: number, hostile: boolean}>}
+   */
+  static getSceneCast(scene, data = this.getData()) {
+    const assigned = new Set(this.getAssignedActorIds(scene.id, data));
+    const counts = this.getTokenCounts(scene);
+    const ids = new Set(assigned);
+    for (const id of counts.keys()) {
+      if (!game.actors.get(id).hasPlayerOwner) ids.add(id);
+    }
+    const hostile = CONST.TOKEN_DISPOSITIONS.HOSTILE;
+    return [...ids].map(id => {
+      const actor = game.actors.get(id);
+      const disposition = scene.tokens.find(t => t.actorId === id)?.disposition ?? actor.prototypeToken.disposition;
+      return {
+        id,
+        name: actor.name,
+        img: actor.img,
+        uuid: actor.uuid,
+        assigned: assigned.has(id),
+        count: counts.get(id) ?? 0,
+        hostile: disposition === hostile
+      };
+    }).sort(this.sortByName);
+  }
+
+  /** Scenes where an actor is assigned or has tokens, by name. */
+  static getActorScenes(actorId, data = this.getData()) {
+    return this.getScenes().map(scene => ({
+      scene,
+      assigned: !!data.sceneMeta[scene.id]?.cast?.includes(actorId),
+      count: scene.tokens.filter(t => t.actorId === actorId).length
+    })).filter(e => e.assigned || e.count);
+  }
+
+  /** Map actorId → number of scenes where it is assigned or on the map, in one pass. */
+  static getActorSceneCounts(data = this.getData()) {
+    const sets = new Map();
+    const add = (actorId, sceneId) => {
+      if (!sets.has(actorId)) sets.set(actorId, new Set());
+      sets.get(actorId).add(sceneId);
+    };
+    for (const scene of game.scenes) {
+      for (const id of data.sceneMeta[scene.id]?.cast ?? []) add(id, scene.id);
+      for (const token of scene.tokens) if (token.actorId) add(token.actorId, scene.id);
+    }
+    return new Map([...sets].map(([id, scenes]) => [id, scenes.size]));
+  }
+
+  /** Actor folders directly inside a folder (null = root). */
+  static getChildActorFolders(parentId) {
+    return game.folders
+      .filter(f => f.type === "Actor" && (f.folder?.id ?? null) === (parentId ?? null))
+      .sort(this.sortByName);
+  }
+
+  /** World actors directly inside an actor folder (null = root). */
+  static getActorsInFolder(folderId) {
+    return game.actors.filter(a => (a.folder?.id ?? null) === (folderId ?? null)).sort(this.sortByName);
   }
 
   /* ---------------------------------------- */

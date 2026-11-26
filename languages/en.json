@@ -704,10 +704,33 @@
     },
     "Confirm": {
       "DeleteFolder": "Delete the folder \"{name}\"? Its subfolders and scenes will move to the parent folder (in Foundry's Scenes sidebar too).",
-      "ResetData": "Clear all favorites and links between scenes? Foundry folders and scenes are not affected."
+      "ResetData": "Clear all favorites, links between scenes and actor assignments? Foundry folders, scenes and tokens are not affected."
     },
     "Info": {
-      "Reset": "Favorites and links cleared."
+      "Reset": "Favorites, links and assignments cleared."
+    },
+    "Cast": {
+      "Actors": "Actors",
+      "ActorSearch": "Search actors…",
+      "NoActors": "No actors",
+      "SelectHint": "Click: show the maps where it is · Drag onto a scene: assign it",
+      "ScenesCount": "Maps where it is assigned or placed",
+      "ScenesOf": "Maps with {name} ({count})",
+      "NoScenes": "This actor is not assigned to any map and is not on any map. Drag it onto a scene card to assign it.",
+      "OpenSheet": "Open sheet",
+      "ClearActor": "Show all scenes",
+      "BarHint": "Scene cast: assigned actors and actors on the map",
+      "Assigned": "Assigned",
+      "OnMap": "On the map",
+      "OnMapCount": "On the map ×{count}",
+      "OffMap": "Not on the map",
+      "AlsoIn": "Also in",
+      "Assign": "Assign to this scene",
+      "Unassign": "Remove assignment",
+      "AssignedTo": "{actor} assigned to {scene}.",
+      "DragHint": "Drag an actor onto the map to place it · Click: open sheet",
+      "Empty": "No actors here. Drop an actor on the bar to assign it to this scene.",
+      "NoCompendium": "Import the actor into the world first: compendium actors can't be assigned."
     },
     "Warn": {
       "FolderCycle": "You can't move a folder inside itself.",
@@ -715,7 +738,7 @@
       "FolderDepth": "Foundry allows at most {max} folder levels."
     },
     "ResetData": "Reset navigator data",
-    "ResetDataHint": "Reset favorites and links",
+    "ResetDataHint": "Reset favorites, links and assignments",
     "Error": {
       "SceneAction": "Could not load the scene \"{name}\". See the console (F12) for details."
     },

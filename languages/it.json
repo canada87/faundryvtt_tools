@@ -704,10 +704,33 @@
     },
     "Confirm": {
       "DeleteFolder": "Eliminare la cartella \"{name}\"? Sottocartelle e scene verranno spostate nella cartella superiore (anche nella barra Scene di Foundry).",
-      "ResetData": "Cancellare tutti i preferiti e i collegamenti tra le scene? Le cartelle e le scene di Foundry non vengono toccate."
+      "ResetData": "Cancellare tutti i preferiti, i collegamenti tra le scene e gli actor assegnati? Cartelle, scene e token di Foundry non vengono toccati."
     },
     "Info": {
-      "Reset": "Preferiti e collegamenti cancellati."
+      "Reset": "Preferiti, collegamenti e assegnazioni cancellati."
+    },
+    "Cast": {
+      "Actors": "Actor",
+      "ActorSearch": "Cerca actor…",
+      "NoActors": "Nessun actor",
+      "SelectHint": "Clic: mostra le mappe in cui si trova · Trascina su una scena: assegnalo",
+      "ScenesCount": "Mappe in cui è assegnato o presente",
+      "ScenesOf": "Mappe con {name} ({count})",
+      "NoScenes": "Questo actor non è assegnato a nessuna mappa e non è su nessuna mappa. Trascinalo su una scena per assegnarlo.",
+      "OpenSheet": "Apri scheda",
+      "ClearActor": "Mostra tutte le scene",
+      "BarHint": "Cast della scena: actor assegnati e presenti sulla mappa",
+      "Assigned": "Assegnati",
+      "OnMap": "Sulla mappa",
+      "OnMapCount": "Sulla mappa ×{count}",
+      "OffMap": "Fuori mappa",
+      "AlsoIn": "Anche in",
+      "Assign": "Assegna a questa scena",
+      "Unassign": "Rimuovi assegnazione",
+      "AssignedTo": "{actor} assegnato a {scene}.",
+      "DragHint": "Trascina un actor sulla mappa per piazzarlo · Clic: apri scheda",
+      "Empty": "Nessun actor qui. Trascina un actor sulla barra per assegnarlo a questa scena.",
+      "NoCompendium": "Importa prima l'actor nel mondo: gli actor dei compendi non si possono assegnare."
     },
     "Warn": {
       "FolderCycle": "Non puoi spostare una cartella dentro se stessa.",
@@ -715,7 +738,7 @@
       "FolderDepth": "Foundry permette al massimo {max} livelli di cartelle."
     },
     "ResetData": "Reset dati del navigatore",
-    "ResetDataHint": "Reset preferiti e collegamenti",
+    "ResetDataHint": "Reset preferiti, collegamenti e assegnazioni",
     "Error": {
       "SceneAction": "Impossibile caricare la scena \"{name}\". Dettagli nella console (F12)."
     },

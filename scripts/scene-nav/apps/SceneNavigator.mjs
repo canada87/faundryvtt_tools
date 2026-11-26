@@ -48,14 +48,20 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       openNote: SceneNavigator.#onOpenNote,
       editNote: SceneNavigator.#onEditNote,
       pullPlayers: SceneNavigator.#onPullPlayers,
-      focusScene: SceneNavigator.#onFocusScene
+      focusScene: SceneNavigator.#onFocusScene,
+      selectActor: SceneNavigator.#onSelectActor,
+      clearActor: SceneNavigator.#onClearActor,
+      toggleActorFolder: SceneNavigator.#onToggleActorFolder,
+      openActorSheet: SceneNavigator.#onOpenActorSheet,
+      assignActor: SceneNavigator.#onAssignActor,
+      unassignActor: SceneNavigator.#onUnassignActor
     }
   };
 
   static PARTS = {
     main: {
       template: `modules/${MODULE_ID}/templates/scene-nav/scene-navigator.hbs`,
-      scrollable: [".scenenav-tree", ".scenenav-main"]
+      scrollable: [".scenenav-tree", ".scenenav-main", ".scenenav-actors"]
     }
   };
 
@@ -80,8 +86,14 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
 
   #view = VIEWS.ALL;
   #search = "";
-  #searchFocused = false;
+  /** Which search field ("scenes" | "actors") keeps focus across re-renders. */
+  #focusedSearch = null;
   #highlightSceneId = null;
+
+  /** Selected actor: the main area shows only the scenes where it is. */
+  #actorId = null;
+  #actorSearch = "";
+  #openActorFolders = new Set();
 
   /** Connected players by viewed scene, refreshed on every render. */
   #players = new Map();
@@ -151,7 +163,16 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     let canCreateSubfolder = false;
     const search = this.#search.trim().toLowerCase();
 
-    if (search) {
+    if (this.#actorId && !game.actors.has(this.#actorId)) this.#actorId = null;
+    const actor = game.actors.get(this.#actorId) ?? null;
+
+    if (actor) {
+      const scenes = S.getActorScenes(actor.id, data).map(e => sceneCard(e.scene));
+      sections.push({
+        title: game.i18n.format("SCENENAV.Cast.ScenesOf", { name: actor.name, count: scenes.length }),
+        scenes
+      });
+    } else if (search) {
       const scenes = S.getScenes().filter(s =>
         s.name.toLowerCase().includes(search) || (s.navName ?? "").toLowerCase().includes(search));
       sections.push({
@@ -209,9 +230,12 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       subfolders,
       canCreateSubfolder,
       currentFolderId: isFolderView ? this.#view : null,
-      viewAll: this.#view === VIEWS.ALL && !search,
-      viewFavorites: this.#view === VIEWS.FAVORITES && !search,
-      viewUnsorted: this.#view === VIEWS.UNSORTED && !search,
+      viewAll: this.#view === VIEWS.ALL && !search && !actor,
+      viewFavorites: this.#view === VIEWS.FAVORITES && !search && !actor,
+      viewUnsorted: this.#view === VIEWS.UNSORTED && !search && !actor,
+      selectedActor: actor ? { id: actor.id, name: actor.name, img: actor.img } : null,
+      actorTree: this.#buildActorTree(S.getActorSceneCounts(data)),
+      actorSearch: this.#actorSearch,
       countAll: game.scenes.size,
       countFavorites: S.getFavoriteScenes(data).length,
       countUnsorted: S.getScenesInFolder(null).length,
@@ -239,6 +263,18 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     const viewers = this.#players.get(scene.id) ?? [];
     const note = S.getSceneNote(scene);
 
+    // Cast as two small counters; names only in the tooltip, so busy maps stay compact
+    const cast = S.getSceneCast(scene, data);
+    const assigned = cast.filter(c => c.assigned);
+    const onMap = cast.filter(c => c.count);
+    const names = list => list.slice(0, 12).map(c => (c.count > 1 ? `${c.name} ×${c.count}` : c.name)).join(", ")
+      + (list.length > 12 ? ` +${list.length - 12}` : "");
+    const castTooltip = [
+      assigned.length ? `${game.i18n.localize("SCENENAV.Cast.Assigned")}: ${names(assigned)}` : "",
+      onMap.length ? `${game.i18n.localize("SCENENAV.Cast.OnMap")}: ${names(onMap)}` : ""
+    ].filter(Boolean).join(" — ");
+    const selected = this.#actorId ? cast.find(c => c.id === this.#actorId) : null;
+
     return {
       id: scene.id,
       name: scene.name,
@@ -254,8 +290,47 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
       hasLinks: !!parentId || children.length > 0 || continues.length > 0,
       viewers,
       note: note ? { name: note.journal.name, preview: S.getNotePreview(scene) } : null,
+      cast: cast.length ? { assigned: assigned.length, onMap: onMap.length, tooltip: castTooltip } : null,
+      // State of the selected actor on this scene (only in the actor view)
+      actorState: this.#actorId ? {
+        assigned: !!selected?.assigned,
+        label: selected?.count
+          ? game.i18n.format("SCENENAV.Cast.OnMapCount", { count: selected.count })
+          : game.i18n.localize("SCENENAV.Cast.OffMap"),
+        onMap: !!selected?.count
+      } : null,
       highlight: this.#highlightSceneId === scene.id
     };
+  }
+
+  /** Actor folders and actors as a flat indented list; a search shows matching actors only. */
+  #buildActorTree(sceneCounts) {
+    const S = SceneNavSystem;
+    const row = (actor, depth) => ({
+      id: actor.id,
+      name: actor.name,
+      img: actor.img,
+      indent: depth * 14,
+      scenes: sceneCounts.get(actor.id) ?? 0,
+      selected: actor.id === this.#actorId
+    });
+
+    const search = this.#actorSearch.trim().toLowerCase();
+    if (search) {
+      return game.actors.filter(a => a.name.toLowerCase().includes(search)).sort(S.sortByName).map(a => row(a, 0));
+    }
+
+    const rows = [];
+    const walk = (parentId, depth) => {
+      for (const folder of S.getChildActorFolders(parentId)) {
+        const open = this.#openActorFolders.has(folder.id);
+        rows.push({ isFolder: true, id: folder.id, name: folder.name, color: S.folderColor(folder), indent: depth * 14, open });
+        if (open) walk(folder.id, depth + 1);
+      }
+      for (const actor of S.getActorsInFolder(parentId)) rows.push(row(actor, depth));
+    };
+    walk(null, 0);
+    return rows;
   }
 
   /* ---------------------------------------- */
@@ -276,24 +351,38 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     const root = this.element;
     if (!root) return;
 
-    // Search: re-render on input, keeping focus and caret in the field
-    const searchInput = root.querySelector(".scenenav-search input");
-    if (searchInput) {
+    // Searches (scenes, actors): re-render on input, keeping focus and caret in the field
+    root.querySelectorAll("input[data-search]").forEach(input => {
+      const key = input.dataset.search;
       const doSearch = foundry.utils.debounce(value => {
-        this.#search = value;
+        if (key === "actors") this.#actorSearch = value;
+        else {
+          this.#search = value;
+          this.#actorId = null;
+        }
         this.render();
       }, 200);
-      searchInput.addEventListener("input", ev => {
-        this.#searchFocused = true;
+      input.addEventListener("input", ev => {
+        this.#focusedSearch = key;
         doSearch(ev.currentTarget.value);
       });
-      searchInput.addEventListener("blur", () => { this.#searchFocused = false; });
-      if (this.#searchFocused || options.isFirstRender) {
-        searchInput.focus();
-        const end = searchInput.value.length;
-        searchInput.setSelectionRange(end, end);
+      input.addEventListener("blur", () => {
+        if (this.#focusedSearch === key) this.#focusedSearch = null;
+      });
+      if (this.#focusedSearch === key || (options.isFirstRender && key === "scenes")) {
+        input.focus();
+        const end = input.value.length;
+        input.setSelectionRange(end, end);
       }
-    }
+    });
+
+    // Actors drag as standard Actor data: onto a scene card (assign) or Foundry's canvas
+    root.querySelectorAll(".scenenav-actor[data-actor-id]").forEach(el => {
+      el.addEventListener("dragstart", ev => {
+        const actor = game.actors.get(el.dataset.actorId);
+        if (actor) ev.dataTransfer.setData("text/plain", JSON.stringify({ type: "Actor", uuid: actor.uuid }));
+      });
+    });
 
     // Card size slider (client setting), applied live while dragging
     const sceneRoot = root.querySelector(".scenenav-root");
@@ -308,7 +397,9 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     // Scene cards: drag, double-click to view
     root.querySelectorAll(".scenenav-card[data-scene-id]").forEach(card => {
       const sceneId = card.dataset.sceneId;
-      card.addEventListener("drop", ev => this.#onDropJournal(ev, sceneId));
+      // Cards accept drops in every view, also where the section is not a drop target
+      card.addEventListener("dragover", ev => ev.preventDefault());
+      card.addEventListener("drop", ev => this.#onDropOnCard(ev, sceneId));
       card.addEventListener("dragstart", ev => {
         ev.dataTransfer.setData("text/plain", JSON.stringify({ type: DRAG_TYPE, kind: "scene", id: sceneId }));
         ev.dataTransfer.effectAllowed = "move";
@@ -378,6 +469,8 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     const search = this.#search.trim().toLowerCase();
     const matches = scene => scene.name.toLowerCase().includes(search)
       || (scene.navName ?? "").toLowerCase().includes(search);
+    // With an actor selected, scenes without it are dimmed
+    const actorScenes = this.#actorId ? new Set(S.getActorScenes(this.#actorId, data).map(e => e.scene.id)) : null;
 
     // Links touching the view; scenes outside it become "ghost" nodes
     const links = S.getLinks(data).filter(l => visible.has(l.from) || visible.has(l.to));
@@ -396,7 +489,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
         active: scene.active,
         isView: scene.isView,
         ghost: ghosts.has(id),
-        dim: !!search && !matches(scene),
+        dim: (!!search && !matches(scene)) || (!!actorScenes && !actorScenes.has(id)),
         highlight: this.#highlightSceneId === id,
         viewers: this.#players.get(id) ?? [],
         note: S.getSceneNote(scene) ? { name: S.getSceneNote(scene).journal.name, preview: S.getNotePreview(scene, 200) } : null
@@ -540,21 +633,31 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     await SceneNavSystem.clearViewLayout(this.#view);
   }
 
-  /** Dropping a Journal (or page) from the sidebar on a card makes it the scene's note. */
-  async #onDropJournal(event, sceneId) {
+  /**
+   * Dropping on a card: a Journal (or page) becomes the scene's note,
+   * an Actor is assigned to the scene.
+   */
+  async #onDropOnCard(event, sceneId) {
     let payload;
     try {
       payload = JSON.parse(event.dataTransfer.getData("text/plain"));
     } catch {
       return;
     }
-    if (!["JournalEntry", "JournalEntryPage"].includes(payload?.type) || !payload.uuid) return;
+    if (!["JournalEntry", "JournalEntryPage", "Actor"].includes(payload?.type) || !payload.uuid) return;
     event.preventDefault();
     event.stopPropagation();
     event.currentTarget.closest("[data-drop-folder]")?.classList.remove("drag-over");
     const doc = await fromUuid(payload.uuid);
     const scene = game.scenes.get(sceneId);
     if (!doc || !scene) return;
+    if (doc.documentName === "Actor") {
+      if (doc.pack) return ui.notifications.warn(game.i18n.localize("SCENENAV.Cast.NoCompendium"));
+      if (await SceneNavSystem.assignActor(sceneId, doc.id)) {
+        ui.notifications.info(game.i18n.format("SCENENAV.Cast.AssignedTo", { actor: doc.name, scene: scene.name }));
+      }
+      return;
+    }
     const isPage = doc.documentName === "JournalEntryPage";
     const journal = isPage ? doc.parent : doc;
     if (journal?.pack) return ui.notifications.warn(game.i18n.localize("SCENENAV.Note.NoCompendium"));
@@ -642,7 +745,38 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
   static #onSelectView(event, target) {
     this.#view = target.dataset.view;
     this.#search = "";
+    this.#actorId = null;
     this.render();
+  }
+
+  /** Click an actor: show only its scenes (click again to go back). */
+  static #onSelectActor(event, target) {
+    const actorId = target.closest("[data-actor-id]").dataset.actorId;
+    this.#actorId = this.#actorId === actorId ? null : actorId;
+    this.render();
+  }
+
+  static #onClearActor() {
+    this.#actorId = null;
+    this.render();
+  }
+
+  static #onToggleActorFolder(event, target) {
+    const folderId = target.closest("[data-actor-folder-id]").dataset.actorFolderId;
+    if (!this.#openActorFolders.delete(folderId)) this.#openActorFolders.add(folderId);
+    this.render();
+  }
+
+  static #onOpenActorSheet() {
+    game.actors.get(this.#actorId)?.sheet.render(true);
+  }
+
+  static async #onAssignActor(event, target) {
+    if (this.#actorId) await SceneNavSystem.assignActor(target.closest("[data-scene-id]").dataset.sceneId, this.#actorId);
+  }
+
+  static async #onUnassignActor(event, target) {
+    if (this.#actorId) await SceneNavSystem.unassignActor(target.closest("[data-scene-id]").dataset.sceneId, this.#actorId);
   }
 
   static async #onToggleFolder(event, target) {
@@ -757,6 +891,7 @@ export class SceneNavigator extends HandlebarsApplicationMixin(ApplicationV2) {
     const folderId = SceneNavSystem.getSceneFolderId(sceneId);
     this.#view = folderId ?? VIEWS.UNSORTED;
     this.#search = "";
+    this.#actorId = null;
     this.#highlightSceneId = sceneId;
     this.render();
   }

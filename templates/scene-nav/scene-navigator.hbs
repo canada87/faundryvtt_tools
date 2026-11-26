@@ -14,7 +14,7 @@
 
     <div class="scenenav-search">
       <i class="fas fa-search"></i>
-      <input type="search" value="{{search}}" placeholder="{{localize "SCENENAV.SearchPlaceholder"}}" />
+      <input type="search" data-search="scenes" value="{{search}}" placeholder="{{localize "SCENENAV.SearchPlaceholder"}}" />
       {{#if search}}
         <button type="button" class="scenenav-icon-btn" data-action="clearSearch" data-tooltip="{{localize "SCENENAV.ClearSearch"}}">
           <i class="fas fa-times"></i>
@@ -87,6 +87,37 @@
           <p class="scenenav-hint">{{localize "SCENENAV.NoFolders"}}</p>
         {{/each}}
       </div>
+
+      {{!-- ---------- Actors (assign to scenes, see where they are) ---------- --}}
+      <div class="scenenav-tree-heading scenenav-actors-heading">
+        <span>{{localize "SCENENAV.Cast.Actors"}}</span>
+      </div>
+      <div class="scenenav-search scenenav-actor-search">
+        <i class="fas fa-search"></i>
+        <input type="search" data-search="actors" value="{{actorSearch}}" placeholder="{{localize "SCENENAV.Cast.ActorSearch"}}" />
+      </div>
+      <div class="scenenav-actors">
+        {{#each actorTree}}
+          {{#if isFolder}}
+            <a class="scenenav-tree-item scenenav-actor-folder" data-action="toggleActorFolder" data-actor-folder-id="{{id}}"
+               style="padding-left: {{indent}}px; --folder-color: {{#if color}}{{color}}{{else}}transparent{{/if}}">
+              <span class="scenenav-caret"><i class="fas {{#if open}}fa-caret-down{{else}}fa-caret-right{{/if}}"></i></span>
+              <i class="fas {{#if open}}fa-folder-open{{else}}fa-folder{{/if}} scenenav-folder-icon"></i>
+              <span class="scenenav-tree-name">{{name}}</span>
+            </a>
+          {{else}}
+            <a class="scenenav-tree-item scenenav-actor {{#if selected}}selected{{/if}}" data-action="selectActor" data-actor-id="{{id}}"
+               draggable="true" style="padding-left: {{indent}}px" data-tooltip="{{localize "SCENENAV.Cast.SelectHint"}}">
+              <span class="scenenav-caret"></span>
+              <img src="{{img}}" alt="" draggable="false" />
+              <span class="scenenav-tree-name">{{name}}</span>
+              {{#if scenes}}<span class="scenenav-count" data-tooltip="{{localize "SCENENAV.Cast.ScenesCount"}}"><i class="fas fa-map"></i> {{scenes}}</span>{{/if}}
+            </a>
+          {{/if}}
+        {{else}}
+          <p class="scenenav-hint">{{localize "SCENENAV.Cast.NoActors"}}</p>
+        {{/each}}
+      </div>
     </aside>
 
     {{!-- ---------- Main area ---------- --}}
@@ -105,6 +136,15 @@
             </button>
           {{/if}}
         </nav>
+      {{/if}}
+
+      {{#if selectedActor}}
+        <div class="scenenav-actor-filter">
+          <img src="{{selectedActor.img}}" alt="" />
+          <b>{{selectedActor.name}}</b>
+          <button type="button" class="scenenav-btn" data-action="openActorSheet"><i class="fas fa-id-card"></i> {{localize "SCENENAV.Cast.OpenSheet"}}</button>
+          <button type="button" class="scenenav-icon-btn" data-action="clearActor" data-tooltip="{{localize "SCENENAV.Cast.ClearActor"}}"><i class="fas fa-times"></i></button>
+        </div>
       {{/if}}
 
       {{#if graphMode}}
@@ -182,6 +222,22 @@
                     </a>
                   {{/if}}
 
+                  {{#if actorState}}
+                    <div class="scenenav-actor-state {{#if actorState.onMap}}is-present{{/if}}">
+                      <i class="fas fa-chess-pawn"></i> {{actorState.label}}
+                      {{#if actorState.assigned}}
+                        <button type="button" class="scenenav-icon-btn" data-action="unassignActor" data-tooltip="{{localize "SCENENAV.Cast.Unassign"}}"><i class="fas fa-times"></i></button>
+                      {{else}}
+                        <button type="button" class="scenenav-icon-btn" data-action="assignActor" data-tooltip="{{localize "SCENENAV.Cast.Assign"}}"><i class="fas fa-thumbtack"></i></button>
+                      {{/if}}
+                    </div>
+                  {{else if cast}}
+                    <div class="scenenav-cast-summary" data-tooltip="{{cast.tooltip}}">
+                      {{#if cast.assigned}}<span><i class="fas fa-thumbtack"></i> {{cast.assigned}}</span>{{/if}}
+                      {{#if cast.onMap}}<span><i class="fas fa-chess-pawn"></i> {{cast.onMap}}</span>{{/if}}
+                    </div>
+                  {{/if}}
+
                   {{#if hasLinks}}
                     <div class="scenenav-links">
                       {{#if parent}}
@@ -233,7 +289,7 @@
       {{/each}}
 
       {{#if isEmpty}}
-        <p class="scenenav-empty">{{#if search}}{{localize "SCENENAV.NoResults"}}{{else}}{{localize "SCENENAV.EmptyFolder"}}{{/if}}</p>
+        <p class="scenenav-empty">{{#if selectedActor}}{{localize "SCENENAV.Cast.NoScenes"}}{{else if search}}{{localize "SCENENAV.NoResults"}}{{else}}{{localize "SCENENAV.EmptyFolder"}}{{/if}}</p>
       {{/if}}
 
       {{/if}}

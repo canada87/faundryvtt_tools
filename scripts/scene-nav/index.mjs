@@ -122,7 +122,7 @@ export function initSceneNav() {
 
   for (const hook of ["createFolder", "updateFolder", "deleteFolder"]) {
     Hooks.on(hook, (folder) => {
-      if (folder.type === "Scene") SceneNavigator.refresh();
+      if (folder.type === "Scene" || folder.type === "Actor") SceneNavigator.refresh();
     });
   }
 
@@ -143,6 +143,13 @@ export function initSceneNav() {
     "createJournalEntryPage", "updateJournalEntryPage", "deleteJournalEntryPage"
   ];
   for (const hook of hooks) Hooks.on(hook, () => refreshAll());
+
+  // Cast: tokens placed or removed, actors created, renamed or deleted
+  for (const hook of ["createToken", "deleteToken", "createActor", "deleteActor"]) Hooks.on(hook, () => refreshAll());
+  Hooks.on("updateActor", (actor, changes) => {
+    // Skip HP and other sheet changes, which happen constantly in play
+    if (["name", "img", "folder", "prototypeToken"].some(k => k in changes)) refreshAll();
+  });
 
   Hooks.on("deleteScene", (scene) => {
     SceneNavigator.refresh();

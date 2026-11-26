@@ -1337,3 +1337,204 @@ body:has(#faundryvtt-resources-hud[style*="flex"]) .faundryvtt-scenenav-bar {
   font-weight: 700;
   text-shadow: 0 1px 2px #000;
 }
+
+/* ========================================
+   Scene Navigator — Cast (actors)
+   ======================================== */
+
+.scenenav-actors-heading {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--scenenav-border);
+}
+
+.scenenav-actor-search {
+  max-width: none;
+  margin: 0 4px 6px;
+}
+
+.scenenav-actor-search input {
+  height: 28px;
+  font-size: 13px;
+}
+
+.scenenav-actors {
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+.scenenav-actor img {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.scenenav-actor-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 6px 10px;
+  border: 1px solid var(--scenenav-accent);
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.12);
+  font-size: 15px;
+}
+
+.scenenav-actor-filter img {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.scenenav-cast-summary,
+.scenenav-actor-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 2px 8px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+}
+
+.scenenav-actor-state {
+  gap: 5px;
+  padding-right: 2px;
+  opacity: 0.8;
+}
+
+.scenenav-actor-state.is-present {
+  background: rgba(60, 150, 110, 0.28);
+  color: #a8ecc8;
+  opacity: 1;
+}
+
+.scene-navigator .scenenav-actor-state .scenenav-icon-btn {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---- Bar: cast button and panel ---- */
+
+.faundryvtt-scenenav-bar .scenenav-bar-cast-btn {
+  position: relative;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-cast-btn.is-open {
+  background: rgba(212, 175, 55, 0.3);
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-cast-count {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  min-width: 14px;
+  padding: 1px 3px;
+  border-radius: 7px;
+  background: #d4af37;
+  color: #141417;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.faundryvtt-scenenav-bar .scenenav-bar-cast {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(440px, 90vw);
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 8px 10px;
+  border: 1px solid #d4af37;
+  border-radius: 10px;
+  background: rgba(20, 20, 20, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  line-height: 1.3;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-section h4 {
+  margin: 4px 0 6px;
+  border: none;
+  color: #d4af37;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-total {
+  opacity: 0.6;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-actor {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 200px;
+  padding: 2px 2px 2px 3px;
+  border: 1px solid rgba(120, 200, 160, 0.6);
+  border-radius: 14px;
+  background: rgba(60, 150, 110, 0.2);
+  cursor: grab;
+}
+
+/* Assigned but not placed: the ones to drag onto the map */
+.faundryvtt-scenenav-bar .scenenav-cast-actor.is-offmap {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.35);
+  background: transparent;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-actor.is-hostile {
+  border-color: rgba(220, 80, 80, 0.8);
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-actor.is-hostile.is-present {
+  background: rgba(200, 60, 60, 0.22);
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-actor img {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-count {
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-actor .scenenav-bar-btn {
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+}
+
+.faundryvtt-scenenav-bar .scenenav-cast-hint {
+  margin: 2px 0 0;
+  font-size: 11px;
+  font-style: italic;
+  opacity: 0.6;
+}
