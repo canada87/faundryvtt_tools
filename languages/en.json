@@ -1008,6 +1008,8 @@
     "NextTurn": "Next turn",
     "Exclude": "Exclude from the quota",
     "Include": "Include in the quota",
+    "ExcludeAll": "Exclude the whole party from the quota",
+    "IncludeAll": "Include the whole party in the quota",
     "PausedCombat": "Paused: combat in progress",
     "Empty": "No player token of an online player in this scene.",
     "AutoAdvanced": "Exploration: every token reached the quota, the clock advanced by {seconds} s."

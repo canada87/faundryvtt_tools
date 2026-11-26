@@ -22,7 +22,13 @@
   {{#if tokens.length}}
     <div class="exploration-summary">
       <span>{{localize "EXPLORATION.Ready"}}</span>
-      <span class="exploration-summary-count">{{ready}}/{{total}}</span>
+      <span class="exploration-summary-right">
+        <span class="exploration-summary-count">{{ready}}/{{total}}</span>
+        <button type="button" class="exploration-exclude" data-action="toggleAllExcluded"
+                title="{{#if allExcluded}}{{localize 'EXPLORATION.IncludeAll'}}{{else}}{{localize 'EXPLORATION.ExcludeAll'}}{{/if}}">
+          <i class="fas {{#if allExcluded}}fa-eye-slash{{else}}fa-eye{{/if}}"></i>
+        </button>
+      </span>
     </div>
 
     <ul class="exploration-list">

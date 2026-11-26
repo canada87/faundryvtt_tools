@@ -236,12 +236,14 @@ export class ExplorationSystem {
     return this.nextTurn({ advanceTime: false });
   }
 
-  /** Exclude a token from the quota (not blocked, not waited for). */
-  static async setExcluded(tokenId, excluded) {
+  /** Exclude one token (or an array of tokens) from the quota (not blocked, not waited for). */
+  static async setExcluded(tokenIds, excluded) {
     if (!game.user.isGM) return;
     const next = { ...this.#state.excluded };
-    if (excluded) next[tokenId] = true;
-    else delete next[tokenId];
+    for (const id of [tokenIds].flat()) {
+      if (excluded) next[id] = true;
+      else delete next[id];
+    }
     this.#state.excluded = next;
     this.onUpdate(null);
     await this.#write();

@@ -70,6 +70,16 @@
   color: var(--ex-muted);
 }
 
+.exploration-tracker .exploration-summary {
+  align-items: center;
+}
+
+.exploration-tracker .exploration-summary-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .exploration-tracker .exploration-summary-count {
   font-weight: 700;
 }

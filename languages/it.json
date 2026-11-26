@@ -1008,6 +1008,8 @@
     "NextTurn": "Turno successivo",
     "Exclude": "Escludi dalla quota",
     "Include": "Includi nella quota",
+    "ExcludeAll": "Escludi tutto il party dalla quota",
+    "IncludeAll": "Includi tutto il party nella quota",
     "PausedCombat": "In pausa: combattimento in corso",
     "Empty": "Nessun token di giocatori online in questa scena.",
     "AutoAdvanced": "Esplorazione: tutti i token hanno raggiunto la quota, l'orologio è avanzato di {seconds} s."

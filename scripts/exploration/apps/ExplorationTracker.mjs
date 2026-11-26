@@ -30,6 +30,7 @@ export class ExplorationTracker extends HandlebarsApplicationMixin(ApplicationV2
     actions: {
       nextTurn: ExplorationTracker.#onNextTurn,
       toggleExcluded: ExplorationTracker.#onToggleExcluded,
+      toggleAllExcluded: ExplorationTracker.#onToggleAllExcluded,
       panToToken: ExplorationTracker.#onPanToToken
     }
   };
@@ -120,6 +121,7 @@ export class ExplorationTracker extends HandlebarsApplicationMixin(ApplicationV2
       quota,
       seconds,
       tokens,
+      allExcluded: !counted.length,
       ready: counted.filter(t => t.done).length,
       total: counted.length
     };
@@ -157,6 +159,14 @@ export class ExplorationTracker extends HandlebarsApplicationMixin(ApplicationV2
     const id = target.closest("[data-token-id]")?.dataset.tokenId;
     if (!id) return;
     await ExplorationSystem.setExcluded(id, !ExplorationSystem.isExcluded(id));
+  }
+
+  /** Exclude the whole party, or include it again if everyone is already excluded. */
+  static async #onToggleAllExcluded() {
+    const ids = ExplorationSystem.trackedTokens(canvas?.scene).map(t => t.id);
+    if (!ids.length) return;
+    const allExcluded = ids.every(id => ExplorationSystem.isExcluded(id));
+    await ExplorationSystem.setExcluded(ids, !allExcluded);
   }
 
   static #onPanToToken(event, target) {
